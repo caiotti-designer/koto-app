@@ -15,11 +15,13 @@ interface Prompt {
 interface PromptCardProps {
   prompt: Prompt;
   onUpdateCover: (coverImage: string) => void;
+  onClick?: () => void;
   mpid?: string;
 }
 const PromptCard: React.FC<PromptCardProps> = ({
   prompt,
-  onUpdateCover
+  onUpdateCover,
+  onClick
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -78,7 +80,7 @@ const PromptCard: React.FC<PromptCardProps> = ({
     y: 0
   }} whileHover={{
     y: -4
-  }} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group" data-magicpath-id="0" data-magicpath-path="PromptCard.tsx">
+  }} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group cursor-pointer" onClick={onClick} data-magicpath-id="0" data-magicpath-path="PromptCard.tsx">
       {/* Cover Image Area */}
       <div className={`relative h-32 bg-gradient-to-br from-indigo-50 to-purple-50 border-b border-gray-100 ${isDragOver ? 'bg-indigo-100' : ''}`} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop} data-magicpath-id="1" data-magicpath-path="PromptCard.tsx">
         {prompt.coverImage ? <img src={prompt.coverImage} alt={prompt.title} className="w-full h-full object-cover" data-magicpath-id="2" data-magicpath-path="PromptCard.tsx" /> : <div className="flex items-center justify-center h-full" data-magicpath-id="3" data-magicpath-path="PromptCard.tsx">
@@ -94,7 +96,10 @@ const PromptCard: React.FC<PromptCardProps> = ({
         
         {/* Upload Overlay */}
         <div className={`absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity ${isDragOver ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} data-magicpath-id="8" data-magicpath-path="PromptCard.tsx">
-          <button onClick={() => fileInputRef.current?.click()} className="bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-all" data-magicpath-id="9" data-magicpath-path="PromptCard.tsx">
+          <button onClick={e => {
+          e.stopPropagation();
+          fileInputRef.current?.click();
+        }} className="bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-all" data-magicpath-id="9" data-magicpath-path="PromptCard.tsx">
             <Upload className="w-4 h-4" data-magicpath-id="10" data-magicpath-path="PromptCard.tsx" />
             <span data-magicpath-id="11" data-magicpath-path="PromptCard.tsx">Upload Cover</span>
           </button>
@@ -102,12 +107,19 @@ const PromptCard: React.FC<PromptCardProps> = ({
 
         {/* Menu Button */}
         <div className="absolute top-3 right-3" data-magicpath-id="12" data-magicpath-path="PromptCard.tsx">
-          <button onClick={() => setShowMenu(!showMenu)} className="p-1.5 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-lg transition-all opacity-0 group-hover:opacity-100" data-magicpath-id="13" data-magicpath-path="PromptCard.tsx">
+          <button onClick={e => {
+          e.stopPropagation();
+          setShowMenu(!showMenu);
+        }} className="p-1.5 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-lg transition-all opacity-0 group-hover:opacity-100" data-magicpath-id="13" data-magicpath-path="PromptCard.tsx">
             <MoreHorizontal className="w-4 h-4 text-gray-600" data-magicpath-id="14" data-magicpath-path="PromptCard.tsx" />
           </button>
           
           {showMenu && <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10 min-w-[120px]" data-magicpath-id="15" data-magicpath-path="PromptCard.tsx">
-              <button onClick={handleCopyPrompt} className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2" data-magicpath-id="16" data-magicpath-path="PromptCard.tsx">
+              <button onClick={e => {
+            e.stopPropagation();
+            handleCopyPrompt();
+            setShowMenu(false);
+          }} className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2" data-magicpath-id="16" data-magicpath-path="PromptCard.tsx">
                 <Copy className="w-4 h-4" data-magicpath-id="17" data-magicpath-path="PromptCard.tsx" />
                 <span data-magicpath-id="18" data-magicpath-path="PromptCard.tsx">Copy</span>
               </button>
