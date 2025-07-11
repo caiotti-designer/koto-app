@@ -49,24 +49,24 @@ const Sidebar: React.FC<SidebarProps> = ({
     label: 'Prompts',
     icon: MessageSquare,
     tab: 'prompts' as const,
-    mpid: "7ecf3456-fad1-4298-a77a-fccd85f62b5e"
+    mpid: "7d313e07-6980-41f8-ac94-d0e2b1411a58"
   }, {
     id: 'toolbox',
     label: 'Tool Box',
     icon: Wrench,
     tab: 'toolbox' as const,
-    mpid: "26f33eeb-2feb-46da-8340-64705f18dbcc"
+    mpid: "35d328bb-2621-43ec-a1ac-0f80d4717787"
   }] as any[];
   const bottomItems = [{
     id: 'settings',
     label: 'Settings',
     icon: Settings,
-    mpid: "43bed23b-349a-4828-9ef5-9fbf145d5293"
+    mpid: "3d7e61ff-a5b2-4a5c-8334-303b1182ef99"
   }, {
     id: 'help',
     label: 'Help',
     icon: HelpCircle,
-    mpid: "f4b63cbb-be35-4403-9872-c169b65cb88f"
+    mpid: "7285715b-a0b8-4cd1-af27-d59c2aa99351"
   }] as any[];
   const SidebarContent = () => <div className="h-full flex flex-col bg-white border-r border-gray-200" data-magicpath-id="0" data-magicpath-path="Sidebar.tsx">
       {/* Header */}
@@ -111,7 +111,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             }} exit={{
               opacity: 0,
               x: -10
-            }} className="font-medium" data-magicpath-uuid={(item as any)["mpid"] ?? "unsafe"} data-magicpath-field="label:string" data-magicpath-id="17" data-magicpath-path="Sidebar.tsx">
+            }} className="font-medium" data-magicpath-uuid={(item as any)["mpid"] ?? "unsafe"} data-magicpath-field="label:unknown" data-magicpath-id="17" data-magicpath-path="Sidebar.tsx">
                     {item.label}
                   </motion.span>}
               </AnimatePresence>
@@ -154,7 +154,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             }} exit={{
               opacity: 0,
               x: -10
-            }} className="font-medium" data-magicpath-uuid={(item as any)["mpid"] ?? "unsafe"} data-magicpath-field="label:string" data-magicpath-id="29" data-magicpath-path="Sidebar.tsx">
+            }} className="font-medium" data-magicpath-uuid={(item as any)["mpid"] ?? "unsafe"} data-magicpath-field="label:unknown" data-magicpath-id="29" data-magicpath-path="Sidebar.tsx">
                     {item.label}
                   </motion.span>}
               </AnimatePresence>
