@@ -34,42 +34,42 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
     id: 'smileys',
     name: 'Smileys',
     icon: '😀',
-    mpid: "514f7433-fba7-4efa-9947-9724010e2e96"
+    mpid: "e629c10f-6eba-499c-af13-b86c4da6ff0b"
   }, {
     id: 'people',
     name: 'People',
     icon: '👤',
-    mpid: "bf31c3e6-6f51-47a4-a4fa-961bec1c0a86"
+    mpid: "be1f0300-c75a-4266-b63e-bc97bedac6db"
   }, {
     id: 'animals',
     name: 'Animals',
     icon: '🐶',
-    mpid: "399165ff-8730-4cff-a5fe-aae3c1c2a2bb"
+    mpid: "422dc8f5-1075-4883-9a0b-593e21e8ff46"
   }, {
     id: 'food',
     name: 'Food',
     icon: '🍎',
-    mpid: "00d5d0fe-fc48-4f9a-86f8-66faf73f15c3"
+    mpid: "2ebfb229-08b2-4123-9e38-951a8f8f8423"
   }, {
     id: 'travel',
     name: 'Travel',
     icon: '✈️',
-    mpid: "fd24f9f3-6254-4ec4-ba0a-263fb37c87b7"
+    mpid: "a731b4e3-c9cb-44dd-81ef-d155e7913dc6"
   }, {
     id: 'activities',
     name: 'Activities',
     icon: '⚽',
-    mpid: "0cc857de-92cd-497d-9bf1-7c6f8edab2d6"
+    mpid: "640a78c7-84d7-4a6e-9f71-9ea0b0757962"
   }, {
     id: 'objects',
     name: 'Objects',
     icon: '💡',
-    mpid: "ba5ebf6b-f101-4e5d-943c-091288ba28c6"
+    mpid: "b9b03089-71dd-4910-acc4-44b8a106b80f"
   }, {
     id: 'symbols',
     name: 'Symbols',
     icon: '❤️',
-    mpid: "afc6a528-20b1-4aa6-a8ba-6554458b776f"
+    mpid: "9577e4e7-6f36-434a-92e7-5ab6015a9e11"
   }] as any[];
   const emojiData = {
     smileys: ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '😎', '🤓', '🧐'],

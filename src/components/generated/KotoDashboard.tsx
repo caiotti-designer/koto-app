@@ -40,6 +40,9 @@ const KotoDashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewPromptDialog, setShowNewPromptDialog] = useState(false);
   const [showNewToolDialog, setShowNewToolDialog] = useState(false);
+  const [showAddTagDialog, setShowAddTagDialog] = useState(false);
+  const [newTagName, setNewTagName] = useState('');
+  const [newTagColor, setNewTagColor] = useState('bg-blue-100 text-blue-700');
   const [prompts, setPrompts] = useState<Prompt[]>([{
     id: '1',
     title: 'Creative Writing Assistant',
@@ -48,7 +51,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-15'),
-    mpid: "97738ffa-1be7-4ff0-825a-dd2168e84143"
+    mpid: "2b485184-3938-471f-bf74-9c856143515b"
   }, {
     id: '2',
     title: 'Code Review Helper',
@@ -57,7 +60,7 @@ const KotoDashboard: React.FC = () => {
     model: 'Claude-3',
     category: 'Development',
     createdAt: new Date('2024-01-14'),
-    mpid: "4c8143e1-2a48-4005-a909-7ada2e1a3d9e"
+    mpid: "9478dba8-728a-49a6-a73c-acda65bd5444"
   }]);
   const [tools, setTools] = useState<Tool[]>([{
     id: '1',
@@ -65,84 +68,100 @@ const KotoDashboard: React.FC = () => {
     logo: '🎨',
     category: 'Design',
     url: 'https://figma.com',
-    mpid: "6ae57900-7152-43d3-accb-cc2e96d5b648"
+    mpid: "01b2a2c9-9266-4f1c-86b4-cbb19c4076b6"
   }, {
     id: '2',
     name: 'GitHub',
     logo: '💻',
     category: 'Development',
     url: 'https://github.com',
-    mpid: "3aa1330d-577d-421e-8044-36e585e2c068"
+    mpid: "2a84a90c-968a-4576-b935-5911a8ecfbf0"
   }, {
     id: '3',
     name: 'Notion',
     logo: '📝',
     category: 'Productivity',
     url: 'https://notion.so',
-    mpid: "f4102e0f-1370-4dee-83fe-85ef0a96d7ac"
+    mpid: "ba5a4c6c-68aa-4221-bd48-4fddb3c44a49"
   }]);
-  const categories: Category[] = [{
+  const [categories, setCategories] = useState<Category[]>([{
     id: 'all',
     name: 'All',
-    count: prompts.length,
+    count: 0,
+    // Will be calculated dynamically
     color: 'bg-gray-100 text-gray-700',
-    mpid: "9e24487d-aac0-464c-a428-9ac24e18d684"
+    mpid: "fe38a911-92f6-4e58-b3e9-4c3b48375d2b"
   }, {
     id: 'writing',
     name: 'Writing',
-    count: prompts.filter(p => p.category === 'Writing').length,
+    count: 0,
+    // Will be calculated dynamically
     color: 'bg-blue-100 text-blue-700',
-    mpid: "811681f3-e3a7-44ee-ae1e-faa02fc3cb01"
+    mpid: "4a2278b5-ce24-4732-b746-fd9db46ae646"
   }, {
     id: 'development',
     name: 'Development',
-    count: prompts.filter(p => p.category === 'Development').length,
+    count: 0,
+    // Will be calculated dynamically
     color: 'bg-green-100 text-green-700',
-    mpid: "f89f0def-2679-46cd-89a7-a719fade938f"
+    mpid: "5ed955bc-b09f-4d04-9875-2171f4f91f8f"
   }, {
     id: 'design',
     name: 'Design',
     count: 3,
     color: 'bg-purple-100 text-purple-700',
-    mpid: "d943a530-fdfd-4d7a-bd66-5e2aaf3649af"
+    mpid: "5e32137c-543d-4fd9-8fef-ec9a243d65e4"
   }, {
     id: 'marketing',
     name: 'Marketing',
     count: 5,
     color: 'bg-orange-100 text-orange-700',
-    mpid: "9c597471-0e20-4396-95a6-85dbce2ee302"
+    mpid: "de79ee1e-0c7d-4009-a3d7-5c5554080784"
   }, {
     id: 'productivity',
     name: 'Productivity',
     count: 2,
     color: 'bg-indigo-100 text-indigo-700',
-    mpid: "9811cf9a-8b9d-439a-8d1f-0f7528b36a9d"
-  }];
-  const toolCategories: Category[] = [{
+    mpid: "5bf1d71b-c89d-462e-a54f-11202c1966da"
+  }]);
+  const [toolCategories, setToolCategories] = useState<Category[]>([{
     id: 'all',
     name: 'All',
-    count: tools.length,
+    count: 0,
+    // Will be calculated dynamically
     color: 'bg-gray-100 text-gray-700',
-    mpid: "ea684f0b-c020-4e05-af55-655c90bbafc6"
+    mpid: "32f8d66c-117f-4c33-9bed-9dae0090781b"
   }, {
     id: 'design',
     name: 'Design',
-    count: tools.filter(t => t.category === 'Design').length,
+    count: 0,
+    // Will be calculated dynamically
     color: 'bg-purple-100 text-purple-700',
-    mpid: "e9cef7f4-8de0-4ee9-9968-1b4c267406ca"
+    mpid: "43052b61-7da3-48c6-8f61-9b927b23d7d7"
   }, {
     id: 'development',
     name: 'Development',
-    count: tools.filter(t => t.category === 'Development').length,
+    count: 0,
+    // Will be calculated dynamically
     color: 'bg-green-100 text-green-700',
-    mpid: "40f96742-989e-4164-8ea5-2f162b479875"
+    mpid: "bf5861d3-d773-435d-972c-0770bc645ba4"
   }, {
     id: 'productivity',
     name: 'Productivity',
-    count: tools.filter(t => t.category === 'Productivity').length,
+    count: 0,
+    // Will be calculated dynamically
     color: 'bg-indigo-100 text-indigo-700',
-    mpid: "953f4cfa-161b-4e3c-b2c0-285a985bd5fe"
-  }];
+    mpid: "c24a1e6c-f2b9-4fb4-9ca1-ba78fa5595f4"
+  }]);
+  // Update category counts dynamically
+  const updatedCategories = categories.map(category => ({
+    ...category,
+    count: category.id === 'all' ? prompts.length : prompts.filter(p => p.category.toLowerCase() === category.id).length
+  }));
+  const updatedToolCategories = toolCategories.map(category => ({
+    ...category,
+    count: category.id === 'all' ? tools.length : tools.filter(t => t.category.toLowerCase() === category.id).length
+  }));
   const filteredPrompts = prompts.filter(prompt => {
     const matchesSearch = prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) || prompt.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesCategory = activeCategory === 'all' || prompt.category.toLowerCase() === activeCategory;
@@ -175,6 +194,24 @@ const KotoDashboard: React.FC = () => {
     };
     setTools(prev => [newTool, ...prev]);
     setShowNewToolDialog(false);
+  };
+  const handleAddTag = () => {
+    if (!newTagName.trim()) return;
+    const newTag: Category = {
+      id: newTagName.toLowerCase().replace(/\s+/g, '-'),
+      name: newTagName,
+      count: 0,
+      color: newTagColor,
+      mpid: `tag-${Date.now()}`
+    };
+    if (activeTab === 'prompts') {
+      setCategories(prev => [...prev, newTag]);
+    } else {
+      setToolCategories(prev => [...prev, newTag]);
+    }
+    setNewTagName('');
+    setNewTagColor('bg-blue-100 text-blue-700');
+    setShowAddTagDialog(false);
   };
   useEffect(() => {
     const handleResize = () => {
@@ -215,13 +252,13 @@ const KotoDashboard: React.FC = () => {
                 </motion.button>}
             </div>
             
-            <motion.button className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors" whileHover={{
+            <motion.button onClick={() => setShowAddTagDialog(true)} className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors" whileHover={{
             scale: 1.02
           }} whileTap={{
             scale: 0.98
           }} data-magicpath-id="11" data-magicpath-path="KotoDashboard.tsx">
               <FolderPlus className="w-4 h-4 mr-2" data-magicpath-id="12" data-magicpath-path="KotoDashboard.tsx" />
-              Add Category
+              Add Tag
             </motion.button>
           </div>
         </div>
@@ -229,7 +266,7 @@ const KotoDashboard: React.FC = () => {
         {/* Categories Tab Bar */}
         <div className="bg-white border-b border-gray-200 px-6 py-3" data-magicpath-id="13" data-magicpath-path="KotoDashboard.tsx">
           <div className="flex items-center space-x-2 overflow-x-auto" data-magicpath-id="14" data-magicpath-path="KotoDashboard.tsx">
-            {(activeTab === 'prompts' ? categories : toolCategories).map(category => <motion.button key={category.id} onClick={() => setActiveCategory(category.id)} className={`flex-shrink-0 inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${activeCategory === category.id ? 'bg-indigo-100 text-indigo-700 border border-indigo-200' : category.color}`} whileHover={{
+            {(activeTab === 'prompts' ? updatedCategories : updatedToolCategories).map(category => <motion.button key={category.id} onClick={() => setActiveCategory(category.id)} className={`flex-shrink-0 inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${activeCategory === category.id ? 'bg-indigo-100 text-indigo-700 border border-indigo-200' : category.color}`} whileHover={{
             scale: 1.05
           }} whileTap={{
             scale: 0.95
@@ -249,7 +286,7 @@ const KotoDashboard: React.FC = () => {
                 <div className="flex items-center justify-between mb-6" data-magicpath-id="20" data-magicpath-path="KotoDashboard.tsx">
                   <div data-magicpath-id="21" data-magicpath-path="KotoDashboard.tsx">
                     <h1 className="text-2xl font-semibold text-gray-900" data-magicpath-id="22" data-magicpath-path="KotoDashboard.tsx">
-                      {activeCategory === 'all' ? 'All Prompts' : `${categories.find(c => c.id === activeCategory)?.name} Prompts`}
+                      {activeCategory === 'all' ? 'All Prompts' : `${updatedCategories.find(c => c.id === activeCategory)?.name} Prompts`}
                     </h1>
                     <p className="text-gray-600 mt-1" data-magicpath-id="23" data-magicpath-path="KotoDashboard.tsx">
                       {filteredPrompts.length} prompts available
@@ -273,7 +310,7 @@ const KotoDashboard: React.FC = () => {
               </> : <>
                 <div className="mb-6" data-magicpath-id="29" data-magicpath-path="KotoDashboard.tsx">
                   <h1 className="text-2xl font-semibold text-gray-900" data-magicpath-id="30" data-magicpath-path="KotoDashboard.tsx">
-                    {activeCategory === 'all' ? 'All Tools' : `${toolCategories.find(c => c.id === activeCategory)?.name} Tools`}
+                    {activeCategory === 'all' ? 'All Tools' : `${updatedToolCategories.find(c => c.id === activeCategory)?.name} Tools`}
                   </h1>
                   <p className="text-gray-600 mt-1" data-magicpath-id="31" data-magicpath-path="KotoDashboard.tsx">
                     Your favorite tools and resources
@@ -325,15 +362,90 @@ const KotoDashboard: React.FC = () => {
       {/* New Tool Dialog */}
       <NewToolDialog open={showNewToolDialog} onClose={() => setShowNewToolDialog(false)} onSave={handleSaveTool} data-magicpath-id="45" data-magicpath-path="KotoDashboard.tsx" />
 
-      {/* Mobile Menu Overlay */}
+      {/* Add Tag Dialog */}
       <AnimatePresence data-magicpath-id="46" data-magicpath-path="KotoDashboard.tsx">
+        {showAddTagDialog && <motion.div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{
+        opacity: 0
+      }} animate={{
+        opacity: 1
+      }} exit={{
+        opacity: 0
+      }} onClick={() => setShowAddTagDialog(false)} data-magicpath-id="47" data-magicpath-path="KotoDashboard.tsx">
+            <motion.div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl" initial={{
+          scale: 0.9,
+          opacity: 0
+        }} animate={{
+          scale: 1,
+          opacity: 1
+        }} exit={{
+          scale: 0.9,
+          opacity: 0
+        }} onClick={e => e.stopPropagation()} data-magicpath-id="48" data-magicpath-path="KotoDashboard.tsx">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4" data-magicpath-id="49" data-magicpath-path="KotoDashboard.tsx">Add New Tag</h2>
+              
+              <div className="space-y-4" data-magicpath-id="50" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="51" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-gray-700 mb-2" data-magicpath-id="52" data-magicpath-path="KotoDashboard.tsx">
+                    Tag Name
+                  </label>
+                  <input type="text" value={newTagName} onChange={e => setNewTagName(e.target.value)} placeholder="Enter tag name" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" data-magicpath-id="53" data-magicpath-path="KotoDashboard.tsx" />
+                </div>
+
+                <div data-magicpath-id="54" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-gray-700 mb-2" data-magicpath-id="55" data-magicpath-path="KotoDashboard.tsx">
+                    Color Theme
+                  </label>
+                  <div className="grid grid-cols-3 gap-2" data-magicpath-id="56" data-magicpath-path="KotoDashboard.tsx">
+                    {[{
+                  value: 'bg-blue-100 text-blue-700',
+                  color: 'bg-blue-100',
+                  mpid: "e80c1d70-cc6a-4600-bada-1387db115227"
+                }, {
+                  value: 'bg-green-100 text-green-700',
+                  color: 'bg-green-100',
+                  mpid: "7f43532c-6609-4e19-9ecb-8fc70723f302"
+                }, {
+                  value: 'bg-purple-100 text-purple-700',
+                  color: 'bg-purple-100',
+                  mpid: "e08636a1-e644-4873-a7d8-d2d49137cc90"
+                }, {
+                  value: 'bg-orange-100 text-orange-700',
+                  color: 'bg-orange-100',
+                  mpid: "340a7daf-e9db-44b6-adb2-973532508e0e"
+                }, {
+                  value: 'bg-pink-100 text-pink-700',
+                  color: 'bg-pink-100',
+                  mpid: "50e7d41c-ea08-43f8-b916-15741102fd80"
+                }, {
+                  value: 'bg-yellow-100 text-yellow-700',
+                  color: 'bg-yellow-100',
+                  mpid: "b83ec98e-df01-4c15-8111-204ed01d6d71"
+                }].map(colorOption => <button key={colorOption.value} onClick={() => setNewTagColor(colorOption.value)} className={`w-full h-8 rounded-lg border-2 transition-all ${newTagColor === colorOption.value ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-gray-200 hover:border-gray-300'} ${colorOption.color}`} data-magicpath-uuid={(colorOption as any)["mpid"] ?? "unsafe"} data-magicpath-id="57" data-magicpath-path="KotoDashboard.tsx" />)}
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-3 pt-4" data-magicpath-id="58" data-magicpath-path="KotoDashboard.tsx">
+                  <button onClick={() => setShowAddTagDialog(false)} className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors" data-magicpath-id="59" data-magicpath-path="KotoDashboard.tsx">
+                    Cancel
+                  </button>
+                  <button onClick={handleAddTag} disabled={!newTagName.trim()} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 text-white rounded-lg transition-colors" data-magicpath-id="60" data-magicpath-path="KotoDashboard.tsx">
+                    Add Tag
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>}
+      </AnimatePresence>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence data-magicpath-id="61" data-magicpath-path="KotoDashboard.tsx">
         {mobileMenuOpen && <motion.div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" initial={{
         opacity: 0
       }} animate={{
         opacity: 1
       }} exit={{
         opacity: 0
-      }} onClick={() => setMobileMenuOpen(false)} data-magicpath-id="47" data-magicpath-path="KotoDashboard.tsx" />}
+      }} onClick={() => setMobileMenuOpen(false)} data-magicpath-id="62" data-magicpath-path="KotoDashboard.tsx" />}
       </AnimatePresence>
     </div>;
 };
