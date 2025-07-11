@@ -48,7 +48,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-15'),
-    mpid: "3c0dbd9b-6272-4472-9836-a1adca7efb92"
+    mpid: "723aff70-acde-4745-8eb4-220623ad9840"
   }, {
     id: '2',
     title: 'Code Review Helper',
@@ -57,7 +57,7 @@ const KotoDashboard: React.FC = () => {
     model: 'Claude-3',
     category: 'Development',
     createdAt: new Date('2024-01-14'),
-    mpid: "6b1b5f5d-d38b-4d66-9bdb-0d9255a3c15c"
+    mpid: "e1f8489d-1c80-43b4-ac4e-9a81b6e074d7"
   }]);
   const [tools, setTools] = useState<Tool[]>([{
     id: '1',
@@ -65,83 +65,83 @@ const KotoDashboard: React.FC = () => {
     logo: '🎨',
     category: 'Design',
     url: 'https://figma.com',
-    mpid: "e235b830-541f-49e2-be64-38d27aad8137"
+    mpid: "86f85afd-f74f-46b2-8f81-68dcb878ef7d"
   }, {
     id: '2',
     name: 'GitHub',
     logo: '💻',
     category: 'Development',
     url: 'https://github.com',
-    mpid: "806cf927-bfd0-4de1-ba02-b088b2d400bd"
+    mpid: "7b9a0abe-cb64-4637-9d9a-53f01aa42f2b"
   }, {
     id: '3',
     name: 'Notion',
     logo: '📝',
     category: 'Productivity',
     url: 'https://notion.so',
-    mpid: "1b152cd7-b879-44d2-a183-6b4888401203"
+    mpid: "0aa004b0-5877-4667-89cc-05bc23f279d5"
   }]);
   const categories: Category[] = [{
     id: 'all',
     name: 'All',
     count: prompts.length,
     color: 'bg-gray-100 text-gray-700',
-    mpid: "ad5e502c-f221-408e-831a-3ff2b376e41a"
+    mpid: "169ea97f-793a-418d-96fb-52f4485735f5"
   }, {
     id: 'writing',
     name: 'Writing',
     count: prompts.filter(p => p.category === 'Writing').length,
     color: 'bg-blue-100 text-blue-700',
-    mpid: "336825b8-433e-41ce-8800-6e79f27d0515"
+    mpid: "8bc99c37-5db7-40f6-a233-11c0bc21d250"
   }, {
     id: 'development',
     name: 'Development',
     count: prompts.filter(p => p.category === 'Development').length,
     color: 'bg-green-100 text-green-700',
-    mpid: "9b18802f-d8e7-48b5-bb9c-37249af642b1"
+    mpid: "3c14afac-cd4d-4f9b-ae9a-027764c9eb55"
   }, {
     id: 'design',
     name: 'Design',
     count: 3,
     color: 'bg-purple-100 text-purple-700',
-    mpid: "05ea39a2-56dc-4c2a-82bc-d6f9364191ae"
+    mpid: "4530e41e-f3bf-499c-b76a-0277272e58a4"
   }, {
     id: 'marketing',
     name: 'Marketing',
     count: 5,
     color: 'bg-orange-100 text-orange-700',
-    mpid: "48b9faf5-b57d-4687-9473-5ae4f175b5d5"
+    mpid: "3f8c9d52-3476-4422-b405-4bcae28d4c73"
   }, {
     id: 'productivity',
     name: 'Productivity',
     count: 2,
     color: 'bg-indigo-100 text-indigo-700',
-    mpid: "6eed443e-3507-4c79-b613-5005077740aa"
+    mpid: "fbb8b646-1ee5-4a2c-a175-a5d3e5550ae7"
   }];
   const toolCategories: Category[] = [{
     id: 'all',
     name: 'All',
     count: tools.length,
     color: 'bg-gray-100 text-gray-700',
-    mpid: "dfe70b38-0483-4994-a96e-13c198f272c2"
+    mpid: "1aa98ac2-a7d2-40e8-96f4-2c47c493a4c9"
   }, {
     id: 'design',
     name: 'Design',
     count: tools.filter(t => t.category === 'Design').length,
     color: 'bg-purple-100 text-purple-700',
-    mpid: "0173ae29-ba34-4e03-a5da-8c5db8dbbc63"
+    mpid: "293444d8-9a3a-4b0b-9811-54b6661df35d"
   }, {
     id: 'development',
     name: 'Development',
     count: tools.filter(t => t.category === 'Development').length,
     color: 'bg-green-100 text-green-700',
-    mpid: "9dccf147-637e-451c-affa-ca5a37ee92ba"
+    mpid: "4e18dbce-e2f9-493a-8ca5-34e9e09703d6"
   }, {
     id: 'productivity',
     name: 'Productivity',
     count: tools.filter(t => t.category === 'Productivity').length,
     color: 'bg-indigo-100 text-indigo-700',
-    mpid: "30933339-6a95-43b5-b1ff-aa702b6dcd5a"
+    mpid: "53701e64-6ebb-472f-9fc8-7134a6fb9bc6"
   }];
   const filteredPrompts = prompts.filter(prompt => {
     const matchesSearch = prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) || prompt.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));

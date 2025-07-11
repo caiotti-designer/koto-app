@@ -49,24 +49,24 @@ const Sidebar: React.FC<SidebarProps> = ({
     label: 'Prompts',
     icon: MessageSquare,
     tab: 'prompts' as const,
-    mpid: "7d313e07-6980-41f8-ac94-d0e2b1411a58"
+    mpid: "81661eff-e8cb-4f18-bcde-d904281f4222"
   }, {
     id: 'toolbox',
     label: 'Tool Box',
     icon: Wrench,
     tab: 'toolbox' as const,
-    mpid: "35d328bb-2621-43ec-a1ac-0f80d4717787"
+    mpid: "ab879740-8952-4bc1-9378-8550e58da5a3"
   }] as any[];
   const bottomItems = [{
     id: 'settings',
     label: 'Settings',
     icon: Settings,
-    mpid: "3d7e61ff-a5b2-4a5c-8334-303b1182ef99"
+    mpid: "fff4f01d-8b45-4f9e-9800-965186b403e7"
   }, {
     id: 'help',
     label: 'Help',
     icon: HelpCircle,
-    mpid: "7285715b-a0b8-4cd1-af27-d59c2aa99351"
+    mpid: "f1403d95-7479-4ee8-b094-08c0c21e02dc"
   }] as any[];
   const SidebarContent = () => <div className="h-full flex flex-col bg-white border-r border-gray-200" data-magicpath-id="0" data-magicpath-path="Sidebar.tsx">
       {/* Header */}
