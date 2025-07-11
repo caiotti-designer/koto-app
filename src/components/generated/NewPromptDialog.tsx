@@ -112,7 +112,7 @@ const NewPromptDialog: React.FC<NewPromptDialogProps> = ({
         opacity: 1
       }} exit={{
         opacity: 0
-      }} className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose} data-magicpath-id="2" data-magicpath-path="NewPromptDialog.tsx" />
+      }} className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} data-magicpath-id="2" data-magicpath-path="NewPromptDialog.tsx" />
 
           {/* Dialog */}
           <motion.div initial={{

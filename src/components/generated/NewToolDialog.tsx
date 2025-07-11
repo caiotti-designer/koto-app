@@ -34,42 +34,42 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
     id: 'smileys',
     name: 'Smileys',
     icon: '😀',
-    mpid: "a721f726-f033-477c-9515-6af860762c21"
+    mpid: "514f7433-fba7-4efa-9947-9724010e2e96"
   }, {
     id: 'people',
     name: 'People',
     icon: '👤',
-    mpid: "00ff88b6-8a37-44aa-ad0f-c23754ac9125"
+    mpid: "bf31c3e6-6f51-47a4-a4fa-961bec1c0a86"
   }, {
     id: 'animals',
     name: 'Animals',
     icon: '🐶',
-    mpid: "8d8bb16e-6758-4c0b-8606-fd14a73eef78"
+    mpid: "399165ff-8730-4cff-a5fe-aae3c1c2a2bb"
   }, {
     id: 'food',
     name: 'Food',
     icon: '🍎',
-    mpid: "f4a6e8b1-13d4-4d78-9cb4-78b05a2bedbe"
+    mpid: "00d5d0fe-fc48-4f9a-86f8-66faf73f15c3"
   }, {
     id: 'travel',
     name: 'Travel',
     icon: '✈️',
-    mpid: "14dc75b1-f7af-4a48-b6b1-611136a34c08"
+    mpid: "fd24f9f3-6254-4ec4-ba0a-263fb37c87b7"
   }, {
     id: 'activities',
     name: 'Activities',
     icon: '⚽',
-    mpid: "a8bb0665-6246-433d-8076-dedd6154253e"
+    mpid: "0cc857de-92cd-497d-9bf1-7c6f8edab2d6"
   }, {
     id: 'objects',
     name: 'Objects',
     icon: '💡',
-    mpid: "3c21f7c1-f39d-47ed-be3d-bda6e0257ac7"
+    mpid: "ba5ebf6b-f101-4e5d-943c-091288ba28c6"
   }, {
     id: 'symbols',
     name: 'Symbols',
     icon: '❤️',
-    mpid: "47e55f79-4faa-4b30-b7de-af38c93a4c8e"
+    mpid: "afc6a528-20b1-4aa6-a8ba-6554458b776f"
   }] as any[];
   const emojiData = {
     smileys: ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '😎', '🤓', '🧐'],
@@ -187,7 +187,7 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
   return <AnimatePresence data-magicpath-id="0" data-magicpath-path="NewToolDialog.tsx">
       {open && <div className="fixed inset-0 z-50 flex items-center justify-center p-4" data-magicpath-id="1" data-magicpath-path="NewToolDialog.tsx">
           {/* Backdrop */}
-          <motion.div className="absolute inset-0 bg-black bg-opacity-50" initial={{
+          <motion.div className="absolute inset-0 bg-black/40 backdrop-blur-sm" initial={{
         opacity: 0
       }} animate={{
         opacity: 1
@@ -301,56 +301,62 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
                 }} transition={{
                   type: "spring",
                   duration: 0.3
-                }} className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden z-50" data-magicpath-id="38" data-magicpath-path="NewToolDialog.tsx">
+                }} className="fixed inset-0 z-[60] flex items-center justify-center p-4" data-magicpath-id="38" data-magicpath-path="NewToolDialog.tsx">
+                        {/* Emoji picker backdrop */}
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowEmojiPicker(false)} data-magicpath-id="39" data-magicpath-path="NewToolDialog.tsx" />
+                        
+                        {/* Emoji picker content */}
+                        <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden w-full max-w-md max-h-[80vh]" data-magicpath-id="40" data-magicpath-path="NewToolDialog.tsx">
                         {/* Search Bar */}
-                        <div className="p-4 border-b border-gray-100 bg-gray-50" data-magicpath-id="39" data-magicpath-path="NewToolDialog.tsx">
-                          <div className="relative" data-magicpath-id="40" data-magicpath-path="NewToolDialog.tsx">
-                            <input type="text" placeholder="Search emojis..." value={emojiSearchQuery} onChange={e => setEmojiSearchQuery(e.target.value)} className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" data-magicpath-id="41" data-magicpath-path="NewToolDialog.tsx" />
-                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" data-magicpath-id="42" data-magicpath-path="NewToolDialog.tsx">
+                        <div className="p-4 border-b border-gray-100 bg-gray-50" data-magicpath-id="41" data-magicpath-path="NewToolDialog.tsx">
+                          <div className="relative" data-magicpath-id="42" data-magicpath-path="NewToolDialog.tsx">
+                            <input type="text" placeholder="Search emojis..." value={emojiSearchQuery} onChange={e => setEmojiSearchQuery(e.target.value)} className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" data-magicpath-id="43" data-magicpath-path="NewToolDialog.tsx" />
+                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" data-magicpath-id="44" data-magicpath-path="NewToolDialog.tsx">
                               🔍
                             </div>
                           </div>
                         </div>
 
                         {/* Category Tabs */}
-                        <div className="flex overflow-x-auto bg-gray-50 border-b border-gray-100" data-magicpath-id="43" data-magicpath-path="NewToolDialog.tsx">
-                          {emojiCategories.map(cat => <button key={cat.id} type="button" onClick={() => setSelectedEmojiCategory(cat.id)} className={`flex-shrink-0 px-4 py-3 text-sm font-medium transition-colors ${selectedEmojiCategory === cat.id ? 'text-blue-600 border-b-2 border-blue-600 bg-white' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`} data-magicpath-uuid={(cat as any)["mpid"] ?? "unsafe"} data-magicpath-id="44" data-magicpath-path="NewToolDialog.tsx">
-                              <span className="text-lg mr-1" data-magicpath-uuid={(cat as any)["mpid"] ?? "unsafe"} data-magicpath-field="icon:string" data-magicpath-id="45" data-magicpath-path="NewToolDialog.tsx">{cat.icon}</span>
-                              <span className="hidden sm:inline" data-magicpath-uuid={(cat as any)["mpid"] ?? "unsafe"} data-magicpath-field="name:string" data-magicpath-id="46" data-magicpath-path="NewToolDialog.tsx">{cat.name}</span>
+                        <div className="flex overflow-x-auto bg-gray-50 border-b border-gray-100" data-magicpath-id="45" data-magicpath-path="NewToolDialog.tsx">
+                          {emojiCategories.map(cat => <button key={cat.id} type="button" onClick={() => setSelectedEmojiCategory(cat.id)} className={`flex-shrink-0 px-4 py-3 text-sm font-medium transition-colors ${selectedEmojiCategory === cat.id ? 'text-blue-600 border-b-2 border-blue-600 bg-white' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`} data-magicpath-uuid={(cat as any)["mpid"] ?? "unsafe"} data-magicpath-id="46" data-magicpath-path="NewToolDialog.tsx">
+                              <span className="text-lg mr-1" data-magicpath-uuid={(cat as any)["mpid"] ?? "unsafe"} data-magicpath-field="icon:unknown" data-magicpath-id="47" data-magicpath-path="NewToolDialog.tsx">{cat.icon}</span>
+                              <span className="hidden sm:inline" data-magicpath-uuid={(cat as any)["mpid"] ?? "unsafe"} data-magicpath-field="name:unknown" data-magicpath-id="48" data-magicpath-path="NewToolDialog.tsx">{cat.name}</span>
                             </button>)}
                         </div>
 
                         {/* Emoji Grid */}
-                        <div className="p-4 max-h-64 overflow-y-auto" data-magicpath-id="47" data-magicpath-path="NewToolDialog.tsx">
-                          <div className="grid grid-cols-8 gap-2" data-magicpath-id="48" data-magicpath-path="NewToolDialog.tsx">
+                        <div className="p-4 max-h-64 overflow-y-auto" data-magicpath-id="49" data-magicpath-path="NewToolDialog.tsx">
+                          <div className="grid grid-cols-8 gap-2" data-magicpath-id="50" data-magicpath-path="NewToolDialog.tsx">
                             {filteredEmojis.map((emoji, index) => <motion.button key={`${emoji}-${index}`} type="button" onClick={() => {
-                        setLogo(emoji);
-                        setShowEmojiPicker(false);
-                      }} className="w-10 h-10 flex items-center justify-center text-xl hover:bg-gray-100 rounded-lg transition-colors" whileHover={{
-                        scale: 1.2
-                      }} whileTap={{
-                        scale: 0.9
-                      }} data-magicpath-uuid={(emoji as any)["mpid"] ?? "unsafe"} data-magicpath-id="49" data-magicpath-path="NewToolDialog.tsx">
+                          setLogo(emoji);
+                          setShowEmojiPicker(false);
+                        }} className="w-10 h-10 flex items-center justify-center text-xl hover:bg-gray-100 rounded-lg transition-colors" whileHover={{
+                          scale: 1.2
+                        }} whileTap={{
+                          scale: 0.9
+                        }} data-magicpath-uuid={(emoji as any)["mpid"] ?? "unsafe"} data-magicpath-id="51" data-magicpath-path="NewToolDialog.tsx">
                                 {emoji}
                               </motion.button>)}
                           </div>
-                          {filteredEmojis.length === 0 && <div className="text-center py-8 text-gray-500" data-magicpath-id="50" data-magicpath-path="NewToolDialog.tsx">
-                              <div className="text-2xl mb-2" data-magicpath-id="51" data-magicpath-path="NewToolDialog.tsx">🔍</div>
-                              <p className="text-sm" data-magicpath-id="52" data-magicpath-path="NewToolDialog.tsx">No emojis found</p>
+                          {filteredEmojis.length === 0 && <div className="text-center py-8 text-gray-500" data-magicpath-id="52" data-magicpath-path="NewToolDialog.tsx">
+                              <div className="text-2xl mb-2" data-magicpath-id="53" data-magicpath-path="NewToolDialog.tsx">🔍</div>
+                              <p className="text-sm" data-magicpath-id="54" data-magicpath-path="NewToolDialog.tsx">No emojis found</p>
                             </div>}
                         </div>
 
                         {/* Recently Used (placeholder) */}
-                        <div className="p-4 border-t border-gray-100 bg-gray-50" data-magicpath-id="53" data-magicpath-path="NewToolDialog.tsx">
-                          <p className="text-xs text-gray-500 mb-2" data-magicpath-id="54" data-magicpath-path="NewToolDialog.tsx">Recently Used</p>
-                          <div className="flex space-x-2" data-magicpath-id="55" data-magicpath-path="NewToolDialog.tsx">
+                        <div className="p-4 border-t border-gray-100 bg-gray-50" data-magicpath-id="55" data-magicpath-path="NewToolDialog.tsx">
+                          <p className="text-xs text-gray-500 mb-2" data-magicpath-id="56" data-magicpath-path="NewToolDialog.tsx">Recently Used</p>
+                          <div className="flex space-x-2" data-magicpath-id="57" data-magicpath-path="NewToolDialog.tsx">
                             {['🎨', '💻', '📱', '🚀', '💡', '🔧'].map((emoji, index) => <button key={index} type="button" onClick={() => {
-                        setLogo(emoji);
-                        setShowEmojiPicker(false);
-                      }} className="w-8 h-8 flex items-center justify-center text-lg hover:bg-gray-200 rounded-lg transition-colors" data-magicpath-id="56" data-magicpath-path="NewToolDialog.tsx">
+                          setLogo(emoji);
+                          setShowEmojiPicker(false);
+                        }} className="w-8 h-8 flex items-center justify-center text-lg hover:bg-gray-200 rounded-lg transition-colors" data-magicpath-id="58" data-magicpath-path="NewToolDialog.tsx">
                                 {emoji}
                               </button>)}
                           </div>
+                        </div>
                         </div>
                       </motion.div>}
                   </AnimatePresence>
@@ -358,23 +364,23 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
               </div>
 
               {/* Description Input */}
-              <div data-magicpath-id="57" data-magicpath-path="NewToolDialog.tsx">
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2" data-magicpath-id="58" data-magicpath-path="NewToolDialog.tsx">
+              <div data-magicpath-id="59" data-magicpath-path="NewToolDialog.tsx">
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2" data-magicpath-id="60" data-magicpath-path="NewToolDialog.tsx">
                   Description
                 </label>
-                <textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Brief description of what this tool does..." rows={3} className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none" data-magicpath-id="59" data-magicpath-path="NewToolDialog.tsx" />
+                <textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Brief description of what this tool does..." rows={3} className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none" data-magicpath-id="61" data-magicpath-path="NewToolDialog.tsx" />
               </div>
 
               {/* Actions */}
-              <div className="flex items-center justify-end space-x-3 pt-4" data-magicpath-id="60" data-magicpath-path="NewToolDialog.tsx">
-                <button type="button" onClick={handleClose} className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors" data-magicpath-id="61" data-magicpath-path="NewToolDialog.tsx">
+              <div className="flex items-center justify-end space-x-3 pt-4" data-magicpath-id="62" data-magicpath-path="NewToolDialog.tsx">
+                <button type="button" onClick={handleClose} className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors" data-magicpath-id="63" data-magicpath-path="NewToolDialog.tsx">
                   Cancel
                 </button>
                 <motion.button type="submit" disabled={!name || !url || !category || isAnalyzing} className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors" whileHover={{
               scale: 1.02
             }} whileTap={{
               scale: 0.98
-            }} data-magicpath-id="62" data-magicpath-path="NewToolDialog.tsx">
+            }} data-magicpath-id="64" data-magicpath-path="NewToolDialog.tsx">
                   Add Tool
                 </motion.button>
               </div>
