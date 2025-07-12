@@ -489,8 +489,13 @@ const KotoDashboard: React.FC = () => {
             }}>
                 {/* First Row - Centered Tabs */}
                 <div className="mb-8" data-magicpath-id="72" data-magicpath-path="KotoDashboard.tsx">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-1 inline-flex" data-magicpath-id="73" data-magicpath-path="KotoDashboard.tsx">
-                    <div className="flex space-x-1" data-magicpath-id="74" data-magicpath-path="KotoDashboard.tsx">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-1 inline-flex" data-magicpath-id="73" data-magicpath-path="KotoDashboard.tsx" style={{
+                  display: "flex",
+                  alignItems: "center"
+                }}>
+                    <div className="flex space-x-1" data-magicpath-id="74" data-magicpath-path="KotoDashboard.tsx" style={{
+                    alignItems: "center"
+                  }}>
                       <button onClick={() => setActiveTab('prompts')} className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`} data-magicpath-id="75" data-magicpath-path="KotoDashboard.tsx">
                         <MessageSquare className="w-4 h-4" data-magicpath-id="76" data-magicpath-path="KotoDashboard.tsx" />
                         <span data-magicpath-id="77" data-magicpath-path="KotoDashboard.tsx">Prompts</span>
@@ -506,7 +511,8 @@ const KotoDashboard: React.FC = () => {
                 {/* Second Row - Title and Actions */}
                 <div className="flex items-center justify-between w-full max-w-3xl" data-magicpath-id="81" data-magicpath-path="KotoDashboard.tsx" style={{
                 width: "1083px",
-                maxWidth: "1083px"
+                maxWidth: "1083px",
+                alignItems: "end"
               }}>
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6" data-magicpath-id="82" data-magicpath-path="KotoDashboard.tsx" style={{
                   display: "flex",
