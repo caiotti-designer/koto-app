@@ -482,7 +482,11 @@ const KotoDashboard: React.FC = () => {
         }} data-magicpath-id="68" data-magicpath-path="KotoDashboard.tsx">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-900/50 to-pink-900/50" data-magicpath-id="69" data-magicpath-path="KotoDashboard.tsx"></div>
             <div className="relative h-full flex items-center justify-center" data-magicpath-id="70" data-magicpath-path="KotoDashboard.tsx">
-              <div className="text-center text-white flex flex-col items-center justify-center w-full max-w-4xl px-8" data-magicpath-id="71" data-magicpath-path="KotoDashboard.tsx">
+              <div className="text-center text-white flex flex-col items-center justify-center w-full max-w-4xl px-8" data-magicpath-id="71" data-magicpath-path="KotoDashboard.tsx" style={{
+              display: "flex",
+              width: "1083px",
+              maxWidth: "1083px"
+            }}>
                 {/* First Row - Centered Tabs */}
                 <div className="mb-8" data-magicpath-id="72" data-magicpath-path="KotoDashboard.tsx">
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-1 inline-flex" data-magicpath-id="73" data-magicpath-path="KotoDashboard.tsx">
@@ -500,7 +504,10 @@ const KotoDashboard: React.FC = () => {
                 </div>
 
                 {/* Second Row - Title and Actions */}
-                <div className="flex items-center justify-between w-full max-w-3xl" data-magicpath-id="81" data-magicpath-path="KotoDashboard.tsx">
+                <div className="flex items-center justify-between w-full max-w-3xl" data-magicpath-id="81" data-magicpath-path="KotoDashboard.tsx" style={{
+                width: "1083px",
+                maxWidth: "1083px"
+              }}>
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6" data-magicpath-id="82" data-magicpath-path="KotoDashboard.tsx">
                     <div className="flex items-center space-x-3 mb-2" data-magicpath-id="83" data-magicpath-path="KotoDashboard.tsx">
                       <Palette className="w-6 h-6" data-magicpath-id="84" data-magicpath-path="KotoDashboard.tsx" />
