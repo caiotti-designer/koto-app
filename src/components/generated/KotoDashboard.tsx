@@ -50,7 +50,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-15'),
-    mpid: "d2fc22fe-342f-4349-b603-7275a0f85866"
+    mpid: "d7e159d5-791a-4ee3-b6e9-6facb37de582"
   }, {
     id: '2',
     title: 'Man and Leopard',
@@ -60,7 +60,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-14'),
-    mpid: "e4db7577-b1d2-47eb-b03b-4c2c1846bd94"
+    mpid: "a06fbf55-3cce-4133-80ec-03c20613c3ab"
   }, {
     id: '3',
     title: 'Girl and Owl',
@@ -70,7 +70,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1494790108755-2616c6d4e6e8?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-13'),
-    mpid: "d896e7cb-037c-4585-95a7-ec26b1ec8507"
+    mpid: "adfb766e-54ff-46fe-a545-29f9bd2eacb0"
   }, {
     id: '4',
     title: 'Boy and Falcon',
@@ -80,7 +80,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-12'),
-    mpid: "b6fff1a5-c6ff-41aa-a6e3-b6f00f2b2bca"
+    mpid: "08143775-2047-49d1-bd21-eaa45e275220"
   }, {
     id: '5',
     title: 'Creative Writing Assistant',
@@ -89,7 +89,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-11'),
-    mpid: "04369376-e6e7-4be1-8840-8a65f3570289"
+    mpid: "e2f0568c-e381-4460-bf57-4ddb3deba8cf"
   }, {
     id: '6',
     title: 'Creative Writing Assistant',
@@ -98,7 +98,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-10'),
-    mpid: "a922e269-e0c1-4eae-a3c4-89c185d599bd"
+    mpid: "ce21f6fb-6b0b-440c-a1fe-ac9a57675836"
   }, {
     id: '7',
     title: 'Creative Writing Assistant',
@@ -107,7 +107,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-09'),
-    mpid: "d74997c5-59b8-400e-afd8-9e8e7599744a"
+    mpid: "4cf14877-f6a0-458c-a69f-7331cc00522d"
   }, {
     id: '8',
     title: 'Creative Writing Assistant',
@@ -116,136 +116,136 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-08'),
-    mpid: "63a5447f-59fd-4d22-afd5-241d44ca1848"
+    mpid: "763acf33-9fec-4f88-b692-690797c81308"
   }]);
   const [tools, setTools] = useState<Tool[]>([{
     id: '1',
     name: 'Chat-GPT',
     category: 'AI Tools',
     url: 'https://chat.openai.com',
-    mpid: "1beb6a3c-6d03-4a61-b790-1dbc3252cfcc"
+    mpid: "86b47b85-466e-471f-9a2e-34b3796b6538"
   }, {
     id: '2',
     name: 'Claude',
     category: 'AI Tools',
     url: 'https://claude.ai',
-    mpid: "4784ff0f-b6da-4bb3-9d77-f46af2fdf21e"
+    mpid: "33301b08-60f4-4333-9279-5ee1e057f5f4"
   }, {
     id: '3',
     name: 'DeepSeek',
     category: 'AI Tools',
     url: 'https://deepseek.com',
-    mpid: "570a431e-361b-44a9-8705-9ae592109454"
+    mpid: "b497c7c8-dbb1-4cc3-b9bc-5fbce5bb9210"
   }, {
     id: '4',
     name: 'Grok',
     category: 'AI Tools',
     url: 'https://grok.x.ai',
-    mpid: "475c7070-30ed-4980-9ea4-cdc8d14a485b"
+    mpid: "4f23e1ce-36e4-46c3-afe9-8680defa4fa7"
   }]);
   const [categories, setCategories] = useState<Category[]>([{
     id: 'midjourney',
     name: 'Midjourney',
     count: 0,
     icon: Palette,
-    mpid: "a1e4d119-b882-4325-8c8d-5171f116f950"
+    mpid: "6383c7b3-6642-4ba0-9dc9-fd7715ead48e"
   }, {
     id: 'chat-gpt',
     name: 'Chat-GPT',
     count: 0,
     icon: MessageSquare,
-    mpid: "960f90eb-4d8b-4676-b549-8ea1387efbcc"
+    mpid: "738fbe18-f66e-4e99-a153-d4b2816f2a86"
   }, {
     id: 'development',
     name: 'Development',
     count: 0,
     icon: Code,
-    mpid: "8b54d1b7-7a55-4d7e-aade-54b9d8ccdebd"
+    mpid: "455e3d34-5d82-42c8-a911-b06a21472af9"
   }, {
     id: 'design',
     name: 'Design',
     count: 0,
     icon: PenTool,
-    mpid: "cebb2292-6cf6-4a88-958b-0aeccd7ea7bc"
+    mpid: "595f1045-c891-4acb-84be-037eebb2356f"
   }, {
     id: 'business',
     name: 'Business',
     count: 0,
     icon: Briefcase,
-    mpid: "3e2bf52a-40f7-406a-8cb3-d3e4fd21d19f"
+    mpid: "5e44600d-3c02-4b0f-a96c-cd575464ad9a"
   }, {
     id: 'marketing',
     name: 'Marketing',
     count: 0,
     icon: Target,
-    mpid: "c9af98e5-02ff-4e67-a0ae-35b1cbce68c4"
+    mpid: "40d2621f-e8c6-4877-8f00-043a41e842ef"
   }, {
     id: 'sales',
     name: 'Sales',
     count: 0,
     icon: BarChart3,
-    mpid: "513f36d1-1a76-452f-9bab-eb157aeca597"
+    mpid: "b3f18bf6-35de-4ec4-bb51-0fd716ae422a"
   }, {
     id: 'customer-support',
     name: 'Customer Support',
     count: 0,
     icon: Users,
-    mpid: "26498e41-8f3c-4e14-b666-fc76f724c143"
+    mpid: "4a04e06f-21d4-447b-bc35-dad3bdf9905e"
   }, {
     id: 'research',
     name: 'Research',
     count: 0,
     icon: Search,
-    mpid: "96cdc49c-f716-487d-9063-aadb06213f8c"
+    mpid: "d7075653-5c74-4cf2-a517-77a83929b89f"
   }, {
     id: 'writing',
     name: 'Writing',
     count: 0,
     icon: PenTool,
-    mpid: "74ca4c82-8843-4a96-a7cc-85fbf0302924"
+    mpid: "0b2a78d3-ec75-4994-addc-7e8c972c5b2f"
   }]);
   const [toolCategories, setToolCategories] = useState<Category[]>([{
     id: 'all-tools',
     name: 'All Tools',
     count: 0,
     icon: Globe,
-    mpid: "a4e94d52-531c-42d7-9519-3ecc1c9d20b7"
+    mpid: "efabd806-3f58-41c0-9b31-eb62ef638a36"
   }, {
     id: 'ai-tools',
     name: 'AI Tools',
     count: 0,
     icon: Zap,
-    mpid: "8a78dc96-f888-47ea-bea2-674d2ff19841"
+    mpid: "633788dd-0bca-4e25-9d83-63079b543d1c"
   }, {
     id: 'ui-design',
     name: 'UI Design',
     count: 0,
     icon: Figma,
-    mpid: "25ed65ce-5e1f-4f27-9f95-a7b7f5e32301"
+    mpid: "3e2c483d-794d-403c-aad4-8cb8b350e666"
   }, {
     id: 'ux-design',
     name: 'UX Design',
     count: 0,
     icon: Users,
-    mpid: "dfc65de0-8180-452b-a07b-8e401c56ef7e"
+    mpid: "06ece9ae-757e-4b64-9439-6e0518e0db4e"
   }, {
     id: 'design',
     name: 'Design',
     count: 0,
     icon: PenTool,
-    mpid: "d5fb322a-f359-4a5d-8a56-24441d9dbfaf"
+    mpid: "fee0dd73-667e-4c97-a04e-0e5e3e9f61c2"
   }, {
     id: 'figma',
     name: 'Figma',
     count: 0,
     icon: Figma,
-    mpid: "d0319e61-3201-4c5c-aa57-4f97e9bb24b9"
+    mpid: "4219ab17-0e49-45f1-bbe5-d7065b9ccb3d"
   }, {
     id: 'crypto',
     name: 'Crypto',
     count: 0,
     icon: Cpu,
-    mpid: "ecd0b32d-ac6d-451f-b9c6-c7f7593c6503"
+    mpid: "76ecbe51-32f0-4df4-997d-63ad5e4db599"
   }]);
 
   // Update category counts dynamically
@@ -417,9 +417,9 @@ const KotoDashboard: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0" data-magicpath-id="43" data-magicpath-path="KotoDashboard.tsx">
         {/* Header */}
-        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4" data-magicpath-id="44" data-magicpath-path="KotoDashboard.tsx" style={{
+        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4" style={{
         display: "none"
-      }}>
+      }} data-magicpath-id="44" data-magicpath-path="KotoDashboard.tsx">
           <div className="flex items-center justify-between" data-magicpath-id="45" data-magicpath-path="KotoDashboard.tsx">
             <div className="flex items-center space-x-4" data-magicpath-id="46" data-magicpath-path="KotoDashboard.tsx">
               <button onClick={() => setMobileMenuOpen(true)} className="md:hidden p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" data-magicpath-id="47" data-magicpath-path="KotoDashboard.tsx">
@@ -453,9 +453,9 @@ const KotoDashboard: React.FC = () => {
         </header>
 
         {/* Tab Navigation */}
-        <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4" data-magicpath-id="57" data-magicpath-path="KotoDashboard.tsx" style={{
+        <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4" style={{
         display: "none"
-      }}>
+      }} data-magicpath-id="57" data-magicpath-path="KotoDashboard.tsx">
           <div className="flex items-center justify-center" data-magicpath-id="58" data-magicpath-path="KotoDashboard.tsx">
             <div className="bg-slate-100 dark:bg-slate-700 p-1 rounded-lg" data-magicpath-id="59" data-magicpath-path="KotoDashboard.tsx">
               <div className="flex space-x-1" data-magicpath-id="60" data-magicpath-path="KotoDashboard.tsx">
@@ -482,11 +482,18 @@ const KotoDashboard: React.FC = () => {
         }} data-magicpath-id="68" data-magicpath-path="KotoDashboard.tsx">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-900/50 to-pink-900/50" data-magicpath-id="69" data-magicpath-path="KotoDashboard.tsx"></div>
             <div className="relative h-full flex items-center justify-center" data-magicpath-id="70" data-magicpath-path="KotoDashboard.tsx">
-              <div className="text-center text-white" data-magicpath-id="71" data-magicpath-path="KotoDashboard.tsx" style={{
+              <div className="text-center text-white" style={{
               display: "flex",
-              flexDirection: "column"
-            }}>
-                <div className="mb-6" data-magicpath-id="72" data-magicpath-path="KotoDashboard.tsx">
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+              maxWidth: "1200px",
+              padding: "0 2rem"
+            }} data-magicpath-id="71" data-magicpath-path="KotoDashboard.tsx">
+                <div className="mb-6" style={{
+                marginBottom: 0
+              }} data-magicpath-id="72" data-magicpath-path="KotoDashboard.tsx">
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-1 inline-flex" data-magicpath-id="73" data-magicpath-path="KotoDashboard.tsx">
                     <div className="flex space-x-1" data-magicpath-id="74" data-magicpath-path="KotoDashboard.tsx">
                       <button onClick={() => setActiveTab('prompts')} className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`} data-magicpath-id="75" data-magicpath-path="KotoDashboard.tsx">
@@ -501,11 +508,13 @@ const KotoDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-md mx-auto" data-magicpath-id="81" data-magicpath-path="KotoDashboard.tsx" style={{
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-md mx-auto" style={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "start"
-              }}>
+                alignItems: "start",
+                margin: 0,
+                maxWidth: "none"
+              }} data-magicpath-id="81" data-magicpath-path="KotoDashboard.tsx">
                   <div className="flex items-center space-x-3 mb-2" data-magicpath-id="82" data-magicpath-path="KotoDashboard.tsx">
                     <Palette className="w-6 h-6" data-magicpath-id="83" data-magicpath-path="KotoDashboard.tsx" />
                     <h1 className="text-2xl font-bold" data-magicpath-id="84" data-magicpath-path="KotoDashboard.tsx">
@@ -517,7 +526,9 @@ const KotoDashboard: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="mt-6 flex items-center justify-center space-x-4" data-magicpath-id="86" data-magicpath-path="KotoDashboard.tsx">
+                <div className="mt-6 flex items-center justify-center space-x-4" style={{
+                marginTop: 0
+              }} data-magicpath-id="86" data-magicpath-path="KotoDashboard.tsx">
                   <motion.button onClick={() => activeTab === 'prompts' ? setShowNewPromptDialog(true) : setShowNewToolDialog(true)} whileHover={{
                   scale: 1.05
                 }} whileTap={{
