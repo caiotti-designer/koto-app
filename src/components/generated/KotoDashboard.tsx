@@ -596,7 +596,9 @@ const KotoDashboard: React.FC = () => {
                           <h3 className="font-semibold text-slate-900 dark:text-white text-lg leading-tight" data-magicpath-uuid={(prompt as any)["mpid"] ?? "unsafe"} data-magicpath-field="title:unknown" data-magicpath-id="111" data-magicpath-path="KotoDashboard.tsx">
                             {prompt.title}
                           </h3>
-                          <span className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-full ml-2 flex-shrink-0" data-magicpath-uuid={(prompt as any)["mpid"] ?? "unsafe"} data-magicpath-field="model:unknown" data-magicpath-id="112" data-magicpath-path="KotoDashboard.tsx">
+                          <span className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-full ml-2 flex-shrink-0" data-magicpath-uuid={(prompt as any)["mpid"] ?? "unsafe"} data-magicpath-field="model:unknown" data-magicpath-id="112" data-magicpath-path="KotoDashboard.tsx" style={{
+                      display: "none"
+                    }}>
                             {prompt.model}
                           </span>
                         </div>
