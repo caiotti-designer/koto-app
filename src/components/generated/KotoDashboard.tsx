@@ -417,7 +417,9 @@ const KotoDashboard: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0" data-magicpath-id="43" data-magicpath-path="KotoDashboard.tsx">
         {/* Header */}
-        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4" data-magicpath-id="44" data-magicpath-path="KotoDashboard.tsx">
+        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4" data-magicpath-id="44" data-magicpath-path="KotoDashboard.tsx" style={{
+        display: "none"
+      }}>
           <div className="flex items-center justify-between" data-magicpath-id="45" data-magicpath-path="KotoDashboard.tsx">
             <div className="flex items-center space-x-4" data-magicpath-id="46" data-magicpath-path="KotoDashboard.tsx">
               <button onClick={() => setMobileMenuOpen(true)} className="md:hidden p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" data-magicpath-id="47" data-magicpath-path="KotoDashboard.tsx">
@@ -451,7 +453,9 @@ const KotoDashboard: React.FC = () => {
         </header>
 
         {/* Tab Navigation */}
-        <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4" data-magicpath-id="57" data-magicpath-path="KotoDashboard.tsx">
+        <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4" data-magicpath-id="57" data-magicpath-path="KotoDashboard.tsx" style={{
+        display: "none"
+      }}>
           <div className="flex items-center justify-center" data-magicpath-id="58" data-magicpath-path="KotoDashboard.tsx">
             <div className="bg-slate-100 dark:bg-slate-700 p-1 rounded-lg" data-magicpath-id="59" data-magicpath-path="KotoDashboard.tsx">
               <div className="flex space-x-1" data-magicpath-id="60" data-magicpath-path="KotoDashboard.tsx">
@@ -478,7 +482,10 @@ const KotoDashboard: React.FC = () => {
         }} data-magicpath-id="68" data-magicpath-path="KotoDashboard.tsx">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-900/50 to-pink-900/50" data-magicpath-id="69" data-magicpath-path="KotoDashboard.tsx"></div>
             <div className="relative h-full flex items-center justify-center" data-magicpath-id="70" data-magicpath-path="KotoDashboard.tsx">
-              <div className="text-center text-white" data-magicpath-id="71" data-magicpath-path="KotoDashboard.tsx">
+              <div className="text-center text-white" data-magicpath-id="71" data-magicpath-path="KotoDashboard.tsx" style={{
+              display: "flex",
+              flexDirection: "column"
+            }}>
                 <div className="mb-6" data-magicpath-id="72" data-magicpath-path="KotoDashboard.tsx">
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-1 inline-flex" data-magicpath-id="73" data-magicpath-path="KotoDashboard.tsx">
                     <div className="flex space-x-1" data-magicpath-id="74" data-magicpath-path="KotoDashboard.tsx">
@@ -494,7 +501,11 @@ const KotoDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-md mx-auto" data-magicpath-id="81" data-magicpath-path="KotoDashboard.tsx">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-md mx-auto" data-magicpath-id="81" data-magicpath-path="KotoDashboard.tsx" style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "start"
+              }}>
                   <div className="flex items-center space-x-3 mb-2" data-magicpath-id="82" data-magicpath-path="KotoDashboard.tsx">
                     <Palette className="w-6 h-6" data-magicpath-id="83" data-magicpath-path="KotoDashboard.tsx" />
                     <h1 className="text-2xl font-bold" data-magicpath-id="84" data-magicpath-path="KotoDashboard.tsx">
