@@ -508,7 +508,13 @@ const KotoDashboard: React.FC = () => {
                 width: "1083px",
                 maxWidth: "1083px"
               }}>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6" data-magicpath-id="82" data-magicpath-path="KotoDashboard.tsx">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6" data-magicpath-id="82" data-magicpath-path="KotoDashboard.tsx" style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
+                  paddingTop: "16px",
+                  paddingBottom: "16px"
+                }}>
                     <div className="flex items-center space-x-3 mb-2" data-magicpath-id="83" data-magicpath-path="KotoDashboard.tsx">
                       <Palette className="w-6 h-6" data-magicpath-id="84" data-magicpath-path="KotoDashboard.tsx" />
                       <h1 className="text-2xl font-bold" data-magicpath-id="85" data-magicpath-path="KotoDashboard.tsx">
