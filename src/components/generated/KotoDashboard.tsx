@@ -50,7 +50,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-15'),
-    mpid: "8bc5961c-93d5-4269-9289-0132f2ecadfb"
+    mpid: "d2fc22fe-342f-4349-b603-7275a0f85866"
   }, {
     id: '2',
     title: 'Man and Leopard',
@@ -60,7 +60,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-14'),
-    mpid: "a4bfaa2d-5dd0-4f3c-bfcd-e97fae7fac7c"
+    mpid: "e4db7577-b1d2-47eb-b03b-4c2c1846bd94"
   }, {
     id: '3',
     title: 'Girl and Owl',
@@ -70,7 +70,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1494790108755-2616c6d4e6e8?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-13'),
-    mpid: "60c1615d-f9f5-4c2c-a49d-17d8ef884213"
+    mpid: "d896e7cb-037c-4585-95a7-ec26b1ec8507"
   }, {
     id: '4',
     title: 'Boy and Falcon',
@@ -80,7 +80,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-12'),
-    mpid: "4316673e-3f82-46c4-8f26-7dc312c874d5"
+    mpid: "b6fff1a5-c6ff-41aa-a6e3-b6f00f2b2bca"
   }, {
     id: '5',
     title: 'Creative Writing Assistant',
@@ -89,7 +89,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-11'),
-    mpid: "36708e3f-857d-45c0-9e70-55be5a567fb6"
+    mpid: "04369376-e6e7-4be1-8840-8a65f3570289"
   }, {
     id: '6',
     title: 'Creative Writing Assistant',
@@ -98,7 +98,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-10'),
-    mpid: "848953b6-431e-4b3e-ad59-02053663ac1b"
+    mpid: "a922e269-e0c1-4eae-a3c4-89c185d599bd"
   }, {
     id: '7',
     title: 'Creative Writing Assistant',
@@ -107,7 +107,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-09'),
-    mpid: "5b1de982-fe15-47fb-988b-14ac174fd159"
+    mpid: "d74997c5-59b8-400e-afd8-9e8e7599744a"
   }, {
     id: '8',
     title: 'Creative Writing Assistant',
@@ -116,136 +116,136 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-08'),
-    mpid: "0d6e36a1-caae-452d-965e-d4bb7be87e53"
+    mpid: "63a5447f-59fd-4d22-afd5-241d44ca1848"
   }]);
   const [tools, setTools] = useState<Tool[]>([{
     id: '1',
     name: 'Chat-GPT',
     category: 'AI Tools',
     url: 'https://chat.openai.com',
-    mpid: "3d2e7515-92a6-48d0-ae64-44452944742a"
+    mpid: "1beb6a3c-6d03-4a61-b790-1dbc3252cfcc"
   }, {
     id: '2',
     name: 'Claude',
     category: 'AI Tools',
     url: 'https://claude.ai',
-    mpid: "3ec4c74c-9f1d-47fb-a714-b3696404650a"
+    mpid: "4784ff0f-b6da-4bb3-9d77-f46af2fdf21e"
   }, {
     id: '3',
     name: 'DeepSeek',
     category: 'AI Tools',
     url: 'https://deepseek.com',
-    mpid: "49a27841-1a4c-44c7-ac77-e2079c590c9a"
+    mpid: "570a431e-361b-44a9-8705-9ae592109454"
   }, {
     id: '4',
     name: 'Grok',
     category: 'AI Tools',
     url: 'https://grok.x.ai',
-    mpid: "bb027053-f900-461d-8527-76b1bab50109"
+    mpid: "475c7070-30ed-4980-9ea4-cdc8d14a485b"
   }]);
   const [categories, setCategories] = useState<Category[]>([{
     id: 'midjourney',
     name: 'Midjourney',
     count: 0,
     icon: Palette,
-    mpid: "a43f38e8-be2e-47c8-bb13-d568762d74d0"
+    mpid: "a1e4d119-b882-4325-8c8d-5171f116f950"
   }, {
     id: 'chat-gpt',
     name: 'Chat-GPT',
     count: 0,
     icon: MessageSquare,
-    mpid: "c0767307-cc4e-458c-ae57-edce24b46081"
+    mpid: "960f90eb-4d8b-4676-b549-8ea1387efbcc"
   }, {
     id: 'development',
     name: 'Development',
     count: 0,
     icon: Code,
-    mpid: "297a5a40-3182-42a4-a68e-ba293495553c"
+    mpid: "8b54d1b7-7a55-4d7e-aade-54b9d8ccdebd"
   }, {
     id: 'design',
     name: 'Design',
     count: 0,
     icon: PenTool,
-    mpid: "6922c6f2-fd1f-4f78-8de8-4fa5c3d8e533"
+    mpid: "cebb2292-6cf6-4a88-958b-0aeccd7ea7bc"
   }, {
     id: 'business',
     name: 'Business',
     count: 0,
     icon: Briefcase,
-    mpid: "bd6657ad-0e9c-4c61-b9f9-5d967188f0e6"
+    mpid: "3e2bf52a-40f7-406a-8cb3-d3e4fd21d19f"
   }, {
     id: 'marketing',
     name: 'Marketing',
     count: 0,
     icon: Target,
-    mpid: "00782b36-302b-4b1c-9cb1-2b9e3ed564a8"
+    mpid: "c9af98e5-02ff-4e67-a0ae-35b1cbce68c4"
   }, {
     id: 'sales',
     name: 'Sales',
     count: 0,
     icon: BarChart3,
-    mpid: "bea07896-8b0c-4ab3-8fea-7f5ed649ac9b"
+    mpid: "513f36d1-1a76-452f-9bab-eb157aeca597"
   }, {
     id: 'customer-support',
     name: 'Customer Support',
     count: 0,
     icon: Users,
-    mpid: "52a222bf-6c17-4efd-af52-c6e4ab6d0eee"
+    mpid: "26498e41-8f3c-4e14-b666-fc76f724c143"
   }, {
     id: 'research',
     name: 'Research',
     count: 0,
     icon: Search,
-    mpid: "20449e7a-d034-4ad3-90b1-2e9afab032cf"
+    mpid: "96cdc49c-f716-487d-9063-aadb06213f8c"
   }, {
     id: 'writing',
     name: 'Writing',
     count: 0,
     icon: PenTool,
-    mpid: "0ad8a75c-0deb-4543-8813-51ac9612d158"
+    mpid: "74ca4c82-8843-4a96-a7cc-85fbf0302924"
   }]);
   const [toolCategories, setToolCategories] = useState<Category[]>([{
     id: 'all-tools',
     name: 'All Tools',
     count: 0,
     icon: Globe,
-    mpid: "966c6acb-1d0b-4459-8f2a-87984774c859"
+    mpid: "a4e94d52-531c-42d7-9519-3ecc1c9d20b7"
   }, {
     id: 'ai-tools',
     name: 'AI Tools',
     count: 0,
     icon: Zap,
-    mpid: "131a26d0-11c6-4ef5-95e6-2d5f8824a5b0"
+    mpid: "8a78dc96-f888-47ea-bea2-674d2ff19841"
   }, {
     id: 'ui-design',
     name: 'UI Design',
     count: 0,
     icon: Figma,
-    mpid: "3f2eafce-326d-400e-940f-c20c8025a15f"
+    mpid: "25ed65ce-5e1f-4f27-9f95-a7b7f5e32301"
   }, {
     id: 'ux-design',
     name: 'UX Design',
     count: 0,
     icon: Users,
-    mpid: "91191eb5-598a-412c-828c-f6ed85574830"
+    mpid: "dfc65de0-8180-452b-a07b-8e401c56ef7e"
   }, {
     id: 'design',
     name: 'Design',
     count: 0,
     icon: PenTool,
-    mpid: "01340e27-547c-4c15-86b9-7ef51ce70307"
+    mpid: "d5fb322a-f359-4a5d-8a56-24441d9dbfaf"
   }, {
     id: 'figma',
     name: 'Figma',
     count: 0,
     icon: Figma,
-    mpid: "291dd0c8-6c22-44e0-95d9-c28c7af5ad44"
+    mpid: "d0319e61-3201-4c5c-aa57-4f97e9bb24b9"
   }, {
     id: 'crypto',
     name: 'Crypto',
     count: 0,
     icon: Cpu,
-    mpid: "67ba261e-1f9f-4590-aa89-21d8c459e6ee"
+    mpid: "ecd0b32d-ac6d-451f-b9c6-c7f7593c6503"
   }]);
 
   // Update category counts dynamically
@@ -291,7 +291,9 @@ const KotoDashboard: React.FC = () => {
     setNewTagName('');
     setShowAddTagDialog(false);
   };
-  return <div className={`h-screen w-full ${darkMode ? 'dark' : ''} bg-slate-50 dark:bg-slate-900 flex overflow-hidden transition-colors duration-300`} data-magicpath-id="0" data-magicpath-path="KotoDashboard.tsx">
+  return <div className={`h-screen w-full ${darkMode ? 'dark' : ''} bg-slate-50 dark:bg-slate-900 flex overflow-hidden transition-colors duration-300`} style={{
+    fontFamily: 'Space Grotesk, sans-serif'
+  }} data-magicpath-id="0" data-magicpath-path="KotoDashboard.tsx">
       {/* Sidebar */}
       <motion.aside animate={{
       width: sidebarCollapsed ? 80 : 280
