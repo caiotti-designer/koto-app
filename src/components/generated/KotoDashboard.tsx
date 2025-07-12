@@ -484,8 +484,8 @@ const KotoDashboard: React.FC = () => {
             <div className="relative h-full flex items-center justify-center" data-magicpath-id="70" data-magicpath-path="KotoDashboard.tsx">
               <div className="text-center text-white flex flex-col items-center justify-center w-full max-w-4xl px-8" data-magicpath-id="71" data-magicpath-path="KotoDashboard.tsx" style={{
               display: "flex",
-              width: "1083px",
-              maxWidth: "1083px"
+              width: "96%",
+              maxWidth: "96%"
             }}>
                 {/* First Row - Centered Tabs */}
                 <div className="mb-8" data-magicpath-id="72" data-magicpath-path="KotoDashboard.tsx">
@@ -510,9 +510,9 @@ const KotoDashboard: React.FC = () => {
 
                 {/* Second Row - Title and Actions */}
                 <div className="flex items-center justify-between w-full max-w-3xl" data-magicpath-id="81" data-magicpath-path="KotoDashboard.tsx" style={{
-                width: "1083px",
-                maxWidth: "1083px",
-                alignItems: "end"
+                alignItems: "end",
+                width: "100%",
+                maxWidth: "100%"
               }}>
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6" data-magicpath-id="82" data-magicpath-path="KotoDashboard.tsx" style={{
                   display: "flex",
