@@ -548,7 +548,7 @@ const KotoDashboard: React.FC = () => {
                     scale: 0.95
                   }} className="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-medium flex items-center space-x-2 backdrop-blur-sm transition-colors" data-magicpath-id="91" data-magicpath-path="KotoDashboard.tsx">
                       <Plus className="w-4 h-4" data-magicpath-id="92" data-magicpath-path="KotoDashboard.tsx" />
-                      <span data-magicpath-id="93" data-magicpath-path="KotoDashboard.tsx">Add Tag</span>
+                      <span data-magicpath-id="93" data-magicpath-path="KotoDashboard.tsx">Add Project</span>
                     </motion.button>
                   </div>
                 </div>
