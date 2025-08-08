@@ -53,91 +53,91 @@ interface Project {
 const iconOptions = [{
   name: 'Smile',
   icon: Smile,
-  mpid: "ca5de4c5-a5a5-495a-89d4-039cc90e9f67"
+  mpid: "93beda6e-8d05-4e4b-afb5-ebc0a81f36d8"
 }, {
   name: 'Heart',
   icon: Heart,
-  mpid: "46699cf5-c47e-42ab-8929-564c85011024"
+  mpid: "e2d697e7-6afb-42dd-a05f-d6c0497e8bbd"
 }, {
   name: 'Star',
   icon: Star,
-  mpid: "d60a11f0-62f3-46fa-bd05-0b7fd6a79b83"
+  mpid: "4c002c2e-dd27-4ee5-81e9-eda2873047f8"
 }, {
   name: 'Zap',
   icon: ZapIcon,
-  mpid: "906c028d-aea5-43bd-8cc4-6314cc1a5448"
+  mpid: "87c9f2e8-2951-4aaf-a08c-69cc775c23c3"
 }, {
   name: 'Coffee',
   icon: Coffee,
-  mpid: "4da8f956-6729-420d-8771-83a9d768f170"
+  mpid: "d7d2b51a-d1fe-4696-af20-1d05bfc65022"
 }, {
   name: 'Music',
   icon: Music,
-  mpid: "76ef5359-904f-47f9-b97f-0822f7605682"
+  mpid: "b2a248f6-88bd-4b4c-9a6a-053dfa4d77cb"
 }, {
   name: 'Book',
   icon: Book,
-  mpid: "31e80844-2efa-44b3-9bd0-9bbc01ec4834"
+  mpid: "b473d01d-d841-4ea8-a56f-565b9709fd6d"
 }, {
   name: 'Gamepad',
   icon: Gamepad2,
-  mpid: "99b83944-963e-44e0-b201-1a4ad326512d"
+  mpid: "7bf783e5-ce2e-49a4-94f9-f6803611402d"
 }, {
   name: 'Laptop',
   icon: Laptop,
-  mpid: "1cb3bd55-e448-4467-a37a-067cea29f0bf"
+  mpid: "a160d95b-9739-4740-90f5-4716d1adef5e"
 }, {
   name: 'Smartphone',
   icon: Smartphone,
-  mpid: "b267c93d-fe6d-478e-9afc-c4c7c205f69a"
+  mpid: "9efa6be4-3406-4894-955a-1e7c4dab20a5"
 }, {
   name: 'Headphones',
   icon: Headphones,
-  mpid: "c133afba-7003-4c39-839c-49d5f49cb340"
+  mpid: "e862823d-7bd5-4853-8d49-0b6945c49b1e"
 }, {
   name: 'Car',
   icon: Car,
-  mpid: "b8dbceb0-17d7-470b-8857-fd63e8bc7108"
+  mpid: "c8d42a27-893c-4e32-9bbc-a8d9847cb235"
 }, {
   name: 'Home',
   icon: Home,
-  mpid: "57b9afdb-9fe1-4cfe-88a9-b68064e75dce"
+  mpid: "8180bbcf-0ed2-4fe6-ab1d-e847e9ddc916"
 }, {
   name: 'Plane',
   icon: Plane,
-  mpid: "fa4d8c82-4db0-4ba3-9c11-f17e032535f4"
+  mpid: "cf9f6d82-da7f-4331-a0f1-f73ef0c4d90b"
 }, {
   name: 'Gift',
   icon: Gift,
-  mpid: "3dcf37a8-cb05-4c73-88e0-d29b9ccac17d"
+  mpid: "8c2006eb-9970-4645-8301-9d17d3343798"
 }, {
   name: 'Shopping',
   icon: ShoppingBag,
-  mpid: "9aef0286-c9e0-4cda-b0f7-7763a34e4f9a"
+  mpid: "dd145a04-3637-4025-a98d-c5834199d523"
 }, {
   name: 'Card',
   icon: CreditCard,
-  mpid: "bbc63114-de41-4ef4-a5c2-9eefdc98d4db"
+  mpid: "df36a7c4-5b0b-41e2-af7b-fb423cb7aa98"
 }, {
   name: 'Mail',
   icon: Mail,
-  mpid: "3166fe58-86e4-4ee9-b95e-45069b3cc148"
+  mpid: "48a0536f-3dcc-48cc-b19c-7edcdddb04a5"
 }, {
   name: 'Phone',
   icon: Phone,
-  mpid: "d8ed43b0-2534-4a8c-b053-50706dd698c5"
+  mpid: "01991ece-a26e-4de2-bf82-f903dc5989bc"
 }, {
   name: 'Map',
   icon: MapPin,
-  mpid: "42a329b7-caf1-461b-a032-97a5d2a455a4"
+  mpid: "fab0f059-edf2-4c80-ac7c-e5036778a47e"
 }, {
   name: 'Calendar',
   icon: Calendar,
-  mpid: "50d9ba97-c625-4ee8-a15b-17ec3deeb3d3"
+  mpid: "0f536b2a-d3cc-4752-8755-81be25b8802d"
 }, {
   name: 'Clock',
   icon: Clock,
-  mpid: "06baed1f-a9ff-4743-9dfc-dc4b935e35d2"
+  mpid: "5747f6d3-28be-44c9-bde0-7c85053faf97"
 }] as any[];
 const KotoDashboard: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -191,7 +191,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-15'),
-    mpid: "2c8e8b83-8a10-4d02-8664-43d683d5d1be"
+    mpid: "e1b00b22-e3cb-4f23-80b3-d0b2baf774b8"
   }, {
     id: '2',
     title: 'Man and Leopard',
@@ -201,7 +201,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-14'),
-    mpid: "fd2e1a80-bf0f-480d-a6b8-9827707e8c3d"
+    mpid: "b0d85f6c-5295-4f11-b604-2bbdfd4b532b"
   }, {
     id: '3',
     title: 'Girl and Owl',
@@ -211,7 +211,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1494790108755-2616c6d4e6e8?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-13'),
-    mpid: "84c12b71-bc58-43b7-a785-82be0cab281c"
+    mpid: "88b15c46-8561-4850-98f3-17d7c58101b9"
   }, {
     id: '4',
     title: 'Boy and Falcon',
@@ -221,7 +221,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-12'),
-    mpid: "88a14a7c-3688-4047-bb46-b300f21e92d2"
+    mpid: "3feeefdb-bf3d-4723-bb47-1b80a109d889"
   }, {
     id: '5',
     title: 'Creative Writing Assistant',
@@ -230,7 +230,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-11'),
-    mpid: "c95b3a59-c9c1-4df4-a14a-166bf3b244b2"
+    mpid: "f8e69392-b520-49d9-b152-f26e4721c686"
   }, {
     id: '6',
     title: 'Creative Writing Assistant',
@@ -239,7 +239,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-10'),
-    mpid: "ef88c15b-1860-455f-89f7-3328b0356901"
+    mpid: "df60c383-0d66-4151-a9d5-37c04194fb30"
   }, {
     id: '7',
     title: 'Creative Writing Assistant',
@@ -248,7 +248,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-09'),
-    mpid: "9ed75ee8-0c27-4d15-8d01-ce67881333e7"
+    mpid: "b17f8e6b-088c-45f9-8292-787d0931a811"
   }, {
     id: '8',
     title: 'Creative Writing Assistant',
@@ -257,7 +257,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-08'),
-    mpid: "b4e2e4eb-2735-46f8-bb31-02e54081b145"
+    mpid: "38c47d9c-211e-493b-b3fa-96c6d161a011"
   }]);
   const [tools, setTools] = useState<Tool[]>([{
     id: '1',
@@ -265,28 +265,28 @@ const KotoDashboard: React.FC = () => {
     category: 'AI Tools',
     url: 'https://chat.openai.com',
     description: 'Advanced AI language model for conversations, writing, and problem-solving.',
-    mpid: "adc8b863-498b-419e-b7e3-bd1a8d598b4c"
+    mpid: "88937d5e-438c-41ac-aae3-a72bf0c07623"
   }, {
     id: '2',
     name: 'Claude',
     category: 'AI Tools',
     url: 'https://claude.ai',
     description: 'AI assistant by Anthropic for helpful, harmless, and honest conversations.',
-    mpid: "e1c0974b-d1f8-477b-8d57-94aa0f0b98cb"
+    mpid: "c1326e26-6180-4045-9ae7-bf29aa76b704"
   }, {
     id: '3',
     name: 'DeepSeek',
     category: 'AI Tools',
     url: 'https://deepseek.com',
     description: 'Advanced AI model for coding, reasoning, and complex problem-solving.',
-    mpid: "774908e9-b764-4405-a128-bb5dc9d8b6e6"
+    mpid: "4335440e-c6d1-4c69-b322-a017dfc2ecbc"
   }, {
     id: '4',
     name: 'Grok',
     category: 'AI Tools',
     url: 'https://grok.x.ai',
     description: 'AI assistant with real-time information and witty personality.',
-    mpid: "26a7f7e2-33e1-4972-8202-76246b197055"
+    mpid: "18a85f34-29de-4e78-804e-395d9cb31698"
   }]);
   const [categories, setCategories] = useState<Category[]>([{
     id: 'midjourney',
@@ -294,70 +294,70 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Palette,
     expanded: false,
-    mpid: "d5275074-1b30-428c-9658-049845cb85f9"
+    mpid: "b688d947-36b4-44fd-ab27-81b5467a5f4b"
   }, {
     id: 'chat-gpt',
     name: 'Chat-GPT',
     count: 0,
     icon: MessageSquare,
     expanded: false,
-    mpid: "3b1a86e9-399a-4624-a2ef-05cb10b540db"
+    mpid: "3006278a-ec31-45ea-bd3a-0a5ec11708c8"
   }, {
     id: 'development',
     name: 'Development',
     count: 0,
     icon: Code,
     expanded: false,
-    mpid: "049789d0-d7fd-4af6-9492-902c533ebe21"
+    mpid: "6f87bea9-9a41-4173-8063-f7f800d741d9"
   }, {
     id: 'design',
     name: 'Design',
     count: 0,
     icon: PenTool,
     expanded: false,
-    mpid: "34a11d6a-6613-43c6-906e-00037b95227b"
+    mpid: "96247f71-e109-4ddc-87f6-32902754c556"
   }, {
     id: 'business',
     name: 'Business',
     count: 0,
     icon: Briefcase,
     expanded: false,
-    mpid: "8ddc0cd8-e33a-4aef-bcb0-c1dfe767e856"
+    mpid: "4ae868eb-77e2-48f8-8d99-089795b45fd0"
   }, {
     id: 'marketing',
     name: 'Marketing',
     count: 0,
     icon: Target,
     expanded: false,
-    mpid: "2f9370c8-3340-4e8b-943d-18e24c8d8bc5"
+    mpid: "e7ce5604-1e58-48a3-910a-2bdddd134d76"
   }, {
     id: 'sales',
     name: 'Sales',
     count: 0,
     icon: BarChart3,
     expanded: false,
-    mpid: "e2deeb88-8fe8-489a-add2-b08e0be1ae91"
+    mpid: "64727230-ec3c-4352-9101-efafc2884809"
   }, {
     id: 'customer-support',
     name: 'Customer Support',
     count: 0,
     icon: Users,
     expanded: false,
-    mpid: "703cb7ee-1bd5-44ea-8d48-d698160b62e4"
+    mpid: "3abdce82-dd07-40ad-8327-575b22e3c0bc"
   }, {
     id: 'research',
     name: 'Research',
     count: 0,
     icon: Search,
     expanded: false,
-    mpid: "68f3f390-f138-4960-91d8-eee4e6c6cc59"
+    mpid: "be7e8ad0-556c-4266-ac79-16953e7fffbd"
   }, {
     id: 'writing',
     name: 'Writing',
     count: 0,
     icon: PenTool,
     expanded: false,
-    mpid: "4c0d8f18-6ad3-4066-a327-c906d292674a"
+    mpid: "53c41c65-5915-4c12-98c5-697f2cfa21e1"
   }]);
   const [toolCategories, setToolCategories] = useState<Category[]>([{
     id: 'all-tools',
@@ -365,49 +365,49 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "684ab8e8-6f85-4394-92c1-b5c5414d8a75"
+    mpid: "39944417-c547-4f3a-bf3f-ab85c0553c90"
   }, {
     id: 'ai-tools',
     name: 'AI Tools',
     count: 0,
     icon: Zap,
     expanded: false,
-    mpid: "84643cbe-c6a7-4379-9117-2f39cb0eaf0f"
+    mpid: "e0f6f633-5b4e-4412-bfad-c365390c6977"
   }, {
     id: 'ui-design',
     name: 'UI Design',
     count: 0,
     icon: Figma,
     expanded: false,
-    mpid: "7bcd7ec9-89fa-4de6-9417-a89b5663376a"
+    mpid: "78813ddb-3e83-4bb9-8375-2ff1f8f59326"
   }, {
     id: 'ux-design',
     name: 'UX Design',
     count: 0,
     icon: Users,
     expanded: false,
-    mpid: "afbd6c23-6948-4e46-ba73-966a956b7aa2"
+    mpid: "09086147-108e-43e5-bdac-bce56135c303"
   }, {
     id: 'design',
     name: 'Design',
     count: 0,
     icon: PenTool,
     expanded: false,
-    mpid: "00e8d272-1e35-4454-a6c8-b8cfef5e9b46"
+    mpid: "91f36777-cc80-4dc7-9ea9-792a7dca2f62"
   }, {
     id: 'figma',
     name: 'Figma',
     count: 0,
     icon: Figma,
     expanded: false,
-    mpid: "e2f6ef3b-2ca7-4049-987b-a45df1cd0691"
+    mpid: "02837cb3-b31f-4b8f-8ded-fd53843b66a8"
   }, {
     id: 'crypto',
     name: 'Crypto',
     count: 0,
     icon: Cpu,
     expanded: false,
-    mpid: "d432de01-125f-4f9f-97ba-95f94534fe22"
+    mpid: "e5f79576-8d3f-4086-8f1c-eb4ccf022a9b"
   }]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
 
@@ -718,7 +718,7 @@ const KotoDashboard: React.FC = () => {
                 const hasSubcategories = categorySubcategories.length > 0;
                 return <div key={category.id} data-magicpath-id="29" data-magicpath-path="KotoDashboard.tsx">
                       <div className="flex items-center group" data-magicpath-id="30" data-magicpath-path="KotoDashboard.tsx">
-                        <button onClick={() => setActiveCategory(category.id)} onDoubleClick={() => handleDoubleClick(category.id, category.name)} className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors ${isActive ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'}`} data-magicpath-id="31" data-magicpath-path="KotoDashboard.tsx">
+                        <button onClick={() => setActiveCategory(category.id)} onDoubleClick={() => handleDoubleClick(category.id, category.name)} className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors relative ${isActive ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'}`} data-magicpath-id="31" data-magicpath-path="KotoDashboard.tsx">
                           <Icon className="w-5 h-5 flex-shrink-0" data-magicpath-id="32" data-magicpath-path="KotoDashboard.tsx" />
                           <AnimatePresence mode="wait" data-magicpath-id="33" data-magicpath-path="KotoDashboard.tsx">
                             {!sidebarCollapsed && <motion.div initial={{
@@ -732,34 +732,35 @@ const KotoDashboard: React.FC = () => {
                           x: -10
                         }} className="flex items-center justify-between w-full" data-magicpath-id="34" data-magicpath-path="KotoDashboard.tsx">
                                 {editingItem === category.id ? <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} onBlur={() => handleRename(category.id, 'category')} onKeyPress={e => e.key === 'Enter' && handleRename(category.id, 'category')} className="bg-transparent border-none outline-none text-sm font-medium flex-1" autoFocus data-magicpath-id="35" data-magicpath-path="KotoDashboard.tsx" /> : <span className="font-medium text-sm" data-magicpath-id="36" data-magicpath-path="KotoDashboard.tsx">{category.name}</span>}
+                                
+                                {/* Inline action buttons */}
+                                <div className="flex items-center space-x-1" data-magicpath-id="37" data-magicpath-path="KotoDashboard.tsx">
+                                  {/* Delete button */}
+                                  <button onClick={e => {
+                              e.stopPropagation();
+                              // Handle delete category
+                              if (activeTab === 'prompts') {
+                                setCategories(prev => prev.filter(cat => cat.id !== category.id));
+                              } else {
+                                setToolCategories(prev => prev.filter(cat => cat.id !== category.id));
+                              }
+                            }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-all" data-magicpath-id="38" data-magicpath-path="KotoDashboard.tsx">
+                                    <Trash2 className="w-4 h-4 text-red-500" data-magicpath-id="39" data-magicpath-path="KotoDashboard.tsx" />
+                                  </button>
+                                  
+                                  {/* Add subcategory button */}
+                                  <button onClick={() => handleAddSubcategoryToProject(category.id)} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-all" data-magicpath-id="40" data-magicpath-path="KotoDashboard.tsx">
+                                    <Plus className="w-4 h-4 text-slate-400" data-magicpath-id="41" data-magicpath-path="KotoDashboard.tsx" />
+                                  </button>
+                                  
+                                  {/* Expand/collapse button for subcategories - only show if has subcategories */}
+                                  {hasSubcategories && <button onClick={() => toggleCategoryExpansion(category.id)} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" data-magicpath-id="42" data-magicpath-path="KotoDashboard.tsx">
+                                      {category.expanded ? <ChevronDown className="w-4 h-4 text-slate-400" data-magicpath-id="43" data-magicpath-path="KotoDashboard.tsx" /> : <ChevronRight className="w-4 h-4 text-slate-400" data-magicpath-id="44" data-magicpath-path="KotoDashboard.tsx" />}
+                                    </button>}
+                                </div>
                               </motion.div>}
                           </AnimatePresence>
                         </button>
-                        
-                        {!sidebarCollapsed && <div className="flex items-center space-x-1" data-magicpath-id="37" data-magicpath-path="KotoDashboard.tsx">
-                            {/* Delete button */}
-                            <button onClick={e => {
-                        e.stopPropagation();
-                        // Handle delete category
-                        if (activeTab === 'prompts') {
-                          setCategories(prev => prev.filter(cat => cat.id !== category.id));
-                        } else {
-                          setToolCategories(prev => prev.filter(cat => cat.id !== category.id));
-                        }
-                      }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-all" data-magicpath-id="38" data-magicpath-path="KotoDashboard.tsx">
-                              <Trash2 className="w-4 h-4 text-red-500" data-magicpath-id="39" data-magicpath-path="KotoDashboard.tsx" />
-                            </button>
-                            
-                            {/* Add subcategory button */}
-                            <button onClick={() => handleAddSubcategoryToProject(category.id)} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-all" data-magicpath-id="40" data-magicpath-path="KotoDashboard.tsx">
-                              <Plus className="w-4 h-4 text-slate-400" data-magicpath-id="41" data-magicpath-path="KotoDashboard.tsx" />
-                            </button>
-                            
-                            {/* Expand/collapse button for subcategories - only show if has subcategories */}
-                            {hasSubcategories && <button onClick={() => toggleCategoryExpansion(category.id)} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" data-magicpath-id="42" data-magicpath-path="KotoDashboard.tsx">
-                                {category.expanded ? <ChevronDown className="w-4 h-4 text-slate-400" data-magicpath-id="43" data-magicpath-path="KotoDashboard.tsx" /> : <ChevronRight className="w-4 h-4 text-slate-400" data-magicpath-id="44" data-magicpath-path="KotoDashboard.tsx" />}
-                              </button>}
-                          </div>}
                       </div>
                       
                       {/* Subcategories */}
@@ -774,7 +775,7 @@ const KotoDashboard: React.FC = () => {
                       opacity: 0,
                       height: 0
                     }} className="ml-8 mt-1 space-y-1" data-magicpath-id="46" data-magicpath-path="KotoDashboard.tsx">
-                            {categorySubcategories.map(subcategory => <button key={subcategory.id} onClick={() => setActiveCategory(subcategory.id)} onDoubleClick={() => handleDoubleClick(subcategory.id, subcategory.name)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${activeCategory === subcategory.id ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-300'}`} data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="47" data-magicpath-path="KotoDashboard.tsx">
+                            {categorySubcategories.map(subcategory => <button key={subcategory.id} onClick={() => setActiveCategory(subcategory.id)} onDoubleClick={() => handleDoubleClick(subcategory.id, subcategory.name)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-color-color ${activeCategory === subcategory.id ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-300'}`} data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="47" data-magicpath-path="KotoDashboard.tsx">
                                 {editingItem === subcategory.id ? <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} onBlur={() => handleRename(subcategory.id, 'subcategory')} onKeyPress={e => e.key === 'Enter' && handleRename(subcategory.id, 'subcategory')} className="bg-transparent border-none outline-none text-sm flex-1" autoFocus data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="48" data-magicpath-path="KotoDashboard.tsx" /> : <span data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-field="name:unknown" data-magicpath-id="49" data-magicpath-path="KotoDashboard.tsx">{subcategory.name}</span>}
                               </button>)}
                           </motion.div>}
