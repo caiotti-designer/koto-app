@@ -53,91 +53,91 @@ interface Project {
 const iconOptions = [{
   name: 'Smile',
   icon: Smile,
-  mpid: "133c10d1-57a3-489c-8acb-48a38f104838"
+  mpid: "0db7ce09-9a75-4b34-a1e9-d9a94233d049"
 }, {
   name: 'Heart',
   icon: Heart,
-  mpid: "882dc3c3-6a42-48aa-bf6c-34c22f3ade10"
+  mpid: "c76d4e55-0c1a-4249-86e0-5878a5ca6fb0"
 }, {
   name: 'Star',
   icon: Star,
-  mpid: "2a45d92e-402b-442c-8359-01971392483f"
+  mpid: "29453d6d-47dc-44fc-80ea-9806ec927d1c"
 }, {
   name: 'Zap',
   icon: ZapIcon,
-  mpid: "9299ef40-34a7-40bb-bbd3-4441d20dcd77"
+  mpid: "77874de9-45f0-4218-a0b6-0113c9ef7309"
 }, {
   name: 'Coffee',
   icon: Coffee,
-  mpid: "0c35d5a7-6073-4306-b323-95199f7d6bc9"
+  mpid: "8135c3dd-b32a-4c9a-bbf8-e8a6a0cee568"
 }, {
   name: 'Music',
   icon: Music,
-  mpid: "8bd0333c-e947-4847-987c-b33d8214d805"
+  mpid: "b9a7c4ca-9288-4d92-88cc-ccc370509eba"
 }, {
   name: 'Book',
   icon: Book,
-  mpid: "4f5c7a0a-4bf7-42f7-88cc-4ab0fe13b7b1"
+  mpid: "4a3214ee-b22a-4f30-85f7-7e6b57802458"
 }, {
   name: 'Gamepad',
   icon: Gamepad2,
-  mpid: "5b29bfb2-09fb-4d9b-a637-9239bf42499a"
+  mpid: "267cce7a-335f-4e14-ba13-1d63900db5ba"
 }, {
   name: 'Laptop',
   icon: Laptop,
-  mpid: "634cf93c-f309-4a45-b862-d87c161eef50"
+  mpid: "f2f84585-2764-4d89-a5db-fbca30ade32e"
 }, {
   name: 'Smartphone',
   icon: Smartphone,
-  mpid: "e1f08c30-debc-42a6-9c4d-cb04501419ee"
+  mpid: "68432f3d-0611-48f7-9690-b91b514e9333"
 }, {
   name: 'Headphones',
   icon: Headphones,
-  mpid: "32b3f627-e083-4c53-a6cf-d7b29d50ecef"
+  mpid: "2b512430-3f31-4610-8f8b-e79b02ba9388"
 }, {
   name: 'Car',
   icon: Car,
-  mpid: "886c4b44-3e37-419f-8778-80de3a9188bf"
+  mpid: "2218f2de-b29d-4f80-9c59-ad8bf8ca53a7"
 }, {
   name: 'Home',
   icon: Home,
-  mpid: "1e862b10-e253-422f-93bb-2b86c590654e"
+  mpid: "689ad148-e744-42f0-bca6-e95897a0aeeb"
 }, {
   name: 'Plane',
   icon: Plane,
-  mpid: "fd38546f-0bc0-492b-83ad-7323a87ec9e4"
+  mpid: "5d29b4be-4f5f-4b32-b6e5-7476184c0e88"
 }, {
   name: 'Gift',
   icon: Gift,
-  mpid: "c1732508-f01d-4d84-b33f-7cd6b1e71449"
+  mpid: "90cf3f97-31df-49ad-943a-3367bd97ce4d"
 }, {
   name: 'Shopping',
   icon: ShoppingBag,
-  mpid: "f46552d9-b484-45ec-9615-f6e93ad0fe8f"
+  mpid: "00cf0237-a980-41fb-a40e-31842d02dc19"
 }, {
   name: 'Card',
   icon: CreditCard,
-  mpid: "e5a04cd4-6eb1-4661-8568-9f46f748c19d"
+  mpid: "2ce41cb8-0e5d-4954-b727-c5a91ed94afe"
 }, {
   name: 'Mail',
   icon: Mail,
-  mpid: "030dc163-5194-4213-9c65-b9e93e6f2554"
+  mpid: "8131130a-0c96-4a92-8876-35edda483ea8"
 }, {
   name: 'Phone',
   icon: Phone,
-  mpid: "29ab84c2-3533-4fdc-8175-3be1778ba1d6"
+  mpid: "61828f11-d6b5-4022-97dc-4d769ec3134d"
 }, {
   name: 'Map',
   icon: MapPin,
-  mpid: "b51b9404-5c56-4845-8d62-9361cd9122dd"
+  mpid: "e4e52ce1-f229-459f-93f9-5478ec4c69a2"
 }, {
   name: 'Calendar',
   icon: Calendar,
-  mpid: "5aa9137e-29a7-470e-a2b8-48f763b60acf"
+  mpid: "7fb448b7-1172-40b6-875d-3aa3e7357245"
 }, {
   name: 'Clock',
   icon: Clock,
-  mpid: "e903ad43-7147-47fa-a0f5-3ada43ceeef1"
+  mpid: "9b395a99-61eb-4f42-8d99-9385285c84f3"
 }] as any[];
 const KotoDashboard: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -191,7 +191,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-15'),
-    mpid: "691576e0-0d79-498d-b173-944b0b608b80"
+    mpid: "902ad4cc-9915-4035-a9c8-5c56287bb735"
   }, {
     id: '2',
     title: 'Man and Leopard',
@@ -201,7 +201,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-14'),
-    mpid: "e2486299-135b-4114-be31-c05f3ad9f12f"
+    mpid: "22e4973c-f3f0-4746-bae4-d64742494e3f"
   }, {
     id: '3',
     title: 'Girl and Owl',
@@ -211,7 +211,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1494790108755-2616c6d4e6e8?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-13'),
-    mpid: "88c907cd-9f5d-43f9-8376-cb1ae91a57b5"
+    mpid: "93e8f8b8-e312-4080-876f-7d27282f3e3d"
   }, {
     id: '4',
     title: 'Boy and Falcon',
@@ -221,7 +221,7 @@ const KotoDashboard: React.FC = () => {
     category: 'Midjourney',
     coverImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=300&fit=crop',
     createdAt: new Date('2024-01-12'),
-    mpid: "67adec0f-bb57-470d-92b9-52efb7b1d9c6"
+    mpid: "3c3a7c5b-40f7-4630-a05d-b4a3f5456cd6"
   }, {
     id: '5',
     title: 'Creative Writing Assistant',
@@ -230,7 +230,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-11'),
-    mpid: "1e6caa13-62ac-4398-ae0d-61c6a00fc61f"
+    mpid: "ba752233-1de9-432e-9337-f279c5f25e16"
   }, {
     id: '6',
     title: 'Creative Writing Assistant',
@@ -239,7 +239,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-10'),
-    mpid: "68034f0d-e849-4aa9-ac9c-464c5c08ed02"
+    mpid: "b979de2a-ad50-4b54-82c5-356bc45e2c12"
   }, {
     id: '7',
     title: 'Creative Writing Assistant',
@@ -248,7 +248,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-09'),
-    mpid: "9bc23e71-0381-42f4-ba5a-69dac3ed9e27"
+    mpid: "b3aa1947-820b-499c-9607-d8a743a2f509"
   }, {
     id: '8',
     title: 'Creative Writing Assistant',
@@ -257,7 +257,7 @@ const KotoDashboard: React.FC = () => {
     model: 'GPT-4',
     category: 'Writing',
     createdAt: new Date('2024-01-08'),
-    mpid: "7d65ef25-e713-45d2-be2f-97a43de44f1f"
+    mpid: "d541ff0a-c511-4f54-abd7-a04e26d7a428"
   }]);
   const [tools, setTools] = useState<Tool[]>([{
     id: '1',
@@ -265,28 +265,28 @@ const KotoDashboard: React.FC = () => {
     category: 'AI Tools',
     url: 'https://chat.openai.com',
     description: 'Advanced AI language model for conversations, writing, and problem-solving.',
-    mpid: "88d2bc7c-12f6-4afc-a800-f8688972c36b"
+    mpid: "b5099008-80e3-4885-b73b-957e57477783"
   }, {
     id: '2',
     name: 'Claude',
     category: 'AI Tools',
     url: 'https://claude.ai',
     description: 'AI assistant by Anthropic for helpful, harmless, and honest conversations.',
-    mpid: "f7c173a2-8335-4a5c-b61a-864384bcce78"
+    mpid: "07e2d881-9e87-4b1c-a2da-84f9c9b64bf4"
   }, {
     id: '3',
     name: 'DeepSeek',
     category: 'AI Tools',
     url: 'https://deepseek.com',
     description: 'Advanced AI model for coding, reasoning, and complex problem-solving.',
-    mpid: "a1bd9de5-462b-4a57-8739-b272c50d25a7"
+    mpid: "399a2036-a194-4c64-81c5-325a322bbe27"
   }, {
     id: '4',
     name: 'Grok',
     category: 'AI Tools',
     url: 'https://grok.x.ai',
     description: 'AI assistant with real-time information and witty personality.',
-    mpid: "42f86273-2cd0-47e9-a365-9995e4e96e6a"
+    mpid: "705dd774-068b-497d-8966-1445bd060bce"
   }]);
   const [categories, setCategories] = useState<Category[]>([{
     id: 'midjourney',
@@ -294,70 +294,70 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Palette,
     expanded: false,
-    mpid: "b2704875-dc58-43cc-bee9-8d7174b98b3d"
+    mpid: "5dffaac2-bcae-48bf-873c-e3686232ca81"
   }, {
     id: 'chat-gpt',
     name: 'Chat-GPT',
     count: 0,
     icon: MessageSquare,
     expanded: false,
-    mpid: "d2323833-47a9-483d-8535-7468be4e9458"
+    mpid: "7b08fad8-9b7c-4bf3-b79e-f1ce0ea67717"
   }, {
     id: 'development',
     name: 'Development',
     count: 0,
     icon: Code,
     expanded: false,
-    mpid: "869e6d48-deb7-46b0-a262-8e2d11f593c0"
+    mpid: "b761915c-46fa-4172-8aa6-0713e9f1a1ec"
   }, {
     id: 'design',
     name: 'Design',
     count: 0,
     icon: PenTool,
     expanded: false,
-    mpid: "f36e377e-1376-49bb-836a-3801f852f98c"
+    mpid: "8a185906-1403-4bbe-bfb1-7cd233984b36"
   }, {
     id: 'business',
     name: 'Business',
     count: 0,
     icon: Briefcase,
     expanded: false,
-    mpid: "6fb2676a-bf73-4aed-91fb-3e321dff0068"
+    mpid: "81f839c0-b5e3-4f2d-8bc3-895ce1b44a8a"
   }, {
     id: 'marketing',
     name: 'Marketing',
     count: 0,
     icon: Target,
     expanded: false,
-    mpid: "1fc74c84-a8ee-48a0-819c-7516a93b11f0"
+    mpid: "45d98bba-4493-4509-9166-ce106753781c"
   }, {
     id: 'sales',
     name: 'Sales',
     count: 0,
     icon: BarChart3,
     expanded: false,
-    mpid: "faa203ee-7c3f-4f58-a551-33e3a66bf090"
+    mpid: "ad66c883-21ac-451b-97e4-e07ae08da7cc"
   }, {
     id: 'customer-support',
     name: 'Customer Support',
     count: 0,
     icon: Users,
     expanded: false,
-    mpid: "8c6c97c5-81f1-41eb-825d-15d612afc5e1"
+    mpid: "de6b84a1-f55a-4caf-9d2e-3720cdcfcd45"
   }, {
     id: 'research',
     name: 'Research',
     count: 0,
     icon: Search,
     expanded: false,
-    mpid: "8212359d-fe1b-44cf-a52d-c4d208efdcbf"
+    mpid: "1e216f26-c646-4901-8357-31bd905df491"
   }, {
     id: 'writing',
     name: 'Writing',
     count: 0,
     icon: PenTool,
     expanded: false,
-    mpid: "09428bc1-ce61-4081-b891-e5f1d0f9d8f9"
+    mpid: "cfe9ad8d-f1f0-4582-9269-105b3b87e4b2"
   }]);
   const [toolCategories, setToolCategories] = useState<Category[]>([{
     id: 'all-tools',
@@ -365,49 +365,49 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "c209f1ce-8828-47a6-9d5e-2a940348a83f"
+    mpid: "0fee036a-3544-414e-9c51-d5550687ce36"
   }, {
     id: 'ai-tools',
     name: 'AI Tools',
     count: 0,
     icon: Zap,
     expanded: false,
-    mpid: "ac52f4eb-5f6d-4458-868b-1d3430cfa025"
+    mpid: "ca34f45c-9e52-48d3-92af-f516215bf3ce"
   }, {
     id: 'ui-design',
     name: 'UI Design',
     count: 0,
     icon: Figma,
     expanded: false,
-    mpid: "d9d16b46-ee4f-4e65-b28c-da9eb82fbfe0"
+    mpid: "75d2de5d-7a35-40d5-9e23-ec0e2d7ffa85"
   }, {
     id: 'ux-design',
     name: 'UX Design',
     count: 0,
     icon: Users,
     expanded: false,
-    mpid: "33781727-d915-4ddb-8dd0-bc712ee51c25"
+    mpid: "ac7faa91-fc9a-4341-a642-3776b853eb2a"
   }, {
     id: 'design',
     name: 'Design',
     count: 0,
     icon: PenTool,
     expanded: false,
-    mpid: "c9b43dd6-1170-45cd-adec-af1425bd0d86"
+    mpid: "a6c53545-3134-4c5a-9292-c84f6493afc5"
   }, {
     id: 'figma',
     name: 'Figma',
     count: 0,
     icon: Figma,
     expanded: false,
-    mpid: "45f8de05-3959-4d64-b805-c903bd12bd70"
+    mpid: "ad5a6c59-0f04-49f0-9727-737573363607"
   }, {
     id: 'crypto',
     name: 'Crypto',
     count: 0,
     icon: Cpu,
     expanded: false,
-    mpid: "165f8878-a9b6-47c1-8bb6-db58993b8547"
+    mpid: "85d2cbae-270a-4f20-b3e5-90d9511ddec8"
   }]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
 
@@ -463,15 +463,17 @@ const KotoDashboard: React.FC = () => {
       setToolCategories(prev => [...prev, newCategory]);
     }
 
-    // Add subcategories
-    const newSubcats = newProjectSubcategories.map(subcat => ({
-      id: `${newCategory.id}-${subcat.toLowerCase().replace(/\s+/g, '-')}`,
-      name: subcat,
-      parentId: newCategory.id,
-      count: 0,
-      mpid: `subcat-${Date.now()}-${subcat}`
-    }));
-    setSubcategories(prev => [...prev, ...newSubcats]);
+    // Add subcategories (only for prompts)
+    if (activeTab === 'prompts') {
+      const newSubcats = newProjectSubcategories.map(subcat => ({
+        id: `${newCategory.id}-${subcat.toLowerCase().replace(/\s+/g, '-')}`,
+        name: subcat,
+        parentId: newCategory.id,
+        count: 0,
+        mpid: `subcat-${Date.now()}-${subcat}`
+      }));
+      setSubcategories(prev => [...prev, ...newSubcats]);
+    }
 
     // Reset form
     setNewProjectName('');
@@ -821,7 +823,7 @@ const KotoDashboard: React.FC = () => {
                 <Settings className="w-5 h-5 flex-shrink-0" data-magicpath-id="56" data-magicpath-path="KotoDashboard.tsx" />
                 {!sidebarCollapsed && <span className="font-medium text-sm" data-magicpath-id="57" data-magicpath-path="KotoDashboard.tsx">Settings</span>}
               </button>
-              <button onClick={() => setDarkMode(!darkMode)} className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors" data-magicpath-id="58" data-magicpath-path="KotoDashboard.tsx">
+              <button onClick={() => setDarkMode(!darkMode)} className="w-full flex items-center space-x-3 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors" data-magicpath-id="58" data-magicpath-path="KotoDashboard.tsx">
                 {darkMode ? <Sun className="w-5 h-5 flex-shrink-0" data-magicpath-id="59" data-magicpath-path="KotoDashboard.tsx" /> : <Moon className="w-5 h-5 flex-shrink-0" data-magicpath-id="60" data-magicpath-path="KotoDashboard.tsx" />}
                 {!sidebarCollapsed && <span className="font-medium text-sm" data-magicpath-id="61" data-magicpath-path="KotoDashboard.tsx">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>}
               </button>
@@ -1161,7 +1163,7 @@ const KotoDashboard: React.FC = () => {
               </h1>
               
               <div className="space-y-6" data-magicpath-id="172" data-magicpath-path="KotoDashboard.tsx">
-                {/* Project Name */}
+                {/* Stack/Project Name */}
                 <div data-magicpath-id="173" data-magicpath-path="KotoDashboard.tsx">
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="174" data-magicpath-path="KotoDashboard.tsx">
                     {activeTab === 'toolbox' ? 'Stack' : 'Project'} Name
@@ -1169,7 +1171,7 @@ const KotoDashboard: React.FC = () => {
                   <input type="text" value={newProjectName} onChange={e => setNewProjectName(e.target.value)} placeholder={`Enter ${activeTab === 'toolbox' ? 'stack' : 'project'} name`} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="175" data-magicpath-path="KotoDashboard.tsx" />
                 </div>
 
-                {/* Project Icon */}
+                {/* Stack/Project Icon */}
                 <div data-magicpath-id="176" data-magicpath-path="KotoDashboard.tsx">
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="177" data-magicpath-path="KotoDashboard.tsx">
                     {activeTab === 'toolbox' ? 'Stack' : 'Project'} Icon
@@ -1184,57 +1186,94 @@ const KotoDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Add Tags */}
-                <div data-magicpath-id="181" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="182" data-magicpath-path="KotoDashboard.tsx">
-                    Add Tags
-                  </label>
-                  <div className="flex space-x-2 mb-2" data-magicpath-id="183" data-magicpath-path="KotoDashboard.tsx">
-                    <input type="text" value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleAddTag()} placeholder="Enter tag" className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm" data-magicpath-id="184" data-magicpath-path="KotoDashboard.tsx" />
-                    <button onClick={handleAddTag} className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors" data-magicpath-id="185" data-magicpath-path="KotoDashboard.tsx">
-                      <Plus className="w-4 h-4" data-magicpath-id="186" data-magicpath-path="KotoDashboard.tsx" />
-                    </button>
-                  </div>
-                  
-                  {/* Tags Display */}
-                  {newProjectTags.length > 0 && <div className="flex flex-wrap gap-1.5" data-magicpath-id="187" data-magicpath-path="KotoDashboard.tsx">
-                      {newProjectTags.map(tag => <span key={tag} className="inline-flex items-center px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs rounded-full" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="188" data-magicpath-path="KotoDashboard.tsx">
-                          {tag}
-                          <button onClick={() => removeTag(tag)} className="ml-1 hover:text-indigo-900 dark:hover:text-indigo-100" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="189" data-magicpath-path="KotoDashboard.tsx">
-                            <X className="w-3 h-3" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="190" data-magicpath-path="KotoDashboard.tsx" />
-                          </button>
-                        </span>)}
-                    </div>}
-                </div>
+                {/* Tools Selection - Only for Stack */}
+                {activeTab === 'toolbox' && <div data-magicpath-id="181" data-magicpath-path="KotoDashboard.tsx">
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="182" data-magicpath-path="KotoDashboard.tsx">
+                      Select Tools
+                    </label>
+                    <div className="max-h-48 overflow-y-auto border border-slate-300 dark:border-slate-600 rounded-lg p-3 space-y-2" data-magicpath-id="183" data-magicpath-path="KotoDashboard.tsx">
+                      {tools.map(tool => <label key={tool.id} className="flex items-center space-x-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-lg cursor-pointer" data-magicpath-uuid={(tool as any)["mpid"] ?? "unsafe"} data-magicpath-id="184" data-magicpath-path="KotoDashboard.tsx">
+                          <input type="checkbox" checked={newProjectTags.includes(tool.name)} onChange={e => {
+                    if (e.target.checked) {
+                      setNewProjectTags(prev => [...prev, tool.name]);
+                    } else {
+                      setNewProjectTags(prev => prev.filter(tag => tag !== tool.name));
+                    }
+                  }} className="w-4 h-4 text-indigo-600 bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 rounded focus:ring-indigo-500 focus:ring-2" data-magicpath-uuid={(tool as any)["mpid"] ?? "unsafe"} data-magicpath-id="185" data-magicpath-path="KotoDashboard.tsx" />
+                          <div className="flex-1" data-magicpath-uuid={(tool as any)["mpid"] ?? "unsafe"} data-magicpath-id="186" data-magicpath-path="KotoDashboard.tsx">
+                            <div className="font-medium text-slate-900 dark:text-white text-sm" data-magicpath-uuid={(tool as any)["mpid"] ?? "unsafe"} data-magicpath-field="name:unknown" data-magicpath-id="187" data-magicpath-path="KotoDashboard.tsx">{tool.name}</div>
+                            <div className="text-xs text-slate-500 dark:text-slate-400" data-magicpath-uuid={(tool as any)["mpid"] ?? "unsafe"} data-magicpath-field="category:unknown" data-magicpath-id="188" data-magicpath-path="KotoDashboard.tsx">{tool.category}</div>
+                          </div>
+                        </label>)}
+                    </div>
+                    
+                    {/* Selected Tools Display */}
+                    {newProjectTags.length > 0 && <div className="mt-3" data-magicpath-id="189" data-magicpath-path="KotoDashboard.tsx">
+                        <div className="text-sm text-slate-600 dark:text-slate-400 mb-2" data-magicpath-id="190" data-magicpath-path="KotoDashboard.tsx">
+                          Selected Tools ({newProjectTags.length})
+                        </div>
+                        <div className="flex flex-wrap gap-1.5" data-magicpath-id="191" data-magicpath-path="KotoDashboard.tsx">
+                          {newProjectTags.map(toolName => <span key={toolName} className="inline-flex items-center px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs rounded-full" data-magicpath-uuid={(toolName as any)["mpid"] ?? "unsafe"} data-magicpath-id="192" data-magicpath-path="KotoDashboard.tsx">
+                              {toolName}
+                              <button onClick={() => setNewProjectTags(prev => prev.filter(tag => tag !== toolName))} className="ml-1 hover:text-indigo-900 dark:hover:text-indigo-100" data-magicpath-uuid={(toolName as any)["mpid"] ?? "unsafe"} data-magicpath-id="193" data-magicpath-path="KotoDashboard.tsx">
+                                <X className="w-3 h-3" data-magicpath-uuid={(toolName as any)["mpid"] ?? "unsafe"} data-magicpath-id="194" data-magicpath-path="KotoDashboard.tsx" />
+                              </button>
+                            </span>)}
+                        </div>
+                      </div>}
+                  </div>}
 
-                {/* Add Subcategories */}
-                <div data-magicpath-id="191" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="192" data-magicpath-path="KotoDashboard.tsx">
-                    Add Subcategories
-                  </label>
-                  <div className="flex space-x-2 mb-2" data-magicpath-id="193" data-magicpath-path="KotoDashboard.tsx">
-                    <input type="text" value={newSubcategoryInput} onChange={e => setNewSubcategoryInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleAddSubcategory()} placeholder="Enter subcategory" className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm" data-magicpath-id="194" data-magicpath-path="KotoDashboard.tsx" />
-                    <button onClick={handleAddSubcategory} className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors" data-magicpath-id="195" data-magicpath-path="KotoDashboard.tsx">
-                      <Plus className="w-4 h-4" data-magicpath-id="196" data-magicpath-path="KotoDashboard.tsx" />
-                    </button>
-                  </div>
-                  
-                  {/* Subcategories Display */}
-                  {newProjectSubcategories.length > 0 && <div className="flex flex-wrap gap-1.5" data-magicpath-id="197" data-magicpath-path="KotoDashboard.tsx">
-                      {newProjectSubcategories.map(subcat => <span key={subcat} className="inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs rounded-full" data-magicpath-uuid={(subcat as any)["mpid"] ?? "unsafe"} data-magicpath-id="198" data-magicpath-path="KotoDashboard.tsx">
-                          {subcat}
-                          <button onClick={() => removeSubcategory(subcat)} className="ml-1 hover:text-green-900 dark:hover:text-green-100" data-magicpath-uuid={(subcat as any)["mpid"] ?? "unsafe"} data-magicpath-id="199" data-magicpath-path="KotoDashboard.tsx">
-                            <X className="w-3 h-3" data-magicpath-uuid={(subcat as any)["mpid"] ?? "unsafe"} data-magicpath-id="200" data-magicpath-path="KotoDashboard.tsx" />
-                          </button>
-                        </span>)}
-                    </div>}
-                </div>
+                {/* Add Tags - Only for Project */}
+                {activeTab === 'prompts' && <div data-magicpath-id="195" data-magicpath-path="KotoDashboard.tsx">
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="196" data-magicpath-path="KotoDashboard.tsx">
+                      Add Tags
+                    </label>
+                    <div className="flex space-x-2 mb-2" data-magicpath-id="197" data-magicpath-path="KotoDashboard.tsx">
+                      <input type="text" value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleAddTag()} placeholder="Enter tag" className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm" data-magicpath-id="198" data-magicpath-path="KotoDashboard.tsx" />
+                      <button onClick={handleAddTag} className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors" data-magicpath-id="199" data-magicpath-path="KotoDashboard.tsx">
+                        <Plus className="w-4 h-4" data-magicpath-id="200" data-magicpath-path="KotoDashboard.tsx" />
+                      </button>
+                    </div>
+                    
+                    {/* Tags Display */}
+                    {newProjectTags.length > 0 && <div className="flex flex-wrap gap-1.5" data-magicpath-id="201" data-magicpath-path="KotoDashboard.tsx">
+                        {newProjectTags.map(tag => <span key={tag} className="inline-flex items-center px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs rounded-full" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="202" data-magicpath-path="KotoDashboard.tsx">
+                            {tag}
+                            <button onClick={() => removeTag(tag)} className="ml-1 hover:text-indigo-900 dark:hover:text-indigo-100" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="203" data-magicpath-path="KotoDashboard.tsx">
+                              <X className="w-3 h-3" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="204" data-magicpath-path="KotoDashboard.tsx" />
+                            </button>
+                          </span>)}
+                      </div>}
+                  </div>}
 
-                <div className="flex justify-end space-x-3 pt-4" data-magicpath-id="201" data-magicpath-path="KotoDashboard.tsx">
-                  <button onClick={() => setShowAddProjectDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="202" data-magicpath-path="KotoDashboard.tsx">
+                {/* Add Subcategories - Only for Project */}
+                {activeTab === 'prompts' && <div data-magicpath-id="205" data-magicpath-path="KotoDashboard.tsx">
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="206" data-magicpath-path="KotoDashboard.tsx">
+                      Add Subcategories
+                    </label>
+                    <div className="flex space-x-2 mb-2" data-magicpath-id="207" data-magicpath-path="KotoDashboard.tsx">
+                      <input type="text" value={newSubcategoryInput} onChange={e => setNewSubcategoryInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleAddSubcategory()} placeholder="Enter subcategory" className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm" data-magicpath-id="208" data-magicpath-path="KotoDashboard.tsx" />
+                      <button onClick={handleAddSubcategory} className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors" data-magicpath-id="209" data-magicpath-path="KotoDashboard.tsx">
+                        <Plus className="w-4 h-4" data-magicpath-id="210" data-magicpath-path="KotoDashboard.tsx" />
+                      </button>
+                    </div>
+                    
+                    {/* Subcategories Display */}
+                    {newProjectSubcategories.length > 0 && <div className="flex flex-wrap gap-1.5" data-magicpath-id="211" data-magicpath-path="KotoDashboard.tsx">
+                        {newProjectSubcategories.map(subcat => <span key={subcat} className="inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs rounded-full" data-magicpath-uuid={(subcat as any)["mpid"] ?? "unsafe"} data-magicpath-id="212" data-magicpath-path="KotoDashboard.tsx">
+                            {subcat}
+                            <button onClick={() => removeSubcategory(subcat)} className="ml-1 hover:text-green-900 dark:hover:text-green-100" data-magicpath-uuid={(subcat as any)["mpid"] ?? "unsafe"} data-magicpath-id="213" data-magicpath-path="KotoDashboard.tsx">
+                              <X className="w-3 h-3" data-magicpath-uuid={(subcat as any)["mpid"] ?? "unsafe"} data-magicpath-id="214" data-magicpath-path="KotoDashboard.tsx" />
+                            </button>
+                          </span>)}
+                      </div>}
+                  </div>}
+
+                <div className="flex justify-end space-x-3 pt-4" data-magicpath-id="215" data-magicpath-path="KotoDashboard.tsx">
+                  <button onClick={() => setShowAddProjectDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="216" data-magicpath-path="KotoDashboard.tsx">
                     Cancel
                   </button>
-                  <button onClick={handleAddProject} disabled={!newProjectName.trim()} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-lg transition-colors" data-magicpath-id="203" data-magicpath-path="KotoDashboard.tsx">
+                  <button onClick={handleAddProject} disabled={!newProjectName.trim()} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-lg transition-colors" data-magicpath-id="217" data-magicpath-path="KotoDashboard.tsx">
                     Add {activeTab === 'toolbox' ? 'Stack' : 'Project'}
                   </button>
                 </div>
@@ -1244,14 +1283,14 @@ const KotoDashboard: React.FC = () => {
       </AnimatePresence>
 
       {/* Add Prompt Dialog */}
-      <AnimatePresence data-magicpath-id="204" data-magicpath-path="KotoDashboard.tsx">
+      <AnimatePresence data-magicpath-id="218" data-magicpath-path="KotoDashboard.tsx">
         {showNewPromptDialog && <motion.div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{
         opacity: 0
       }} animate={{
         opacity: 1
       }} exit={{
         opacity: 0
-      }} onClick={() => setShowNewPromptDialog(false)} data-magicpath-id="205" data-magicpath-path="KotoDashboard.tsx">
+      }} onClick={() => setShowNewPromptDialog(false)} data-magicpath-id="219" data-magicpath-path="KotoDashboard.tsx">
             <motion.div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-2xl shadow-xl max-h-[80vh] overflow-y-auto" initial={{
           scale: 0.9,
           opacity: 0
@@ -1261,67 +1300,67 @@ const KotoDashboard: React.FC = () => {
         }} exit={{
           scale: 0.9,
           opacity: 0
-        }} onClick={e => e.stopPropagation()} data-magicpath-id="206" data-magicpath-path="KotoDashboard.tsx">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6" data-magicpath-id="207" data-magicpath-path="KotoDashboard.tsx">Add New Prompt</h2>
+        }} onClick={e => e.stopPropagation()} data-magicpath-id="220" data-magicpath-path="KotoDashboard.tsx">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6" data-magicpath-id="221" data-magicpath-path="KotoDashboard.tsx">Add New Prompt</h2>
               
-              <div className="space-y-6" data-magicpath-id="208" data-magicpath-path="KotoDashboard.tsx">
+              <div className="space-y-6" data-magicpath-id="222" data-magicpath-path="KotoDashboard.tsx">
                 {/* Title */}
-                <div data-magicpath-id="209" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="210" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="223" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="224" data-magicpath-path="KotoDashboard.tsx">
                     Title
                   </label>
-                  <input type="text" value={newPromptTitle} onChange={e => setNewPromptTitle(e.target.value)} placeholder="Enter prompt title" className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="211" data-magicpath-path="KotoDashboard.tsx" />
+                  <input type="text" value={newPromptTitle} onChange={e => setNewPromptTitle(e.target.value)} placeholder="Enter prompt title" className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="225" data-magicpath-path="KotoDashboard.tsx" />
                 </div>
 
                 {/* Content */}
-                <div data-magicpath-id="212" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="213" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="226" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="227" data-magicpath-path="KotoDashboard.tsx">
                     Content
                   </label>
-                  <textarea value={newPromptContent} onChange={e => setNewPromptContent(e.target.value)} placeholder="Enter prompt content" rows={4} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="214" data-magicpath-path="KotoDashboard.tsx" />
+                  <textarea value={newPromptContent} onChange={e => setNewPromptContent(e.target.value)} placeholder="Enter prompt content" rows={4} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="228" data-magicpath-path="KotoDashboard.tsx" />
                 </div>
 
                 {/* Model */}
-                <div data-magicpath-id="215" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="216" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="229" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="230" data-magicpath-path="KotoDashboard.tsx">
                     Model
                   </label>
-                  <select value={newPromptModel} onChange={e => setNewPromptModel(e.target.value)} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="217" data-magicpath-path="KotoDashboard.tsx">
-                    <option value="GPT-4" data-magicpath-id="218" data-magicpath-path="KotoDashboard.tsx">GPT-4</option>
-                    <option value="Claude" data-magicpath-id="219" data-magicpath-path="KotoDashboard.tsx">Claude</option>
-                    <option value="Midjourney" data-magicpath-id="220" data-magicpath-path="KotoDashboard.tsx">Midjourney</option>
-                    <option value="DALL-E" data-magicpath-id="221" data-magicpath-path="KotoDashboard.tsx">DALL-E</option>
+                  <select value={newPromptModel} onChange={e => setNewPromptModel(e.target.value)} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="231" data-magicpath-path="KotoDashboard.tsx">
+                    <option value="GPT-4" data-magicpath-id="232" data-magicpath-path="KotoDashboard.tsx">GPT-4</option>
+                    <option value="Claude" data-magicpath-id="233" data-magicpath-path="KotoDashboard.tsx">Claude</option>
+                    <option value="Midjourney" data-magicpath-id="234" data-magicpath-path="KotoDashboard.tsx">Midjourney</option>
+                    <option value="DALL-E" data-magicpath-id="235" data-magicpath-path="KotoDashboard.tsx">DALL-E</option>
                   </select>
                 </div>
 
                 {/* Tags */}
-                <div data-magicpath-id="222" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="223" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="236" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="237" data-magicpath-path="KotoDashboard.tsx">
                     Tags
                   </label>
-                  <div className="flex space-x-2 mb-2" data-magicpath-id="224" data-magicpath-path="KotoDashboard.tsx">
-                    <input type="text" value={newPromptTagInput} onChange={e => setNewPromptTagInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleAddPromptTag()} placeholder="Enter tag" className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm" data-magicpath-id="225" data-magicpath-path="KotoDashboard.tsx" />
-                    <button onClick={handleAddPromptTag} className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors" data-magicpath-id="226" data-magicpath-path="KotoDashboard.tsx">
-                      <Plus className="w-4 h-4" data-magicpath-id="227" data-magicpath-path="KotoDashboard.tsx" />
+                  <div className="flex space-x-2 mb-2" data-magicpath-id="238" data-magicpath-path="KotoDashboard.tsx">
+                    <input type="text" value={newPromptTagInput} onChange={e => setNewPromptTagInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleAddPromptTag()} placeholder="Enter tag" className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm" data-magicpath-id="239" data-magicpath-path="KotoDashboard.tsx" />
+                    <button onClick={handleAddPromptTag} className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors" data-magicpath-id="240" data-magicpath-path="KotoDashboard.tsx">
+                      <Plus className="w-4 h-4" data-magicpath-id="241" data-magicpath-path="KotoDashboard.tsx" />
                     </button>
                   </div>
                   
                   {/* Tags Display */}
-                  {newPromptTags.length > 0 && <div className="flex flex-wrap gap-1.5" data-magicpath-id="228" data-magicpath-path="KotoDashboard.tsx">
-                      {newPromptTags.map(tag => <span key={tag} className="inline-flex items-center px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs rounded-full" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="229" data-magicpath-path="KotoDashboard.tsx">
+                  {newPromptTags.length > 0 && <div className="flex flex-wrap gap-1.5" data-magicpath-id="242" data-magicpath-path="KotoDashboard.tsx">
+                      {newPromptTags.map(tag => <span key={tag} className="inline-flex items-center px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs rounded-full" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="243" data-magicpath-path="KotoDashboard.tsx">
                           {tag}
-                          <button onClick={() => removePromptTag(tag)} className="ml-1 hover:text-indigo-900 dark:hover:text-indigo-100" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="230" data-magicpath-path="KotoDashboard.tsx">
-                            <X className="w-3 h-3" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="231" data-magicpath-path="KotoDashboard.tsx" />
+                          <button onClick={() => removePromptTag(tag)} className="ml-1 hover:text-indigo-900 dark:hover:text-indigo-100" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="244" data-magicpath-path="KotoDashboard.tsx">
+                            <X className="w-3 h-3" data-magicpath-uuid={(tag as any)["mpid"] ?? "unsafe"} data-magicpath-id="245" data-magicpath-path="KotoDashboard.tsx" />
                           </button>
                         </span>)}
                     </div>}
                 </div>
 
-                <div className="flex justify-end space-x-3 pt-4" data-magicpath-id="232" data-magicpath-path="KotoDashboard.tsx">
-                  <button onClick={() => setShowNewPromptDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="233" data-magicpath-path="KotoDashboard.tsx">
+                <div className="flex justify-end space-x-3 pt-4" data-magicpath-id="246" data-magicpath-path="KotoDashboard.tsx">
+                  <button onClick={() => setShowNewPromptDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="247" data-magicpath-path="KotoDashboard.tsx">
                     Cancel
                   </button>
-                  <button onClick={handleCreatePrompt} disabled={!newPromptTitle.trim() || !newPromptContent.trim()} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-lg transition-colors" data-magicpath-id="234" data-magicpath-path="KotoDashboard.tsx">
+                  <button onClick={handleCreatePrompt} disabled={!newPromptTitle.trim() || !newPromptContent.trim()} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-lg transition-colors" data-magicpath-id="248" data-magicpath-path="KotoDashboard.tsx">
                     Create Prompt
                   </button>
                 </div>
@@ -1331,14 +1370,14 @@ const KotoDashboard: React.FC = () => {
       </AnimatePresence>
 
       {/* Add Tool Dialog */}
-      <AnimatePresence data-magicpath-id="235" data-magicpath-path="KotoDashboard.tsx">
+      <AnimatePresence data-magicpath-id="249" data-magicpath-path="KotoDashboard.tsx">
         {showNewToolDialog && <motion.div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{
         opacity: 0
       }} animate={{
         opacity: 1
       }} exit={{
         opacity: 0
-      }} onClick={() => setShowNewToolDialog(false)} data-magicpath-id="236" data-magicpath-path="KotoDashboard.tsx">
+      }} onClick={() => setShowNewToolDialog(false)} data-magicpath-id="250" data-magicpath-path="KotoDashboard.tsx">
             <motion.div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-xl" initial={{
           scale: 0.9,
           opacity: 0
@@ -1348,54 +1387,54 @@ const KotoDashboard: React.FC = () => {
         }} exit={{
           scale: 0.9,
           opacity: 0
-        }} onClick={e => e.stopPropagation()} data-magicpath-id="237" data-magicpath-path="KotoDashboard.tsx">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6" data-magicpath-id="238" data-magicpath-path="KotoDashboard.tsx">Add New Tool</h2>
+        }} onClick={e => e.stopPropagation()} data-magicpath-id="251" data-magicpath-path="KotoDashboard.tsx">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6" data-magicpath-id="252" data-magicpath-path="KotoDashboard.tsx">Add New Tool</h2>
               
-              <div className="space-y-6" data-magicpath-id="239" data-magicpath-path="KotoDashboard.tsx">
+              <div className="space-y-6" data-magicpath-id="253" data-magicpath-path="KotoDashboard.tsx">
                 {/* Name */}
-                <div data-magicpath-id="240" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="241" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="254" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="255" data-magicpath-path="KotoDashboard.tsx">
                     Tool Name
                   </label>
-                  <input type="text" value={newToolName} onChange={e => setNewToolName(e.target.value)} placeholder="Enter tool name" className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="242" data-magicpath-path="KotoDashboard.tsx" />
+                  <input type="text" value={newToolName} onChange={e => setNewToolName(e.target.value)} placeholder="Enter tool name" className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="256" data-magicpath-path="KotoDashboard.tsx" />
                 </div>
 
                 {/* URL */}
-                <div data-magicpath-id="243" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="244" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="257" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="258" data-magicpath-path="KotoDashboard.tsx">
                     URL
                   </label>
-                  <input type="url" value={newToolUrl} onChange={e => setNewToolUrl(e.target.value)} placeholder="https://example.com" className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="245" data-magicpath-path="KotoDashboard.tsx" />
+                  <input type="url" value={newToolUrl} onChange={e => setNewToolUrl(e.target.value)} placeholder="https://example.com" className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="259" data-magicpath-path="KotoDashboard.tsx" />
                 </div>
 
                 {/* Description */}
-                <div data-magicpath-id="246" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="247" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="260" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="261" data-magicpath-path="KotoDashboard.tsx">
                     Description (optional - will auto-complete based on URL)
                   </label>
-                  <textarea value={newToolDescription} onChange={e => setNewToolDescription(e.target.value)} placeholder="Enter tool description or leave blank for auto-completion" rows={3} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="248" data-magicpath-path="KotoDashboard.tsx" />
+                  <textarea value={newToolDescription} onChange={e => setNewToolDescription(e.target.value)} placeholder="Enter tool description or leave blank for auto-completion" rows={3} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="262" data-magicpath-path="KotoDashboard.tsx" />
                 </div>
 
                 {/* Category */}
-                <div data-magicpath-id="249" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="250" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="263" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="264" data-magicpath-path="KotoDashboard.tsx">
                     Category
                   </label>
-                  <select value={newToolCategory} onChange={e => setNewToolCategory(e.target.value)} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="251" data-magicpath-path="KotoDashboard.tsx">
-                    <option value="AI Tools" data-magicpath-id="252" data-magicpath-path="KotoDashboard.tsx">AI Tools</option>
-                    <option value="UI Design" data-magicpath-id="253" data-magicpath-path="KotoDashboard.tsx">UI Design</option>
-                    <option value="UX Design" data-magicpath-id="254" data-magicpath-path="KotoDashboard.tsx">UX Design</option>
-                    <option value="Design" data-magicpath-id="255" data-magicpath-path="KotoDashboard.tsx">Design</option>
-                    <option value="Figma" data-magicpath-id="256" data-magicpath-path="KotoDashboard.tsx">Figma</option>
-                    <option value="Crypto" data-magicpath-id="257" data-magicpath-path="KotoDashboard.tsx">Crypto</option>
+                  <select value={newToolCategory} onChange={e => setNewToolCategory(e.target.value)} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="265" data-magicpath-path="KotoDashboard.tsx">
+                    <option value="AI Tools" data-magicpath-id="266" data-magicpath-path="KotoDashboard.tsx">AI Tools</option>
+                    <option value="UI Design" data-magicpath-id="267" data-magicpath-path="KotoDashboard.tsx">UI Design</option>
+                    <option value="UX Design" data-magicpath-id="268" data-magicpath-path="KotoDashboard.tsx">UX Design</option>
+                    <option value="Design" data-magicpath-id="269" data-magicpath-path="KotoDashboard.tsx">Design</option>
+                    <option value="Figma" data-magicpath-id="270" data-magicpath-path="KotoDashboard.tsx">Figma</option>
+                    <option value="Crypto" data-magicpath-id="271" data-magicpath-path="KotoDashboard.tsx">Crypto</option>
                   </select>
                 </div>
 
-                <div className="flex justify-end space-x-3 pt-4" data-magicpath-id="258" data-magicpath-path="KotoDashboard.tsx">
-                  <button onClick={() => setShowNewToolDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="259" data-magicpath-path="KotoDashboard.tsx">
+                <div className="flex justify-end space-x-3 pt-4" data-magicpath-id="272" data-magicpath-path="KotoDashboard.tsx">
+                  <button onClick={() => setShowNewToolDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="273" data-magicpath-path="KotoDashboard.tsx">
                     Cancel
                   </button>
-                  <button onClick={handleCreateTool} disabled={!newToolName.trim() || !newToolUrl.trim()} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-lg transition-colors" data-magicpath-id="260" data-magicpath-path="KotoDashboard.tsx">
+                  <button onClick={handleCreateTool} disabled={!newToolName.trim() || !newToolUrl.trim()} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-lg transition-colors" data-magicpath-id="274" data-magicpath-path="KotoDashboard.tsx">
                     Create Tool
                   </button>
                 </div>
@@ -1405,14 +1444,14 @@ const KotoDashboard: React.FC = () => {
       </AnimatePresence>
 
       {/* Prompt Details Dialog */}
-      <AnimatePresence data-magicpath-id="261" data-magicpath-path="KotoDashboard.tsx">
+      <AnimatePresence data-magicpath-id="275" data-magicpath-path="KotoDashboard.tsx">
         {showPromptDetailsDialog && selectedPrompt && <motion.div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{
         opacity: 0
       }} animate={{
         opacity: 1
       }} exit={{
         opacity: 0
-      }} onClick={() => setShowPromptDetailsDialog(false)} data-magicpath-id="262" data-magicpath-path="KotoDashboard.tsx">
+      }} onClick={() => setShowPromptDetailsDialog(false)} data-magicpath-id="276" data-magicpath-path="KotoDashboard.tsx">
             <motion.div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-2xl shadow-xl max-h-[80vh] overflow-y-auto" initial={{
           scale: 0.9,
           opacity: 0
@@ -1422,54 +1461,54 @@ const KotoDashboard: React.FC = () => {
         }} exit={{
           scale: 0.9,
           opacity: 0
-        }} onClick={e => e.stopPropagation()} data-magicpath-id="263" data-magicpath-path="KotoDashboard.tsx">
-              <div className="flex items-start justify-between mb-6" data-magicpath-id="264" data-magicpath-path="KotoDashboard.tsx">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white" data-magicpath-id="265" data-magicpath-path="KotoDashboard.tsx">{selectedPrompt.title}</h2>
-                <button onClick={() => setShowPromptDetailsDialog(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" data-magicpath-id="266" data-magicpath-path="KotoDashboard.tsx">
-                  <X className="w-5 h-5 text-slate-600 dark:text-slate-400" data-magicpath-id="267" data-magicpath-path="KotoDashboard.tsx" />
+        }} onClick={e => e.stopPropagation()} data-magicpath-id="277" data-magicpath-path="KotoDashboard.tsx">
+              <div className="flex items-start justify-between mb-6" data-magicpath-id="278" data-magicpath-path="KotoDashboard.tsx">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white" data-magicpath-id="279" data-magicpath-path="KotoDashboard.tsx">{selectedPrompt.title}</h2>
+                <button onClick={() => setShowPromptDetailsDialog(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" data-magicpath-id="280" data-magicpath-path="KotoDashboard.tsx">
+                  <X className="w-5 h-5 text-slate-600 dark:text-slate-400" data-magicpath-id="281" data-magicpath-path="KotoDashboard.tsx" />
                 </button>
               </div>
 
-              {selectedPrompt.coverImage && <div className="mb-6" data-magicpath-id="268" data-magicpath-path="KotoDashboard.tsx">
-                  <img src={selectedPrompt.coverImage} alt={selectedPrompt.title} className="w-full h-48 object-cover rounded-lg" data-magicpath-id="269" data-magicpath-path="KotoDashboard.tsx" />
+              {selectedPrompt.coverImage && <div className="mb-6" data-magicpath-id="282" data-magicpath-path="KotoDashboard.tsx">
+                  <img src={selectedPrompt.coverImage} alt={selectedPrompt.title} className="w-full h-48 object-cover rounded-lg" data-magicpath-id="283" data-magicpath-path="KotoDashboard.tsx" />
                 </div>}
 
-              <div className="space-y-4" data-magicpath-id="270" data-magicpath-path="KotoDashboard.tsx">
-                <div data-magicpath-id="271" data-magicpath-path="KotoDashboard.tsx">
-                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="272" data-magicpath-path="KotoDashboard.tsx">Content</h3>
-                  <p className="text-slate-700 dark:text-slate-300" data-magicpath-id="273" data-magicpath-path="KotoDashboard.tsx">{selectedPrompt.content}</p>
+              <div className="space-y-4" data-magicpath-id="284" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="285" data-magicpath-path="KotoDashboard.tsx">
+                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="286" data-magicpath-path="KotoDashboard.tsx">Content</h3>
+                  <p className="text-slate-700 dark:text-slate-300" data-magicpath-id="287" data-magicpath-path="KotoDashboard.tsx">{selectedPrompt.content}</p>
                 </div>
 
-                <div data-magicpath-id="274" data-magicpath-path="KotoDashboard.tsx">
-                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="275" data-magicpath-path="KotoDashboard.tsx">Model</h3>
-                  <span className="inline-flex items-center px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm rounded-full" data-magicpath-id="276" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="288" data-magicpath-path="KotoDashboard.tsx">
+                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="289" data-magicpath-path="KotoDashboard.tsx">Model</h3>
+                  <span className="inline-flex items-center px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm rounded-full" data-magicpath-id="290" data-magicpath-path="KotoDashboard.tsx">
                     {selectedPrompt.model}
                   </span>
                 </div>
 
-                <div data-magicpath-id="277" data-magicpath-path="KotoDashboard.tsx">
-                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="278" data-magicpath-path="KotoDashboard.tsx">Tags</h3>
-                  <div className="flex flex-wrap gap-2" data-magicpath-id="279" data-magicpath-path="KotoDashboard.tsx">
-                    {selectedPrompt.tags.map((tag, index) => <span key={index} className="inline-flex items-center px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm rounded-full" data-magicpath-id="280" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="291" data-magicpath-path="KotoDashboard.tsx">
+                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="292" data-magicpath-path="KotoDashboard.tsx">Tags</h3>
+                  <div className="flex flex-wrap gap-2" data-magicpath-id="293" data-magicpath-path="KotoDashboard.tsx">
+                    {selectedPrompt.tags.map((tag, index) => <span key={index} className="inline-flex items-center px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm rounded-full" data-magicpath-id="294" data-magicpath-path="KotoDashboard.tsx">
                         {tag}
                       </span>)}
                   </div>
                 </div>
 
-                <div data-magicpath-id="281" data-magicpath-path="KotoDashboard.tsx">
-                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="282" data-magicpath-path="KotoDashboard.tsx">Created</h3>
-                  <p className="text-slate-700 dark:text-slate-300" data-magicpath-id="283" data-magicpath-path="KotoDashboard.tsx">{selectedPrompt.createdAt.toLocaleDateString()}</p>
+                <div data-magicpath-id="295" data-magicpath-path="KotoDashboard.tsx">
+                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="296" data-magicpath-path="KotoDashboard.tsx">Created</h3>
+                  <p className="text-slate-700 dark:text-slate-300" data-magicpath-id="297" data-magicpath-path="KotoDashboard.tsx">{selectedPrompt.createdAt.toLocaleDateString()}</p>
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-slate-200 dark:border-slate-700" data-magicpath-id="284" data-magicpath-path="KotoDashboard.tsx">
-                <button className="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors flex items-center space-x-2" data-magicpath-id="285" data-magicpath-path="KotoDashboard.tsx">
-                  <Copy className="w-4 h-4" data-magicpath-id="286" data-magicpath-path="KotoDashboard.tsx" />
-                  <span data-magicpath-id="287" data-magicpath-path="KotoDashboard.tsx">Copy</span>
+              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-slate-200 dark:border-slate-700" data-magicpath-id="298" data-magicpath-path="KotoDashboard.tsx">
+                <button className="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors flex items-center space-x-2" data-magicpath-id="299" data-magicpath-path="KotoDashboard.tsx">
+                  <Copy className="w-4 h-4" data-magicpath-id="300" data-magicpath-path="KotoDashboard.tsx" />
+                  <span data-magicpath-id="301" data-magicpath-path="KotoDashboard.tsx">Copy</span>
                 </button>
-                <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors flex items-center space-x-2" data-magicpath-id="288" data-magicpath-path="KotoDashboard.tsx">
-                  <Share2 className="w-4 h-4" data-magicpath-id="289" data-magicpath-path="KotoDashboard.tsx" />
-                  <span data-magicpath-id="290" data-magicpath-path="KotoDashboard.tsx">Share</span>
+                <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors flex items-center space-x-2" data-magicpath-id="302" data-magicpath-path="KotoDashboard.tsx">
+                  <Share2 className="w-4 h-4" data-magicpath-id="303" data-magicpath-path="KotoDashboard.tsx" />
+                  <span data-magicpath-id="304" data-magicpath-path="KotoDashboard.tsx">Share</span>
                 </button>
               </div>
             </motion.div>
@@ -1477,14 +1516,14 @@ const KotoDashboard: React.FC = () => {
       </AnimatePresence>
 
       {/* Tool Details Dialog */}
-      <AnimatePresence data-magicpath-id="291" data-magicpath-path="KotoDashboard.tsx">
+      <AnimatePresence data-magicpath-id="305" data-magicpath-path="KotoDashboard.tsx">
         {showToolDetailsDialog && selectedTool && <motion.div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{
         opacity: 0
       }} animate={{
         opacity: 1
       }} exit={{
         opacity: 0
-      }} onClick={() => setShowToolDetailsDialog(false)} data-magicpath-id="292" data-magicpath-path="KotoDashboard.tsx">
+      }} onClick={() => setShowToolDetailsDialog(false)} data-magicpath-id="306" data-magicpath-path="KotoDashboard.tsx">
             <motion.div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-xl" initial={{
           scale: 0.9,
           opacity: 0
@@ -1494,39 +1533,39 @@ const KotoDashboard: React.FC = () => {
         }} exit={{
           scale: 0.9,
           opacity: 0
-        }} onClick={e => e.stopPropagation()} data-magicpath-id="293" data-magicpath-path="KotoDashboard.tsx">
-              <div className="flex items-start justify-between mb-6" data-magicpath-id="294" data-magicpath-path="KotoDashboard.tsx">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white" data-magicpath-id="295" data-magicpath-path="KotoDashboard.tsx">{selectedTool.name}</h2>
-                <button onClick={() => setShowToolDetailsDialog(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" data-magicpath-id="296" data-magicpath-path="KotoDashboard.tsx">
-                  <X className="w-5 h-5 text-slate-600 dark:text-slate-400" data-magicpath-id="297" data-magicpath-path="KotoDashboard.tsx" />
+        }} onClick={e => e.stopPropagation()} data-magicpath-id="307" data-magicpath-path="KotoDashboard.tsx">
+              <div className="flex items-start justify-between mb-6" data-magicpath-id="308" data-magicpath-path="KotoDashboard.tsx">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white" data-magicpath-id="309" data-magicpath-path="KotoDashboard.tsx">{selectedTool.name}</h2>
+                <button onClick={() => setShowToolDetailsDialog(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" data-magicpath-id="310" data-magicpath-path="KotoDashboard.tsx">
+                  <X className="w-5 h-5 text-slate-600 dark:text-slate-400" data-magicpath-id="311" data-magicpath-path="KotoDashboard.tsx" />
                 </button>
               </div>
 
-              <div className="space-y-4" data-magicpath-id="298" data-magicpath-path="KotoDashboard.tsx">
-                <div data-magicpath-id="299" data-magicpath-path="KotoDashboard.tsx">
-                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="300" data-magicpath-path="KotoDashboard.tsx">Description</h3>
-                  <p className="text-slate-700 dark:text-slate-300" data-magicpath-id="301" data-magicpath-path="KotoDashboard.tsx">{selectedTool.description || 'No description available.'}</p>
+              <div className="space-y-4" data-magicpath-id="312" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="313" data-magicpath-path="KotoDashboard.tsx">
+                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="314" data-magicpath-path="KotoDashboard.tsx">Description</h3>
+                  <p className="text-slate-700 dark:text-slate-300" data-magicpath-id="315" data-magicpath-path="KotoDashboard.tsx">{selectedTool.description || 'No description available.'}</p>
                 </div>
 
-                <div data-magicpath-id="302" data-magicpath-path="KotoDashboard.tsx">
-                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="303" data-magicpath-path="KotoDashboard.tsx">Category</h3>
-                  <span className="inline-flex items-center px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm rounded-full" data-magicpath-id="304" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="316" data-magicpath-path="KotoDashboard.tsx">
+                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="317" data-magicpath-path="KotoDashboard.tsx">Category</h3>
+                  <span className="inline-flex items-center px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm rounded-full" data-magicpath-id="318" data-magicpath-path="KotoDashboard.tsx">
                     {selectedTool.category}
                   </span>
                 </div>
 
-                <div data-magicpath-id="305" data-magicpath-path="KotoDashboard.tsx">
-                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="306" data-magicpath-path="KotoDashboard.tsx">URL</h3>
+                <div data-magicpath-id="319" data-magicpath-path="KotoDashboard.tsx">
+                  <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2" data-magicpath-id="320" data-magicpath-path="KotoDashboard.tsx">URL</h3>
                   <a href={selectedTool.url} target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline break-all">
                     {selectedTool.url}
                   </a>
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-slate-200 dark:border-slate-700" data-magicpath-id="307" data-magicpath-path="KotoDashboard.tsx">
-                <button onClick={() => window.open(selectedTool.url, '_blank')} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors flex items-center space-x-2" data-magicpath-id="308" data-magicpath-path="KotoDashboard.tsx">
-                  <ExternalLink className="w-4 h-4" data-magicpath-id="309" data-magicpath-path="KotoDashboard.tsx" />
-                  <span data-magicpath-id="310" data-magicpath-path="KotoDashboard.tsx">Open Tool</span>
+              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-slate-200 dark:border-slate-700" data-magicpath-id="321" data-magicpath-path="KotoDashboard.tsx">
+                <button onClick={() => window.open(selectedTool.url, '_blank')} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors flex items-center space-x-2" data-magicpath-id="322" data-magicpath-path="KotoDashboard.tsx">
+                  <ExternalLink className="w-4 h-4" data-magicpath-id="323" data-magicpath-path="KotoDashboard.tsx" />
+                  <span data-magicpath-id="324" data-magicpath-path="KotoDashboard.tsx">Open Tool</span>
                 </button>
               </div>
             </motion.div>
@@ -1534,14 +1573,14 @@ const KotoDashboard: React.FC = () => {
       </AnimatePresence>
 
       {/* Settings Dialog */}
-      <AnimatePresence data-magicpath-id="311" data-magicpath-path="KotoDashboard.tsx">
+      <AnimatePresence data-magicpath-id="325" data-magicpath-path="KotoDashboard.tsx">
         {showSettingsDialog && <motion.div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{
         opacity: 0
       }} animate={{
         opacity: 1
       }} exit={{
         opacity: 0
-      }} onClick={() => setShowSettingsDialog(false)} data-magicpath-id="312" data-magicpath-path="KotoDashboard.tsx">
+      }} onClick={() => setShowSettingsDialog(false)} data-magicpath-id="326" data-magicpath-path="KotoDashboard.tsx">
             <motion.div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-xl" initial={{
           scale: 0.9,
           opacity: 0
@@ -1551,66 +1590,66 @@ const KotoDashboard: React.FC = () => {
         }} exit={{
           scale: 0.9,
           opacity: 0
-        }} onClick={e => e.stopPropagation()} data-magicpath-id="313" data-magicpath-path="KotoDashboard.tsx">
-              <div className="flex items-start justify-between mb-6" data-magicpath-id="314" data-magicpath-path="KotoDashboard.tsx">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white" data-magicpath-id="315" data-magicpath-path="KotoDashboard.tsx">Settings</h2>
-                <button onClick={() => setShowSettingsDialog(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" data-magicpath-id="316" data-magicpath-path="KotoDashboard.tsx">
-                  <X className="w-5 h-5 text-slate-600 dark:text-slate-400" data-magicpath-id="317" data-magicpath-path="KotoDashboard.tsx" />
+        }} onClick={e => e.stopPropagation()} data-magicpath-id="327" data-magicpath-path="KotoDashboard.tsx">
+              <div className="flex items-start justify-between mb-6" data-magicpath-id="328" data-magicpath-path="KotoDashboard.tsx">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white" data-magicpath-id="329" data-magicpath-path="KotoDashboard.tsx">Settings</h2>
+                <button onClick={() => setShowSettingsDialog(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" data-magicpath-id="330" data-magicpath-path="KotoDashboard.tsx">
+                  <X className="w-5 h-5 text-slate-600 dark:text-slate-400" data-magicpath-id="331" data-magicpath-path="KotoDashboard.tsx" />
                 </button>
               </div>
 
-              <div className="space-y-6" data-magicpath-id="318" data-magicpath-path="KotoDashboard.tsx">
+              <div className="space-y-6" data-magicpath-id="332" data-magicpath-path="KotoDashboard.tsx">
                 {/* Default Theme */}
-                <div data-magicpath-id="319" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-magicpath-id="320" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="333" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-magicpath-id="334" data-magicpath-path="KotoDashboard.tsx">
                     Default Theme
                   </label>
-                  <div className="flex space-x-3" data-magicpath-id="321" data-magicpath-path="KotoDashboard.tsx">
+                  <div className="flex space-x-3" data-magicpath-id="335" data-magicpath-path="KotoDashboard.tsx">
                     <button onClick={() => {
                   setDefaultTheme('light');
                   setDarkMode(false);
-                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${defaultTheme === 'light' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`} data-magicpath-id="322" data-magicpath-path="KotoDashboard.tsx">
-                      <Sun className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" data-magicpath-id="323" data-magicpath-path="KotoDashboard.tsx" />
-                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300" data-magicpath-id="324" data-magicpath-path="KotoDashboard.tsx">Light</div>
+                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${defaultTheme === 'light' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`} data-magicpath-id="336" data-magicpath-path="KotoDashboard.tsx">
+                      <Sun className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" data-magicpath-id="337" data-magicpath-path="KotoDashboard.tsx" />
+                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300" data-magicpath-id="338" data-magicpath-path="KotoDashboard.tsx">Light</div>
                     </button>
                     <button onClick={() => {
                   setDefaultTheme('dark');
                   setDarkMode(true);
-                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${defaultTheme === 'dark' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`} data-magicpath-id="325" data-magicpath-path="KotoDashboard.tsx">
-                      <Moon className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" data-magicpath-id="326" data-magicpath-path="KotoDashboard.tsx" />
-                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300" data-magicpath-id="327" data-magicpath-path="KotoDashboard.tsx">Dark</div>
+                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${defaultTheme === 'dark' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`} data-magicpath-id="339" data-magicpath-path="KotoDashboard.tsx">
+                      <Moon className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" data-magicpath-id="340" data-magicpath-path="KotoDashboard.tsx" />
+                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300" data-magicpath-id="341" data-magicpath-path="KotoDashboard.tsx">Dark</div>
                     </button>
                   </div>
                 </div>
 
                 {/* Background Photo */}
-                <div data-magicpath-id="328" data-magicpath-path="KotoDashboard.tsx">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-magicpath-id="329" data-magicpath-path="KotoDashboard.tsx">
+                <div data-magicpath-id="342" data-magicpath-path="KotoDashboard.tsx">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3" data-magicpath-id="343" data-magicpath-path="KotoDashboard.tsx">
                     Change Background Photo
                   </label>
-                  <div className="space-y-3" data-magicpath-id="330" data-magicpath-path="KotoDashboard.tsx">
-                    <input type="file" accept="image/*" onChange={handleBackgroundUpload} className="hidden" id="background-upload" data-magicpath-id="331" data-magicpath-path="KotoDashboard.tsx" />
-                    <label htmlFor="background-upload" className="flex items-center justify-center w-full p-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:border-slate-400 dark:hover:border-slate-500 cursor-pointer transition-colors" data-magicpath-id="332" data-magicpath-path="KotoDashboard.tsx">
-                      <div className="text-center" data-magicpath-id="333" data-magicpath-path="KotoDashboard.tsx">
-                        <Upload className="w-6 h-6 mx-auto mb-2 text-slate-400" data-magicpath-id="334" data-magicpath-path="KotoDashboard.tsx" />
-                        <div className="text-sm text-slate-600 dark:text-slate-400" data-magicpath-id="335" data-magicpath-path="KotoDashboard.tsx">
+                  <div className="space-y-3" data-magicpath-id="344" data-magicpath-path="KotoDashboard.tsx">
+                    <input type="file" accept="image/*" onChange={handleBackgroundUpload} className="hidden" id="background-upload" data-magicpath-id="345" data-magicpath-path="KotoDashboard.tsx" />
+                    <label htmlFor="background-upload" className="flex items-center justify-center w-full p-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:border-slate-400 dark:hover:border-slate-500 cursor-pointer transition-colors" data-magicpath-id="346" data-magicpath-path="KotoDashboard.tsx">
+                      <div className="text-center" data-magicpath-id="347" data-magicpath-path="KotoDashboard.tsx">
+                        <Upload className="w-6 h-6 mx-auto mb-2 text-slate-400" data-magicpath-id="348" data-magicpath-path="KotoDashboard.tsx" />
+                        <div className="text-sm text-slate-600 dark:text-slate-400" data-magicpath-id="349" data-magicpath-path="KotoDashboard.tsx">
                           Click to upload photo
                         </div>
                       </div>
                     </label>
                     
-                    {backgroundImage && <div className="relative" data-magicpath-id="336" data-magicpath-path="KotoDashboard.tsx">
-                        <img src={backgroundImage} alt="Background preview" className="w-full h-20 object-cover rounded-lg" data-magicpath-id="337" data-magicpath-path="KotoDashboard.tsx" />
-                        <button onClick={() => setBackgroundImage('')} className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors" data-magicpath-id="338" data-magicpath-path="KotoDashboard.tsx">
-                          <X className="w-3 h-3" data-magicpath-id="339" data-magicpath-path="KotoDashboard.tsx" />
+                    {backgroundImage && <div className="relative" data-magicpath-id="350" data-magicpath-path="KotoDashboard.tsx">
+                        <img src={backgroundImage} alt="Background preview" className="w-full h-20 object-cover rounded-lg" data-magicpath-id="351" data-magicpath-path="KotoDashboard.tsx" />
+                        <button onClick={() => setBackgroundImage('')} className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors" data-magicpath-id="352" data-magicpath-path="KotoDashboard.tsx">
+                          <X className="w-3 h-3" data-magicpath-id="353" data-magicpath-path="KotoDashboard.tsx" />
                         </button>
                       </div>}
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-slate-200 dark:border-slate-700" data-magicpath-id="340" data-magicpath-path="KotoDashboard.tsx">
-                <button onClick={() => setShowSettingsDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="341" data-magicpath-path="KotoDashboard.tsx">
+              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-slate-200 dark:border-slate-700" data-magicpath-id="354" data-magicpath-path="KotoDashboard.tsx">
+                <button onClick={() => setShowSettingsDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="355" data-magicpath-path="KotoDashboard.tsx">
                   Close
                 </button>
               </div>
