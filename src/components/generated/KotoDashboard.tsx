@@ -968,7 +968,9 @@ const KotoDashboard: React.FC = () => {
                     scale: 1.05
                   }} whileTap={{
                     scale: 0.95
-                  }} className="bg-white/20 hover:bg-white/30 text-white p-3 rounded-xl backdrop-blur-sm transition-colors group" title="Change Background" data-magicpath-id="112" data-magicpath-path="KotoDashboard.tsx">
+                  }} className="bg-white/20 hover:bg-white/30 text-white p-3 rounded-xl backdrop-blur-sm transition-colors group" title="Change Background" data-magicpath-id="112" data-magicpath-path="KotoDashboard.tsx" style={{
+                    display: "none"
+                  }}>
                       <Camera className="w-5 h-5" />
                     </motion.button>
                   </div>
