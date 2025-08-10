@@ -53,91 +53,91 @@ interface Project {
 const iconOptions = [{
   name: 'Smile',
   icon: Smile,
-  mpid: "29b94b5e-b076-4394-993c-cf07379ae0b8"
+  mpid: "1e2ac396-b94a-4c1d-bcdf-2e3b4fff301d"
 }, {
   name: 'Heart',
   icon: Heart,
-  mpid: "a623baab-643e-4ccd-8c6e-4100b003070d"
+  mpid: "85f1049d-abdc-4442-97f7-d340c979a0ea"
 }, {
   name: 'Star',
   icon: Star,
-  mpid: "c39f87bd-9220-449c-bb61-eacb00888c84"
+  mpid: "db02d2d6-0cb5-4f98-adee-3854a864f4ac"
 }, {
   name: 'Zap',
   icon: ZapIcon,
-  mpid: "f7c4ccf1-5ecb-4558-81ee-0e346fcf09fc"
+  mpid: "d2a7e033-ad08-4000-8174-47322466632d"
 }, {
   name: 'Coffee',
   icon: Coffee,
-  mpid: "8346df4e-d458-4c3d-b706-e7573edacea3"
+  mpid: "31857302-c6d8-46a1-989a-af545f661803"
 }, {
   name: 'Music',
   icon: Music,
-  mpid: "290df633-d017-4222-9080-d378eba5ad9c"
+  mpid: "4095658d-5231-4f95-91db-b77d72d42b24"
 }, {
   name: 'Book',
   icon: Book,
-  mpid: "b69297fa-9c84-4d9a-919b-70f36fc0e14d"
+  mpid: "68877d58-148e-45cf-bdc8-7bf96b524e02"
 }, {
   name: 'Gamepad',
   icon: Gamepad2,
-  mpid: "4ffecd31-21cb-48c6-8902-090379d835d3"
+  mpid: "31cd04ff-a482-49a1-a311-fb9ee159f08a"
 }, {
   name: 'Laptop',
   icon: Laptop,
-  mpid: "57908cc8-5d8f-42db-942a-f9e37dbbb252"
+  mpid: "5ac0f257-d724-4214-a6c0-0aaabcb754f9"
 }, {
   name: 'Smartphone',
   icon: Smartphone,
-  mpid: "64b5b403-1244-4cea-aa73-a2e4f23f3808"
+  mpid: "f57bc2a4-ea08-40c0-a6f7-208c01c1370e"
 }, {
   name: 'Headphones',
   icon: Headphones,
-  mpid: "0d0a40f1-7ffe-4691-9c16-615a9dfdbba7"
+  mpid: "c1f52364-6c72-42b9-80ba-39e393ab6007"
 }, {
   name: 'Car',
   icon: Car,
-  mpid: "b398a8f0-92b3-4abb-bcd7-6080b6028675"
+  mpid: "49fce2b6-99c3-4598-aa33-74f61b401b85"
 }, {
   name: 'Home',
   icon: Home,
-  mpid: "583aa4a8-d80b-4169-b970-5324abd72624"
+  mpid: "ce16abca-5e83-49ca-b7f5-6e11c97bdc27"
 }, {
   name: 'Plane',
   icon: Plane,
-  mpid: "46581b87-b2f6-48c9-9faf-3c86fa7d0ba8"
+  mpid: "abe1b365-e019-43d6-9758-8c2e6a09ac26"
 }, {
   name: 'Gift',
   icon: Gift,
-  mpid: "cb3cbec2-8e61-45fe-83d7-4b5167fabd99"
+  mpid: "9cb5e07d-2651-4bad-ab8a-484537498a2f"
 }, {
   name: 'Shopping',
   icon: ShoppingBag,
-  mpid: "f6aca739-e50d-4908-b225-c5f908384a7c"
+  mpid: "23cb7dbc-58df-4ecd-a1bd-01173112dbff"
 }, {
   name: 'Card',
   icon: CreditCard,
-  mpid: "6273d5c6-7e32-4cc7-8c29-aba003148add"
+  mpid: "f6dbe9b7-c21a-4da1-8449-de557ebf4a7b"
 }, {
   name: 'Mail',
   icon: Mail,
-  mpid: "c20ff10a-350a-429a-bfca-b930dc7e09ef"
+  mpid: "410ebac7-d175-4ba1-a9d2-f53b57994d93"
 }, {
   name: 'Phone',
   icon: Phone,
-  mpid: "d9dc2505-29ff-4bf6-b67e-48baf4022643"
+  mpid: "e85569be-784c-4155-b3d9-06a0551ae11e"
 }, {
   name: 'Map',
   icon: MapPin,
-  mpid: "4d473dfd-1fd0-4129-8188-cafc4abf1efd"
+  mpid: "0e1431a4-e1f7-44de-a144-04259b898391"
 }, {
   name: 'Calendar',
   icon: Calendar,
-  mpid: "2b81214b-f9af-4e48-ac5f-c356ba6f7a8f"
+  mpid: "b8f79fa0-3967-4e4a-b965-b347c23b0f79"
 }, {
   name: 'Clock',
   icon: Clock,
-  mpid: "1c4d814d-8015-4504-aa52-29e1659afdc2"
+  mpid: "57de7772-e4e8-4231-98cc-a76fa0a35d82"
 }] as any[];
 const KotoDashboard: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -193,7 +193,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "9841caef-2d84-4306-a501-e26510277a9d"
+    mpid: "d1918cad-f6ec-47f2-a0fa-79102827413b"
   }]);
   const [toolCategories, setToolCategories] = useState<Category[]>([{
     id: 'all-tools',
@@ -201,7 +201,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "1871c27a-fe15-4e5d-98b6-6621356cfb97"
+    mpid: "d9554a1a-32c5-4721-a30a-1eb373cd8102"
   }]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
 
