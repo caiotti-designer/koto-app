@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Container, Theme } from './settings/types';
-import PromptCard from './components/generated/PromptCard';
+import KotoDashboard from './components/generated/KotoDashboard';
 
 let theme: Theme = 'light';
 let container: Container = 'none';
@@ -18,7 +18,7 @@ function App() {
 
   const generatedComponent = useMemo(() => {
     // THIS IS WHERE THE TOP LEVEL GENRATED COMPONENT WILL BE RETURNED!
-    return <PromptCard />; // %EXPORT_STATEMENT%
+    return <KotoDashboard />; // %EXPORT_STATEMENT%
   }, []);
 
   if (container === 'centered') {
