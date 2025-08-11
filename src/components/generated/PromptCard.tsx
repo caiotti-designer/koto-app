@@ -56,10 +56,12 @@ export default function PromptCard({
         </div>
 
         {/* Model Badge */}
-        <div className="flex items-center justify-between pt-1" data-magicpath-id="10" data-magicpath-path="PromptCard.tsx">
-          <span className="px-3 py-1.5 text-xs font-medium bg-slate-50 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-600" data-magicpath-id="11" data-magicpath-path="PromptCard.tsx">
-            {model}
-          </span>
+        <div className="border-t border-slate-100 dark:border-slate-700 pt-4 mt-4" data-magicpath-id="10" data-magicpath-path="PromptCard.tsx">
+          <div className="flex justify-end" data-magicpath-id="11" data-magicpath-path="PromptCard.tsx">
+            <span className="px-3 py-1.5 text-xs font-medium bg-slate-50 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-600" data-magicpath-id="12" data-magicpath-path="PromptCard.tsx">
+              {model}
+            </span>
+          </div>
         </div>
       </div>
     </motion.div>;
