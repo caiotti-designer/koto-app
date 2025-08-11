@@ -54,91 +54,91 @@ interface Project {
 const iconOptions = [{
   name: 'Smile',
   icon: Smile,
-  mpid: "2731af0f-a34b-40f4-9d75-945e9b4b462e"
+  mpid: "d1b5aff5-7137-425d-b031-e92f6207015e"
 }, {
   name: 'Heart',
   icon: Heart,
-  mpid: "bb52c9f6-e138-4097-a4f7-f7110c97750d"
+  mpid: "155e7e19-f25c-4519-ad32-0d1f2d18f9cd"
 }, {
   name: 'Star',
   icon: Star,
-  mpid: "96876e56-09b1-44c4-936b-eeb48fd8d127"
+  mpid: "c335981a-6a3b-4532-b6b9-eb0811b83207"
 }, {
   name: 'Zap',
   icon: ZapIcon,
-  mpid: "fdee8f4e-fd78-4239-b1b1-e09cc3a1b5b1"
+  mpid: "6a8d4d98-6439-4781-b721-ed2723c39dbd"
 }, {
   name: 'Coffee',
   icon: Coffee,
-  mpid: "60849945-88a8-4454-9d28-8d5d076c0d0a"
+  mpid: "d9e6de1b-fd6d-4a3c-a34c-5d0152a1662b"
 }, {
   name: 'Music',
   icon: Music,
-  mpid: "1393d363-6479-4fed-9127-3a650fced785"
+  mpid: "af3a0da3-e41e-4ab4-88f3-af336281a1e0"
 }, {
   name: 'Book',
   icon: Book,
-  mpid: "dc6a8284-e8e1-44d2-a427-9f9b0fddc062"
+  mpid: "0a723fc6-fc60-4291-a764-55e9728f0e4b"
 }, {
   name: 'Gamepad',
   icon: Gamepad2,
-  mpid: "4fd7c3df-7d5f-4c9a-ac88-9dd1f951d987"
+  mpid: "ae7753f0-bafc-4204-b0ab-d61b3e9b9f14"
 }, {
   name: 'Laptop',
   icon: Laptop,
-  mpid: "da100d81-66fc-4001-a135-c6f651a64602"
+  mpid: "d644d0fc-a3da-48d9-9dd3-b4ed07f107f4"
 }, {
   name: 'Smartphone',
   icon: Smartphone,
-  mpid: "327bf8fa-aff4-41a4-b78c-5e3b281394dc"
+  mpid: "f0052ece-c4a8-4a6c-ac40-9969ee3e9f22"
 }, {
   name: 'Headphones',
   icon: Headphones,
-  mpid: "f5bfd76b-0a57-4cd3-8103-d8b7b9289cc9"
+  mpid: "46ac30f9-f707-4caa-9f27-f0327894276c"
 }, {
   name: 'Car',
   icon: Car,
-  mpid: "f9883a39-e0b5-4ed5-a5a5-f5d391adb1cb"
+  mpid: "e45c5cdd-2658-4524-9305-291b5e8235b1"
 }, {
   name: 'Home',
   icon: Home,
-  mpid: "a9882282-1848-421a-b77d-4eb71192b320"
+  mpid: "b04b38d2-53d6-4f88-96c7-b8cbc9779115"
 }, {
   name: 'Plane',
   icon: Plane,
-  mpid: "7d621631-56fc-46b2-b5a0-f8097feac7de"
+  mpid: "a7662b8c-3530-4a54-be92-d771e13f0dd6"
 }, {
   name: 'Gift',
   icon: Gift,
-  mpid: "862843dd-be55-4690-bbdf-5a8419437b35"
+  mpid: "7dba4809-eab5-4460-8943-3e6b5bd011a6"
 }, {
   name: 'Shopping',
   icon: ShoppingBag,
-  mpid: "59a3cbd3-cdf1-41ea-bbb9-aa2879dfc758"
+  mpid: "c8fc6579-ee3c-484c-8274-01e8eb1b6112"
 }, {
   name: 'Card',
   icon: CreditCard,
-  mpid: "fef89900-9725-44cd-b701-f6cb2e5e20a8"
+  mpid: "cf1517f4-a8b2-48b4-8028-c09ae9603a55"
 }, {
   name: 'Mail',
   icon: Mail,
-  mpid: "7d85b5d7-d886-45d8-b2ed-638e67774c66"
+  mpid: "921dde7f-043b-4f51-be21-7a62e59dc17b"
 }, {
   name: 'Phone',
   icon: Phone,
-  mpid: "6997cd1c-777b-4d58-9702-469aa33e42ca"
+  mpid: "8395d3d4-09ea-41ad-a524-66e0ce93b895"
 }, {
   name: 'Map',
   icon: MapPin,
-  mpid: "30950d70-bd40-489d-bc3e-f087117b23c5"
+  mpid: "66c61ec2-56b5-4649-bcce-d2cc5e0586c2"
 }, {
   name: 'Calendar',
   icon: Calendar,
-  mpid: "1bdb0a4d-165e-48eb-9c7e-5a06a992cc48"
+  mpid: "a7f87b02-e839-4d9a-a523-48ca67a68ea3"
 }, {
   name: 'Clock',
   icon: Clock,
-  mpid: "2b8aa5d2-1d9f-466d-8f48-2ffe677fd3be"
+  mpid: "f967d59d-110d-4d2a-844a-d2721a42c173"
 }] as any[];
 const KotoDashboard: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -186,36 +186,7 @@ const KotoDashboard: React.FC = () => {
   const [backgroundImage, setBackgroundImage] = useState('');
 
   // Reset all data to defaults for new user
-  const [prompts, setPrompts] = useState<Prompt[]>([{
-    id: 'sample-1',
-    title: 'Woman and Tiger',
-    content: 'A woman in an oversized sweater and trousers walks with her pet tiger through a bustling city street, creating an unexpected and surreal scene.',
-    tags: ['sref', 'fashion', 'photography'],
-    model: 'Midjourney',
-    category: 'General',
-    coverImage: 'https://images.unsplash.com/photo-1551717743-49959800b1f6?w=400&h=300&fit=crop&crop=face',
-    createdAt: new Date(),
-    mpid: "c477d117-c716-435d-89c4-2ac983b97c60"
-  }, {
-    id: 'sample-2',
-    title: 'Creative Writing Assistant',
-    content: 'Help me write a compelling story about artificial intelligence discovering emotions for the first time.',
-    tags: ['writing', 'creative', 'AI', 'storytelling'],
-    model: 'Writing',
-    category: 'General',
-    createdAt: new Date(),
-    mpid: "1cf80ad8-e2c7-425b-b5df-2ae4028aaf9f"
-  }, {
-    id: 'sample-3',
-    title: 'Product Design Brief',
-    content: 'Create a comprehensive design brief for a mobile app that helps users track their daily water intake with gamification elements.',
-    tags: ['design', 'mobile', 'UX', 'health'],
-    model: 'GPT-4',
-    category: 'General',
-    coverImage: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=300&fit=crop',
-    createdAt: new Date(),
-    mpid: "41052d07-b71e-43e1-b685-2f3258d61142"
-  }]);
+  const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [tools, setTools] = useState<Tool[]>([]);
   const [categories, setCategories] = useState<Category[]>([{
     id: 'all',
@@ -223,7 +194,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "59134bc3-094a-4afe-b7a5-8c0c21fab9f3"
+    mpid: "85011f03-b242-4846-ab16-bfce79bf747e"
   }]);
   const [toolCategories, setToolCategories] = useState<Category[]>([{
     id: 'all-tools',
@@ -231,7 +202,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "806bd457-9631-429d-ab18-20822f77f2ca"
+    mpid: "2df104fe-ee46-4014-b086-5f2512d33d31"
   }]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
 
