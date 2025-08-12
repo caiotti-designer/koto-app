@@ -56,91 +56,91 @@ interface Project {
 const iconOptions = [{
   name: 'Smile',
   icon: Smile,
-  mpid: "b968c6b2-2cf2-404a-be35-abe64e3d345d"
+  mpid: "0db72b6e-401b-4081-9d51-f5df1cfc6639"
 }, {
   name: 'Heart',
   icon: Heart,
-  mpid: "e06aa4d5-800e-4027-a46a-9873721c624e"
+  mpid: "0fb3ee6a-4a9a-4fb7-94b6-da3125b01ecc"
 }, {
   name: 'Star',
   icon: Star,
-  mpid: "bc7a23fd-0817-4df5-ab03-e95041f4a890"
+  mpid: "bb385ad8-ea39-463c-95f6-31e7a00ae63d"
 }, {
   name: 'Zap',
   icon: ZapIcon,
-  mpid: "6d256cbb-cf3b-4328-a57d-d55d866eb9e7"
+  mpid: "52afbd00-76d1-4bee-a57a-d4ffa35e1efc"
 }, {
   name: 'Coffee',
   icon: Coffee,
-  mpid: "8ae58351-3ba7-4e29-bafa-e3a6a1cca056"
+  mpid: "369f65b2-e640-490f-b04e-1354201a1ee1"
 }, {
   name: 'Music',
   icon: Music,
-  mpid: "c03d5614-ea98-478d-a859-16c1c5caeb5e"
+  mpid: "84274992-9f70-4321-9f42-cfb1f917b11c"
 }, {
   name: 'Book',
   icon: Book,
-  mpid: "29706f0e-3fbb-45d0-a20d-b8095c83495b"
+  mpid: "fe0d588f-98c2-4a4c-90d1-2dfb7bba7257"
 }, {
   name: 'Gamepad',
   icon: Gamepad2,
-  mpid: "9d414a11-cedc-4291-a9f7-7b9bf649d094"
+  mpid: "8ef76b03-f70e-4c26-a9dc-0696d701e179"
 }, {
   name: 'Laptop',
   icon: Laptop,
-  mpid: "8a125404-5930-4b49-8ac3-f6e5c6a79bfe"
+  mpid: "22ddc21f-67ae-48f2-8c36-286a07785390"
 }, {
   name: 'Smartphone',
   icon: Smartphone,
-  mpid: "811ef5fd-0aa7-4da2-8cb5-0cd4e851bb4c"
+  mpid: "f25fba73-6f37-42f3-8870-f3f3b76e1bd1"
 }, {
   name: 'Headphones',
   icon: Headphones,
-  mpid: "f5e078f8-f02b-47af-a8da-8065cd8083f2"
+  mpid: "2a5ab35b-e339-43b2-96b9-5c3681b9914b"
 }, {
   name: 'Car',
   icon: Car,
-  mpid: "0b3f831a-56c5-4d58-82cf-d9457c0e060b"
+  mpid: "5cc6842b-1a01-4caf-b09c-621cf024fc7f"
 }, {
   name: 'Home',
   icon: Home,
-  mpid: "b6168d2d-5e42-4617-abff-1b3f60e7c451"
+  mpid: "014ce858-f3f4-4477-b38d-c9c86d0212aa"
 }, {
   name: 'Plane',
   icon: Plane,
-  mpid: "b69b9c89-95c2-4b57-ba37-6a3000597e76"
+  mpid: "4f71537d-22a8-4e7a-85ff-da374937f35a"
 }, {
   name: 'Gift',
   icon: Gift,
-  mpid: "85a58e84-3f46-46b8-884a-07f7c00378e6"
+  mpid: "5bf91f7c-86e8-4a8b-b2f7-005fb0a62a45"
 }, {
   name: 'Shopping',
   icon: ShoppingBag,
-  mpid: "12c19dba-2cb8-41ff-8118-779b256cf27c"
+  mpid: "992799e5-62d0-421d-bbfe-fd18d76b4911"
 }, {
   name: 'Card',
   icon: CreditCard,
-  mpid: "db8e9d36-9448-4b3d-8f5e-2c31ca819c8f"
+  mpid: "192b2572-863d-4c8e-a0b3-4540b662b001"
 }, {
   name: 'Mail',
   icon: Mail,
-  mpid: "9ebad579-55d2-41ff-be70-f8046e5bb30c"
+  mpid: "62886cd4-27ea-4c4b-994a-85c42ddcf5cf"
 }, {
   name: 'Phone',
   icon: Phone,
-  mpid: "e9892d3d-48c1-4c00-9fd8-884111bfd645"
+  mpid: "a53dca3f-2c2a-4418-8df2-749ace4303c3"
 }, {
   name: 'Map',
   icon: MapPin,
-  mpid: "5bd5bbce-cf88-4af3-bdce-c0218721b05d"
+  mpid: "c571847a-66cd-4d7d-a543-7b1896bcd5bc"
 }, {
   name: 'Calendar',
   icon: Calendar,
-  mpid: "569da6c5-fb0a-4b47-8514-10553a61aecc"
+  mpid: "a6991ea0-3372-49b6-89b7-821535427ee4"
 }, {
   name: 'Clock',
   icon: Clock,
-  mpid: "d9e74f1f-fe6f-4385-a7ef-90f7069c6566"
+  mpid: "46249d64-e54c-42b2-9b5a-16692861f6cc"
 }] as any[];
 const KotoDashboard: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -185,7 +185,7 @@ const KotoDashboard: React.FC = () => {
   const [newToolName, setNewToolName] = useState('');
   const [newToolUrl, setNewToolUrl] = useState('');
   const [newToolDescription, setNewToolDescription] = useState('');
-  const [newToolCategory, setNewToolCategory] = useState('AI Tools');
+  const [newToolCategory, setNewToolCategory] = useState('');
   const [isLoadingToolData, setIsLoadingToolData] = useState(false);
   const [toolFavicon, setToolFavicon] = useState('');
 
@@ -202,7 +202,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "d6781a58-923b-43ca-9f22-3441b349b011"
+    mpid: "1116cd8e-5b82-47c1-bd03-f6b9ff775e0a"
   }]);
   const [toolCategories, setToolCategories] = useState<Category[]>([{
     id: 'all-tools',
@@ -210,7 +210,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "e7867256-9a54-4298-a181-4784d6aa856f"
+    mpid: "70c72d23-3f70-4314-9914-4e89be4920d2"
   }]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
 
@@ -432,7 +432,7 @@ const KotoDashboard: React.FC = () => {
       url: newToolUrl,
       description: newToolDescription,
       favicon: toolFavicon,
-      category: activeCategory === 'all-tools' ? newToolCategory : getCurrentCategoryName(),
+      category: newToolCategory || (activeCategory === 'all-tools' ? 'General' : getCurrentCategoryName()),
       mpid: `tool-${Date.now()}`
     };
     setTools(prev => [newTool, ...prev]);
@@ -441,7 +441,7 @@ const KotoDashboard: React.FC = () => {
     setNewToolName('');
     setNewToolUrl('');
     setNewToolDescription('');
-    setNewToolCategory('AI Tools');
+    setNewToolCategory('');
     setToolFavicon('');
     setIsLoadingToolData(false);
     setShowNewToolDialog(false);
@@ -1265,16 +1265,24 @@ const KotoDashboard: React.FC = () => {
                 {/* Category */}
                 <div data-magicpath-id="222" data-magicpath-path="KotoDashboard.tsx">
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" data-magicpath-id="223" data-magicpath-path="KotoDashboard.tsx">
-                    Category
+                    Stacks
                   </label>
-                  <select value={newToolCategory} onChange={e => setNewToolCategory(e.target.value)} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="224" data-magicpath-path="KotoDashboard.tsx">
-                    <option value="AI Tools" data-magicpath-id="225" data-magicpath-path="KotoDashboard.tsx">AI Tools</option>
-                    <option value="UIDesign" data-magicpath-id="226" data-magicpath-path="KotoDashboard.tsx">UI Design</option>
-                    <option value="UXDesign" data-magicpath-id="227" data-magicpath-path="KotoDashboard.tsx">UX Design</option>
-                    <option value="Design" data-magicpath-id="228" data-magicpath-path="KotoDashboard.tsx">Design</option>
-                    <option value="Figma" data-magicpath-id="229" data-magicpath-path="KotoDashboard.tsx">Figma</option>
-                    <option value="Crypto" data-magicpath-id="230" data-magicpath-path="KotoDashboard.tsx">Crypto</option>
-                  </select>
+                  <div className="space-y-3" data-magicpath-id="224" data-magicpath-path="KotoDashboard.tsx">
+                    <select value={newToolCategory} onChange={e => setNewToolCategory(e.target.value)} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" data-magicpath-id="225" data-magicpath-path="KotoDashboard.tsx">
+                      <option value="" data-magicpath-id="226" data-magicpath-path="KotoDashboard.tsx">Select a stack</option>
+                      {updatedToolCategories.filter(cat => cat.id !== 'all-tools').map(category => <option key={category.id} value={category.name} data-magicpath-uuid={(category as any)["mpid"] ?? "unsafe"} data-magicpath-field="name:unknown" data-magicpath-id="227" data-magicpath-path="KotoDashboard.tsx">
+                          {category.name}
+                        </option>)}
+                    </select>
+                    
+                    <button onClick={() => {
+                  setShowNewToolDialog(false);
+                  setShowAddProjectDialog(true);
+                }} className="w-full flex items-center justify-center space-x-2 px-3 py-2 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:border-slate-400 dark:hover:border-slate-500 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="228" data-magicpath-path="KotoDashboard.tsx">
+                      <Plus className="w-4 h-4" data-magicpath-id="229" data-magicpath-path="KotoDashboard.tsx" />
+                      <span className="text-sm font-medium" data-magicpath-id="230" data-magicpath-path="KotoDashboard.tsx">Add new stack</span>
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex justify-end space-x-3 pt-4" data-magicpath-id="231" data-magicpath-path="KotoDashboard.tsx">
@@ -1311,7 +1319,7 @@ const KotoDashboard: React.FC = () => {
         }} onClick={e => e.stopPropagation()} data-magicpath-id="236" data-magicpath-path="KotoDashboard.tsx">
               <div className="flex items-start justify-between mb-6" data-magicpath-id="237" data-magicpath-path="KotoDashboard.tsx">
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-white" data-magicpath-id="238" data-magicpath-path="KotoDashboard.tsx">Settings</h2>
-                <button onClick={() => setShowSettingsDialog(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors" data-magicpath-id="239" data-magicpath-path="KotoDashboard.tsx">
+                <button onClick={() => setShowSettingsDialog(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-color-color" data-magicpath-id="239" data-magicpath-path="KotoDashboard.tsx">
                   <X className="w-5 h-5 text-slate-600 dark:text-slate-400" data-magicpath-id="240" data-magicpath-path="KotoDashboard.tsx" />
                 </button>
               </div>
