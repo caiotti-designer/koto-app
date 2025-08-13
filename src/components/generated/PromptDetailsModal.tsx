@@ -43,7 +43,19 @@ export default function PromptDetailsModal({
         ...prompt
       });
     }
+    // Reset edit-related states when the selected prompt changes
+    setIsEditing(false);
+    setShowDeleteConfirm(false);
+    setCopySuccess(false);
   }, [prompt]);
+  // Ensure clean state whenever the modal opens
+  React.useEffect(() => {
+    if (isOpen) {
+      setIsEditing(false);
+      setShowDeleteConfirm(false);
+      setCopySuccess(false);
+    }
+  }, [isOpen]);
   if (!prompt || !isOpen) return null;
   const handleEdit = () => {
     setIsEditing(true);
@@ -121,7 +133,7 @@ export default function PromptDetailsModal({
     }} exit={{
       opacity: 0
     }} onClick={onClose}>
-          <motion.div className="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl" initial={{
+          <motion.div className="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col" initial={{
         scale: 0.9,
         opacity: 0,
         y: 20
@@ -151,63 +163,25 @@ export default function PromptDetailsModal({
                     </div>}
                 </div>}
 
-              {/* Header Actions */}
-              <div className="absolute top-4 right-4 flex items-center space-x-2">
-                {!isEditing ? <>
-                    {/* Quick Actions */}
-                    <motion.button onClick={handleCopy} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors">
-                      {copySuccess ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                    </motion.button>
-                    
-                    <motion.button onClick={handleShare} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors">
-                      <Share2 className="w-5 h-5" />
-                    </motion.button>
-                    
-                    <motion.button onClick={handleEdit} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors">
-                      <Edit2 className="w-5 h-5" />
-                    </motion.button>
-                  </> : <>
-                    <motion.button onClick={handleCancel} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="px-4 py-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors">
-                      Cancel
-                    </motion.button>
-                    
-                    <motion.button onClick={handleSave} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors">
-                      Save
-                    </motion.button>
-                  </>}
-                
-                <motion.button onClick={onClose} whileHover={{
-              scale: 1.05
-            }} whileTap={{
-              scale: 0.95
-            }} className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors">
-                  <X className="w-5 h-5" />
-                </motion.button>
-              </div>
+              {/* Header Actions: only Close button (adaptive) */}
+              {(() => {
+                const hasCover = Boolean(editedPrompt?.coverImage || prompt.coverImage);
+                return (
+                  <motion.button
+                    onClick={onClose}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`absolute top-4 right-4 rounded-xl transition-colors ${hasCover ? 'p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white' : 'p-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white border border-slate-200 dark:border-slate-600'}`}
+                    aria-label="Close"
+                  >
+                    <X className="w-5 h-5" />
+                  </motion.button>
+                );
+              })()}
             </div>
 
             {/* Content */}
-            <div className="p-8 overflow-y-auto max-h-[calc(90vh-16rem)]">
+            <div className="p-8 overflow-y-auto flex-1">
               <div className="space-y-6">
                 {/* Title */}
                 <div>
@@ -292,8 +266,8 @@ export default function PromptDetailsModal({
                     </div>}
                 </div>
 
-                {/* Cover Image Management */}
-                {isEditing && <div>
+                {/* Cover Image Management: show uploader only when no cover exists */}
+                {isEditing && !(editedPrompt?.coverImage || prompt.coverImage) && <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                       Cover Image
                     </label>
@@ -302,21 +276,9 @@ export default function PromptDetailsModal({
                       <label htmlFor="edit-cover-image-upload" className="flex items-center justify-center w-full p-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl hover:border-slate-400 dark:hover:border-slate-500 cursor-pointer transition-colors">
                         <div className="text-center">
                           <Camera className="w-6 h-6 mx-auto mb-2 text-slate-400" />
-                          <div className="text-sm text-slate-600 dark:text-slate-400">
-                            {editedPrompt?.coverImage ? 'Change cover image' : 'Add cover image'}
-                          </div>
+                          <div className="text-sm text-slate-600 dark:text-slate-400">Add cover image</div>
                         </div>
                       </label>
-                      
-                      {editedPrompt?.coverImage && <div className="relative">
-                          <img src={editedPrompt.coverImage} alt="Cover preview" className="w-full h-32 object-cover rounded-xl" />
-                          <button onClick={() => setEditedPrompt(prev => prev ? {
-                    ...prev,
-                    coverImage: undefined
-                  } : null)} className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors">
-                            <X className="w-3 h-3" />
-                          </button>
-                        </div>}
                     </div>
                   </div>}
               </div>

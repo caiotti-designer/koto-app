@@ -317,7 +317,6 @@ const KotoDashboard: React.FC = () => {
       count: 0,
       icon: selectedIcon.icon,
       expanded: false,
-      mpid: `project-${Date.now()}`
     };
     if (activeTab === 'prompts') {
       setCategories(prev => [...prev, newCategory]);
@@ -332,7 +331,6 @@ const KotoDashboard: React.FC = () => {
         name: subcat,
         parentId: newCategory.id,
         count: 0,
-        mpid: `subcat-${Date.now()}-${subcat}`
       }));
       setSubcategories(prev => [...prev, ...newSubcats]);
     }
@@ -406,8 +404,7 @@ const KotoDashboard: React.FC = () => {
       category: promptCategory,
       subcategory: promptSubcategory,
       coverImage: newPromptCoverImage,
-      createdAt: new Date(),
-      mpid: `prompt-${Date.now()}`
+      createdAt: new Date()
     };
     setPrompts(prev => [newPrompt, ...prev]);
 
@@ -428,7 +425,6 @@ const KotoDashboard: React.FC = () => {
       description: newToolDescription,
       favicon: toolFavicon,
       category: newToolCategory || (activeCategory === 'all-tools' ? 'General' : getCurrentCategoryName()),
-      mpid: `tool-${Date.now()}`
     };
     setTools(prev => [newTool, ...prev]);
 
@@ -517,7 +513,6 @@ const KotoDashboard: React.FC = () => {
       name: subcatName,
       parentId: parentId,
       count: 0,
-      mpid: `subcat-${Date.now()}`
     };
     setSubcategories(prev => [...prev, newSubcat]);
 
@@ -641,7 +636,10 @@ const KotoDashboard: React.FC = () => {
 
   // Missing handler functions for PromptDetailsModal
   const handleEditPrompt = (prompt: Prompt) => {
-    setPrompts(prev => prev.map(p => p.id === prompt.id ? prompt : p));
+    // Update prompts list
+    setPrompts(prev => prev.map(p => (p.id === prompt.id ? prompt : p)));
+    // If the edited item is the one currently open in the modal, update it too
+    setSelectedPrompt(prev => (prev && prev.id === prompt.id ? { ...prompt } : prev));
   };
   const handleDeletePrompt = (promptId: string) => {
     setPrompts(prev => prev.filter(p => p.id !== promptId));
@@ -1126,7 +1124,13 @@ const KotoDashboard: React.FC = () => {
                             </span>}
                           
                           <div className="flex items-center space-x-1 flex-shrink-0">
-                            <span className="text-xs bg-slate-200 dark:bg-slate-600 px-2 py-0.5 rounded-full">
+                            <span
+                              className={`text-xs px-2 py-0.5 rounded-full ${
+                                activeCategory === subcategory.id
+                                  ? 'bg-white/20 text-white'
+                                  : 'bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-200'
+                              }`}
+                            >
                               {subcategoryCount}
                             </span>
                             
@@ -1173,9 +1177,9 @@ const KotoDashboard: React.FC = () => {
       </motion.aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 px-0">
         {/* Content Area */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto px-0">
           {/* Hero Section */}
           <div className="relative h-64 bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 overflow-hidden" style={{
           backgroundImage: backgroundImage ? `url('${backgroundImage}')` : `url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=400&fit=crop')`,
@@ -1184,85 +1188,76 @@ const KotoDashboard: React.FC = () => {
         }}>
             <div className="absolute inset-0 bg-gradient-to-r from-purple-900/50 to-pink-900/50"></div>
             
-            {/* Profile Menu */}
-            <div className="absolute top-6 right-6">
-              <div className="relative">
-                <motion.button onClick={() => setShowProfileMenu(!showProfileMenu)} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="flex items-center space-x-3 p-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl transition-colors">
-                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="text-left text-white">
-                    <div className="text-sm font-medium">Login</div>
-                    <div className="text-xs text-white/80">Sign in to continue</div>
-                  </div>
-                </motion.button>
-
-                <AnimatePresence>
-                  {showProfileMenu && <motion.div initial={{
-                  opacity: 0,
-                  y: 10
-                }} animate={{
-                  opacity: 1,
-                  y: 0
-                }} exit={{
-                  opacity: 0,
-                  y: 10
-                }} className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1">
-                      <button className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                        <User className="w-4 h-4" />
-                        <span>Sign in</span>
-                      </button>
-                      <button className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                        <User className="w-4 h-4" />
-                        <span>Create Account</span>
-                      </button>
-                      <button onClick={() => setShowSettingsDialog(true)} className="w-full px-4 py-1 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                        <Settings className="w-4 h-4" />
-                        <span>Settings</span>
-                      </button>
-                      <hr className="my-2 border-slate-200 dark:border-slate-700" />
-                      <button className="w-full px-4 py-2 text-left text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                        <HelpCircle className="w-4 h-4" />
-                        <span>Help & Support</span>
-                      </button>
-                    </motion.div>}
-                </AnimatePresence>
-              </div>
-            </div>
+            {/* Unified Header Row moved inside content container below */}
 
             <div className="relative h-full flex items-center justify-center">
-              <div className="text-center text-white flex flex-col items-center justify-center w-full max-w-4xl px-8" style={{
+              <div className="text-center text-white flex flex-col items-center justify-center w-full max-w-4xl p-0" style={{
               display: "flex",
               width: "96%",
               maxWidth: "96%"
             }}>
-                {/* First Row - Centered Tabs */}
-                <div className="mb-8">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-1 inline-flex" style={{
-                  display: "flex",
-                  alignItems: "center"
-                }}>
-                    <div className="flex space-x-1" style={{
-                    alignItems: "center"
-                  }}>
-                      <button onClick={() => setActiveTab('prompts')} className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}>
+                {/* Header Row inside container: Tabs (left) and Login (right) */}
+                <div className="w-full flex items-stretch justify-between mb-6 h-14">
+                  {/* Tabs */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-1 inline-flex h-full" style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className="flex space-x-1" style={{ alignItems: 'center' }}>
+                      <button onClick={() => setActiveTab('prompts')} className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all h-full ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}>
                         <MessageSquare className="w-4 h-4" />
                         <span>Prompts</span>
                       </button>
-                      <button onClick={() => setActiveTab('toolbox')} className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}>
+                      <button onClick={() => setActiveTab('toolbox')} className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all h-full ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}>
                         <Wrench className="w-4 h-4" />
                         <span>Tool Box</span>
                       </button>
                     </div>
                   </div>
+
+                  {/* Profile Menu */}
+                  <div className="relative h-full">
+                    <motion.button onClick={() => setShowProfileMenu(!showProfileMenu)} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center space-x-3 pl-2 pr-4 py-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl transition-colors h-full">
+                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <User className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="text-left text-white">
+                        <div className="text-sm font-medium">Login</div>
+                        <div className="text-xs text-white/80">Sign in to continue</div>
+                      </div>
+                    </motion.button>
+
+                    <AnimatePresence>
+                      {showProfileMenu && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1"
+                        >
+                          <button className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
+                            <User className="w-4 h-4" />
+                            <span>Sign in</span>
+                          </button>
+                          <button className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
+                            <User className="w-4 h-4" />
+                            <span>Create Account</span>
+                          </button>
+                          <button onClick={() => setShowSettingsDialog(true)} className="w-full px-4 py-1 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
+                            <Settings className="w-4 h-4" />
+                            <span>Settings</span>
+                          </button>
+                          <hr className="my-2 border-slate-200 dark:border-slate-700" />
+                          <button className="w-full px-4 py-2 text-left text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
+                            <HelpCircle className="w-4 h-4" />
+                            <span>Help & Support</span>
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
+                {/* Header row handled above (tabs + login) */}
 
                 {/* Second Row - Title and Actions */}
-                <div className="flex items-center justify-between w-full max-w-3xl" style={{
+                <div className="flex items-center justify-between w-full" style={{
                 alignItems: "end",
                 width: "100%",
                 maxWidth: "100%"
@@ -1308,7 +1303,9 @@ const KotoDashboard: React.FC = () => {
                       return <Palette className="w-6 h-6" />;
                     })()}
                       <h1 className="text-2xl font-bold">
-                        {getCurrentCategoryName()}
+                        {activeTab === 'prompts'
+                          ? (activeCategory === 'all' ? 'All Prompts' : getCurrentCategoryName())
+                          : (activeCategory === 'all-tools' ? 'All Tools' : getCurrentCategoryName())}
                       </h1>
                     </div>
                     <p className="text-white/80">
@@ -1341,13 +1338,13 @@ const KotoDashboard: React.FC = () => {
           </div>
 
           {/* Content Grid */}
-          <div className="p-6">
-            <div className="max-w-7xl mx-auto">
+          <div className="py-6 px-0">
+            <div className="w-[96%] mx-auto">
               {/* Show prompts/tools if they exist, otherwise show empty state */}
-              {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'prompt', prompt)}>
+              {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full justify-items-stretch auto-rows-fr">
+                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className="justify-self-start w-full h-full" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'prompt', prompt)}>
                           <PromptCard title={prompt.title} description={prompt.content} tags={prompt.tags} model={prompt.model} coverImage={prompt.coverImage} onClick={() => handlePromptClick(prompt)} />
-                        </div>) : filteredTools.map(tool => <div key={tool.id} draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'tool', tool)} onClick={() => handleToolClick(tool)} className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-xl border border-slate-200 dark:border-slate-700 cursor-pointer transition-all duration-200 hover:scale-102 hover:-translate-y-1">
+                        </div>) : filteredTools.map(tool => <div key={tool.id} className="justify-self-start w-full h-full bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-xl border border-slate-200 dark:border-slate-700 cursor-pointer transition-all duration-200 hover:scale-102 hover:-translate-y-1" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'tool', tool)} onClick={() => handleToolClick(tool)}>
                           <div className="flex items-center space-x-4 mb-4">
                             {tool.favicon && <img src={tool.favicon} alt={`${tool.name} favicon`} className="w-10 h-10 rounded-lg" onError={e => {
                     (e.target as HTMLImageElement).style.display = 'none';
@@ -1374,7 +1371,7 @@ const KotoDashboard: React.FC = () => {
                           </div>
                         </div>)}
                 </div> : (/* Empty State for New User */
-            <div className="text-center py-12">
+            <div className="text-center py-12 w-full">
                   <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     {activeTab === 'prompts' ? <MessageSquare className="w-8 h-8 text-slate-400" /> : <Wrench className="w-8 h-8 text-slate-400" />}
                   </div>
