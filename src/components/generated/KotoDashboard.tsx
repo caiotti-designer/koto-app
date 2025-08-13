@@ -56,91 +56,91 @@ interface Project {
 const iconOptions = [{
   name: 'Smile',
   icon: Smile,
-  mpid: "d39d3361-411f-4071-aff3-aec7941d2963"
+  mpid: "d5ac2cdf-2d9a-43b4-8c80-96de895951f1"
 }, {
   name: 'Heart',
   icon: Heart,
-  mpid: "89209b5e-645e-438f-962e-583f4572999d"
+  mpid: "83860f45-4fde-4138-b406-6b05ee70d0f2"
 }, {
   name: 'Star',
   icon: Star,
-  mpid: "c1e6279b-bbdb-4b55-9357-6b33e012b045"
+  mpid: "e1a8f7d6-c06d-4e89-88ed-5e51c36017f4"
 }, {
   name: 'Zap',
   icon: ZapIcon,
-  mpid: "05292769-4e48-418d-95c4-9b147c7d776f"
+  mpid: "cc7495ef-a41d-48eb-a98b-ea14934c7577"
 }, {
   name: 'Coffee',
   icon: Coffee,
-  mpid: "0ba6c351-bd4d-494a-8cf5-1c9aa81ce993"
+  mpid: "0179130f-6e0c-42e4-b921-5ecb13e5454a"
 }, {
   name: 'Music',
   icon: Music,
-  mpid: "b643696f-2f5b-4731-8f19-8b5e0aab555b"
+  mpid: "570f6724-46be-4b5f-a6f0-2994bf53f862"
 }, {
   name: 'Book',
   icon: Book,
-  mpid: "87e2c822-0662-40c3-9f0c-1b276fccf17e"
+  mpid: "250ce2d1-5fcd-4381-92e1-a2a80088f13e"
 }, {
   name: 'Gamepad',
   icon: Gamepad2,
-  mpid: "eedbce9a-38bc-4075-a331-442f2fece969"
+  mpid: "22800cb9-a66b-4012-83fd-e1f18fe1ea79"
 }, {
   name: 'Laptop',
   icon: Laptop,
-  mpid: "5c9febf6-f23c-4e4a-b818-b6c8b80189ce"
+  mpid: "ab6a2e46-465c-4eeb-afbe-147403e4d46d"
 }, {
   name: 'Smartphone',
   icon: Smartphone,
-  mpid: "322698a6-ed14-44d1-8224-18e2b1d48aed"
+  mpid: "74125cee-c9dc-437e-a357-020b02edf1b0"
 }, {
   name: 'Headphones',
   icon: Headphones,
-  mpid: "18facf6d-eb4b-4363-abfb-8a835df9c8bb"
+  mpid: "b8cb92be-82f1-4f1a-beb2-d0777c05cfb7"
 }, {
   name: 'Car',
   icon: Car,
-  mpid: "d230ea67-867f-4df1-a0c5-db994b806bfa"
+  mpid: "fa9e379a-ffae-45b5-91fa-df4d5219b495"
 }, {
   name: 'Home',
   icon: Home,
-  mpid: "9585f3bb-0e5a-45aa-8baf-a6d5dbbc1ddf"
+  mpid: "a9a73f8f-cffa-40d9-a550-21b18f74c230"
 }, {
   name: 'Plane',
   icon: Plane,
-  mpid: "88d07439-e8c8-415c-9b58-375a6688403c"
+  mpid: "62b32405-d465-49e7-a592-6421a48373af"
 }, {
   name: 'Gift',
   icon: Gift,
-  mpid: "64bf82db-5808-40b5-89b0-c05424dc416c"
+  mpid: "d6f87e80-b288-48ef-b5f4-6aea3528b43b"
 }, {
   name: 'Shopping',
   icon: ShoppingBag,
-  mpid: "0ad1ef85-5951-4af6-bf21-53a2509ebfdc"
+  mpid: "a4f20e5e-b621-422e-8fb6-1c23105e1e17"
 }, {
   name: 'Card',
   icon: CreditCard,
-  mpid: "f01f0b5b-d18c-4121-adca-5603fac73215"
+  mpid: "b2487082-89a6-4c24-bb15-2911d105012b"
 }, {
   name: 'Mail',
   icon: Mail,
-  mpid: "5d1aed49-3bc2-45db-8a2d-2efa15598ee7"
+  mpid: "14490449-e940-4bf1-9f62-3b97d712679d"
 }, {
   name: 'Phone',
   icon: Phone,
-  mpid: "f64787c3-8cba-4a9e-a439-40fb8c6e5fd0"
+  mpid: "88263c78-079b-48ab-b949-a915ceaf1aa1"
 }, {
   name: 'Map',
   icon: MapPin,
-  mpid: "182c9589-7c5f-426e-80c5-576eace40e5e"
+  mpid: "55993ea9-c213-4189-adef-bce35c501592"
 }, {
   name: 'Calendar',
   icon: Calendar,
-  mpid: "679dcfcb-a82a-4a10-bc3f-6c2d7e41ad53"
+  mpid: "aab82917-32d3-4726-8f02-723fe1ad0b62"
 }, {
   name: 'Clock',
   icon: Clock,
-  mpid: "c7f0c56d-98ff-4ce3-8687-dcd4eb6e542e"
+  mpid: "4cf07704-28b1-4cf5-a4b6-2e0848729f53"
 }] as any[];
 const KotoDashboard: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -193,17 +193,6 @@ const KotoDashboard: React.FC = () => {
   const [defaultTheme, setDefaultTheme] = useState<'light' | 'dark'>('light');
   const [backgroundImage, setBackgroundImage] = useState('');
 
-  // Missing state variables
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [toolCategories, setToolCategories] = useState<Category[]>([{
-    id: 'all-tools',
-    name: 'All Tools',
-    count: 0,
-    icon: Globe,
-    expanded: false,
-    mpid: "cb118957-8766-4964-a0ec-050ad7973428"
-  }]);
-
   // Reset all data to defaults for new user
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [tools, setTools] = useState<Tool[]>([]);
@@ -213,7 +202,18 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "58120d96-3f9a-4cd2-9bf0-2682b6dc5905"
+    mpid: "276c9c38-a57a-4871-8909-25e34399893c"
+  }]);
+
+  // Missing state variables
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const [toolCategories, setToolCategories] = useState<Category[]>([{
+    id: 'all-tools',
+    name: 'All Tools',
+    count: 0,
+    icon: Globe,
+    expanded: false,
+    mpid: "7872b9b2-9202-43ab-ab27-e8f8bc80f8b3"
   }]);
 
   // Update category counts dynamically
@@ -549,6 +549,11 @@ const KotoDashboard: React.FC = () => {
     // Check if it's a subcategory
     const subcategory = subcategories.find(sub => sub.id === activeCategory);
     if (subcategory) {
+      // Find the parent category
+      const parentCategory = (activeTab === 'prompts' ? updatedCategories : updatedToolCategories).find(cat => cat.id === subcategory.parentId);
+      if (parentCategory) {
+        return `${parentCategory.name} / ${subcategory.name}`;
+      }
       return subcategory.name;
     }
 
@@ -947,7 +952,7 @@ const KotoDashboard: React.FC = () => {
                           Are you sure you want to delete "{tool.name}"? This action cannot be undone.
                         </p>
                         <div className="flex space-x-3" data-magicpath-id="64" data-magicpath-path="KotoDashboard.tsx">
-                          <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="65" data-magicpath-path="KotoDashboard.tsx">
+                          <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 px-4 py-1 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors" data-magicpath-id="65" data-magicpath-path="KotoDashboard.tsx">
                             Cancel
                           </button>
                           <button onClick={handleDelete} className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors" data-magicpath-id="66" data-magicpath-path="KotoDashboard.tsx">
@@ -1323,9 +1328,9 @@ const KotoDashboard: React.FC = () => {
                     (e.target as HTMLImageElement).style.display = 'none';
                   }} data-magicpath-uuid={(tool as any)["mpid"] ?? "unsafe"} data-magicpath-field="favicon:unknown" data-magicpath-id="192" data-magicpath-path="KotoDashboard.tsx" />}
                             <div className="flex-1" data-magicpath-uuid={(tool as any)["mpid"] ?? "unsafe"} data-magicpath-id="193" data-magicpath-path="KotoDashboard.tsx">
-                              <h3 className="text-lg font-semibold text-slate-900 dark:text-white truncate" data-magicpath-uuid={(tool as any)["mpid"] ?? "unsafe"} data-magicpath-field="name:unknown" data-magicpath-id="194" data-magicpath-path="KotoDashboard.tsx">
+                              <h1 className="text-lg font-semibold text-slate-900 dark:text-white truncate" data-magicpath-uuid={(tool as any)["mpid"] ?? "unsafe"} data-magicpath-field="name:unknown" data-magicpath-id="194" data-magicpath-path="KotoDashboard.tsx">
                                 {tool.name}
-                              </h3>
+                              </h1>
                               <p className="text-sm text-slate-500 dark:text-slate-400 truncate" data-magicpath-uuid={(tool as any)["mpid"] ?? "unsafe"} data-magicpath-field="category:unknown" data-magicpath-id="195" data-magicpath-path="KotoDashboard.tsx">
                                 {tool.category}
                               </p>
