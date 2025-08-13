@@ -1300,8 +1300,10 @@ const KotoDashboard: React.FC = () => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "start",
-                  paddingTop: "16px",
-                  paddingBottom: "16px"
+                  paddingBottom: "24px",
+                  paddingTop: "24px",
+                  marginBottom: "0px",
+                  rowGap: "8px"
                 }} data-magicpath-id="172" data-magicpath-path="KotoDashboard.tsx">
                     <div className="flex items-center space-x-3" data-magicpath-id="173" data-magicpath-path="KotoDashboard.tsx">
                       {(() => {
