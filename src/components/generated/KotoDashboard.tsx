@@ -56,91 +56,91 @@ interface Project {
 const iconOptions = [{
   name: 'Smile',
   icon: Smile,
-  mpid: "13b46995-93d5-4b24-98c5-3a7c7c7f5665"
+  mpid: "d39d3361-411f-4071-aff3-aec7941d2963"
 }, {
   name: 'Heart',
   icon: Heart,
-  mpid: "a8adfdf2-5a3f-4722-898b-5e34a7f924ab"
+  mpid: "89209b5e-645e-438f-962e-583f4572999d"
 }, {
   name: 'Star',
   icon: Star,
-  mpid: "082af4aa-3b95-4c53-ab32-37bc1cf09a8c"
+  mpid: "c1e6279b-bbdb-4b55-9357-6b33e012b045"
 }, {
   name: 'Zap',
   icon: ZapIcon,
-  mpid: "de36ca1d-4a42-4a9d-b462-0b767c412c2c"
+  mpid: "05292769-4e48-418d-95c4-9b147c7d776f"
 }, {
   name: 'Coffee',
   icon: Coffee,
-  mpid: "bff19ce0-4596-434c-839c-58c2a7d32679"
+  mpid: "0ba6c351-bd4d-494a-8cf5-1c9aa81ce993"
 }, {
   name: 'Music',
   icon: Music,
-  mpid: "7bec542f-f6c0-4f4c-b25b-ac723e99d28e"
+  mpid: "b643696f-2f5b-4731-8f19-8b5e0aab555b"
 }, {
   name: 'Book',
   icon: Book,
-  mpid: "a7f18aa8-4b65-4576-ad56-d21ced830e3b"
+  mpid: "87e2c822-0662-40c3-9f0c-1b276fccf17e"
 }, {
   name: 'Gamepad',
   icon: Gamepad2,
-  mpid: "e8e4b19f-ddf0-40cb-85b0-d8d64fd91bc6"
+  mpid: "eedbce9a-38bc-4075-a331-442f2fece969"
 }, {
   name: 'Laptop',
   icon: Laptop,
-  mpid: "88ac4d23-c7fb-4e43-b1b4-9eac392c9f00"
+  mpid: "5c9febf6-f23c-4e4a-b818-b6c8b80189ce"
 }, {
   name: 'Smartphone',
   icon: Smartphone,
-  mpid: "82acf549-4734-4688-8125-af4b694006b0"
+  mpid: "322698a6-ed14-44d1-8224-18e2b1d48aed"
 }, {
   name: 'Headphones',
   icon: Headphones,
-  mpid: "c564cd73-4123-42e9-a65e-beabe1d56cf5"
+  mpid: "18facf6d-eb4b-4363-abfb-8a835df9c8bb"
 }, {
   name: 'Car',
   icon: Car,
-  mpid: "80e81a4d-900c-4870-b42d-7e5ee203ad20"
+  mpid: "d230ea67-867f-4df1-a0c5-db994b806bfa"
 }, {
   name: 'Home',
   icon: Home,
-  mpid: "ffdcf465-a871-4e16-a98a-d2a1efda21dd"
+  mpid: "9585f3bb-0e5a-45aa-8baf-a6d5dbbc1ddf"
 }, {
   name: 'Plane',
   icon: Plane,
-  mpid: "8b44adf4-04f9-4ce9-a253-6ec595cd4461"
+  mpid: "88d07439-e8c8-415c-9b58-375a6688403c"
 }, {
   name: 'Gift',
   icon: Gift,
-  mpid: "abbea2d3-821b-4032-a671-5655a9e0c0ed"
+  mpid: "64bf82db-5808-40b5-89b0-c05424dc416c"
 }, {
   name: 'Shopping',
   icon: ShoppingBag,
-  mpid: "f25ed2a2-470c-4b4e-9fa1-170418510c7e"
+  mpid: "0ad1ef85-5951-4af6-bf21-53a2509ebfdc"
 }, {
   name: 'Card',
   icon: CreditCard,
-  mpid: "e053a876-5ecd-4530-b7fb-7d5445c7eeff"
+  mpid: "f01f0b5b-d18c-4121-adca-5603fac73215"
 }, {
   name: 'Mail',
   icon: Mail,
-  mpid: "6af28e35-50f5-4804-8c47-d6c0e2c43e8a"
+  mpid: "5d1aed49-3bc2-45db-8a2d-2efa15598ee7"
 }, {
   name: 'Phone',
   icon: Phone,
-  mpid: "f5b6446b-df5a-43cc-a7c0-072b4f95b931"
+  mpid: "f64787c3-8cba-4a9e-a439-40fb8c6e5fd0"
 }, {
   name: 'Map',
   icon: MapPin,
-  mpid: "e19de251-d082-4f5b-bc66-93647f8d5e61"
+  mpid: "182c9589-7c5f-426e-80c5-576eace40e5e"
 }, {
   name: 'Calendar',
   icon: Calendar,
-  mpid: "ad750082-ac60-4f5b-a5c2-7b3e443a344e"
+  mpid: "679dcfcb-a82a-4a10-bc3f-6c2d7e41ad53"
 }, {
   name: 'Clock',
   icon: Clock,
-  mpid: "776dc866-53d8-4603-8463-0b84f06de44e"
+  mpid: "c7f0c56d-98ff-4ce3-8687-dcd4eb6e542e"
 }] as any[];
 const KotoDashboard: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -201,7 +201,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "b0a1235f-d495-493c-ab03-f72631c854bc"
+    mpid: "cb118957-8766-4964-a0ec-050ad7973428"
   }]);
 
   // Reset all data to defaults for new user
@@ -213,7 +213,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "df775c4a-d7dc-418b-8ebe-ee117add20c9"
+    mpid: "58120d96-3f9a-4cd2-9bf0-2682b6dc5905"
   }]);
 
   // Update category counts dynamically
@@ -1036,12 +1036,7 @@ const KotoDashboard: React.FC = () => {
                       opacity: 0,
                       x: -10
                     }} className="flex items-center justify-between w-full min-w-0" data-magicpath-id="94" data-magicpath-path="KotoDashboard.tsx">
-                          <span className="font-medium text-sm truncate min-w-0 flex-1" data-magicpath-id="95" data-magicpath-path="KotoDashboard.tsx" style={{
-                        width: "auto",
-                        maxWidth: "100%",
-                        textAlign: "left",
-                        justifyContent: "flex-start"
-                      }}>
+                          <span className="font-medium text-sm truncate min-w-0 flex-1 text-left" data-magicpath-id="95" data-magicpath-path="KotoDashboard.tsx">
                             All
                           </span>
                         </motion.div>}
@@ -1069,7 +1064,7 @@ const KotoDashboard: React.FC = () => {
                           opacity: 0,
                           x: -10
                         }} className="flex items-center justify-between w-full min-w-0" data-magicpath-id="101" data-magicpath-path="KotoDashboard.tsx">
-                                {editingItem === category.id ? <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} onBlur={() => handleRename(category.id, 'category')} onKeyPress={e => e.key === 'Enter' && handleRename(category.id, 'category')} className="bg-transparent border-none outline-none text-sm font-medium flex-1 min-w-0" autoFocus data-magicpath-id="102" data-magicpath-path="KotoDashboard.tsx" /> : <span className="font-medium text-sm truncate min-w-0 flex-1" title={category.name} data-magicpath-id="103" data-magicpath-path="KotoDashboard.tsx">
+                                {editingItem === category.id ? <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} onBlur={() => handleRename(category.id, 'category')} onKeyPress={e => e.key === 'Enter' && handleRename(category.id, 'category')} className="bg-transparent border-none outline-none text-sm font-medium flex-1 min-w-0" autoFocus data-magicpath-id="102" data-magicpath-path="KotoDashboard.tsx" /> : <span className="font-medium text-sm truncate min-w-0 flex-1 text-left" title={category.name} data-magicpath-id="103" data-magicpath-path="KotoDashboard.tsx">
                                     {category.name}
                                   </span>}
                                 
@@ -1129,7 +1124,7 @@ const KotoDashboard: React.FC = () => {
                         const subcategoryCount = activeTab === 'prompts' ? prompts.filter(p => p.category.toLowerCase().replace(/\s+/g, '-') === subcategory.parentId).length : tools.filter(t => t.category.toLowerCase().replace(/\s+/g, '-') === subcategory.parentId).length;
                         return <button key={subcategory.id} onClick={() => setActiveCategory(subcategory.id)} onDoubleClick={() => handleDoubleClick(subcategory.id, subcategory.name)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors group max-w-[247px] ${activeCategory === subcategory.id ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-300'}`} data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="114" data-magicpath-path="KotoDashboard.tsx">
                                   <div className="flex items-center justify-between w-full min-w-0" data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="115" data-magicpath-path="KotoDashboard.tsx">
-                                    {editingItem === subcategory.id ? <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} onBlur={() => handleRename(subcategory.id, 'subcategory')} onKeyPress={e => e.key === 'Enter' && handleRename(subcategory.id, 'subcategory')} className="bg-transparent border-none outline-none text-sm flex-1 min-w-0" autoFocus data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="116" data-magicpath-path="KotoDashboard.tsx" /> : <span className="truncate min-w-0 flex-1" title={subcategory.name} data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-field="name:unknown" data-magicpath-id="117" data-magicpath-path="KotoDashboard.tsx">
+                                    {editingItem === subcategory.id ? <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} onBlur={() => handleRename(subcategory.id, 'subcategory')} onKeyPress={e => e.key === 'Enter' && handleRename(subcategory.id, 'subcategory')} className="bg-transparent border-none outline-none text-sm flex-1 min-w-0" autoFocus data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="116" data-magicpath-path="KotoDashboard.tsx" /> : <span className="truncate min-w-0 flex-1 text-left" title={subcategory.name} data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-field="name:unknown" data-magicpath-id="117" data-magicpath-path="KotoDashboard.tsx">
                                         {subcategory.name}
                                       </span>}
                                     
