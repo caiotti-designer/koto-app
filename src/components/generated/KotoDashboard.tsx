@@ -54,93 +54,93 @@ interface Project {
   mpid?: string;
 }
 const iconOptions = [{
-  name: 'Smile',
-  icon: Smile,
-  mpid: "d5ac2cdf-2d9a-43b4-8c80-96de895951f1"
+  name: 'React',
+  icon: Code,
+  mpid: "a1a1180e-64f0-4511-af47-fab75a62ee60"
 }, {
-  name: 'Heart',
-  icon: Heart,
-  mpid: "83860f45-4fde-4138-b406-6b05ee70d0f2"
+  name: 'Vue',
+  icon: Zap,
+  mpid: "6f452764-b5ef-4f8c-81e8-ce1ffca3b7be"
 }, {
-  name: 'Star',
-  icon: Star,
-  mpid: "e1a8f7d6-c06d-4e89-88ed-5e51c36017f4"
+  name: 'Angular',
+  icon: Target,
+  mpid: "f1986fd0-c1b2-4950-9786-66a2cb62f411"
 }, {
-  name: 'Zap',
-  icon: ZapIcon,
-  mpid: "cc7495ef-a41d-48eb-a98b-ea14934c7577"
+  name: 'Node.js',
+  icon: Cpu,
+  mpid: "69eff86a-af79-4390-9c6f-44321357e768"
 }, {
-  name: 'Coffee',
-  icon: Coffee,
-  mpid: "0179130f-6e0c-42e4-b921-5ecb13e5454a"
+  name: 'Python',
+  icon: Code,
+  mpid: "42efe7c8-3288-49d3-8bdb-21ff56bc08f6"
 }, {
-  name: 'Music',
-  icon: Music,
-  mpid: "570f6724-46be-4b5f-a6f0-2994bf53f862"
+  name: 'JavaScript',
+  icon: Zap,
+  mpid: "7b15b88b-4ca7-4d84-9d3d-19612c7a807d"
 }, {
-  name: 'Book',
-  icon: Book,
-  mpid: "250ce2d1-5fcd-4381-92e1-a2a80088f13e"
+  name: 'TypeScript',
+  icon: Code,
+  mpid: "d566e17f-0ad5-4461-8ed5-0e6f4de66ae7"
 }, {
-  name: 'Gamepad',
-  icon: Gamepad2,
-  mpid: "22800cb9-a66b-4012-83fd-e1f18fe1ea79"
+  name: 'Design',
+  icon: Palette,
+  mpid: "94fd76d2-1737-478b-aaa7-76bb51c17e14"
 }, {
-  name: 'Laptop',
-  icon: Laptop,
-  mpid: "ab6a2e46-465c-4eeb-afbe-147403e4d46d"
-}, {
-  name: 'Smartphone',
+  name: 'Mobile',
   icon: Smartphone,
-  mpid: "74125cee-c9dc-437e-a357-020b02edf1b0"
+  mpid: "07d9e1d4-113c-4fe6-bcd6-dad9ca09a9ab"
 }, {
-  name: 'Headphones',
-  icon: Headphones,
-  mpid: "b8cb92be-82f1-4f1a-beb2-d0777c05cfb7"
+  name: 'Web',
+  icon: Globe,
+  mpid: "4a1826c5-3a77-4f0d-9d07-040a9b549a14"
 }, {
-  name: 'Car',
-  icon: Car,
-  mpid: "fa9e379a-ffae-45b5-91fa-df4d5219b495"
+  name: 'Database',
+  icon: BarChart3,
+  mpid: "de66ac4e-5d72-49cd-a1be-07549666f0a4"
 }, {
-  name: 'Home',
-  icon: Home,
-  mpid: "a9a73f8f-cffa-40d9-a550-21b18f74c230"
+  name: 'DevOps',
+  icon: Wrench,
+  mpid: "22a1144e-4c6e-4386-aaa2-2aa74e39ca40"
 }, {
-  name: 'Plane',
-  icon: Plane,
-  mpid: "62b32405-d465-49e7-a592-6421a48373af"
+  name: 'AI/ML',
+  icon: Cpu,
+  mpid: "5a5d17cb-29b7-4767-a05d-6eec612aadf5"
 }, {
-  name: 'Gift',
-  icon: Gift,
-  mpid: "d6f87e80-b288-48ef-b5f4-6aea3528b43b"
+  name: 'Blockchain',
+  icon: Link,
+  mpid: "cd9c4168-6f77-444a-93ce-47e61dc5616b"
 }, {
-  name: 'Shopping',
+  name: 'Gaming',
+  icon: Gamepad2,
+  mpid: "1f4927cc-9e74-4d6e-aab4-dacfec29848b"
+}, {
+  name: 'E-commerce',
   icon: ShoppingBag,
-  mpid: "a4f20e5e-b621-422e-8fb6-1c23105e1e17"
+  mpid: "81df8ede-4416-4281-a74d-ee979afc0211"
 }, {
-  name: 'Card',
+  name: 'Finance',
   icon: CreditCard,
-  mpid: "b2487082-89a6-4c24-bb15-2911d105012b"
+  mpid: "231d90e8-09e0-446e-be20-d17863a9727d"
 }, {
-  name: 'Mail',
-  icon: Mail,
-  mpid: "14490449-e940-4bf1-9f62-3b97d712679d"
+  name: 'Healthcare',
+  icon: Heart,
+  mpid: "7aa552d4-c80b-4c94-b87c-0a70932176d5"
 }, {
-  name: 'Phone',
-  icon: Phone,
-  mpid: "88263c78-079b-48ab-b949-a915ceaf1aa1"
+  name: 'Education',
+  icon: Book,
+  mpid: "0325a7b7-edb5-42cd-8bb3-e0b19f3e953d"
 }, {
-  name: 'Map',
-  icon: MapPin,
-  mpid: "55993ea9-c213-4189-adef-bce35c501592"
+  name: 'Social',
+  icon: Users,
+  mpid: "9a46457c-0c2b-4a88-b081-cf47e59f3ab8"
 }, {
-  name: 'Calendar',
+  name: 'Productivity',
   icon: Calendar,
-  mpid: "aab82917-32d3-4726-8f02-723fe1ad0b62"
+  mpid: "a038e8b0-078a-4cba-addd-7621cf431726"
 }, {
-  name: 'Clock',
-  icon: Clock,
-  mpid: "4cf07704-28b1-4cf5-a4b6-2e0848729f53"
+  name: 'Analytics',
+  icon: BarChart3,
+  mpid: "51cfbc2a-100c-4de8-a232-a0f583e1af25"
 }] as any[];
 const KotoDashboard: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -202,7 +202,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "276c9c38-a57a-4871-8909-25e34399893c"
+    mpid: "be39bef9-b18d-46ec-a267-55c4dabcefd1"
   }]);
 
   // Missing state variables
@@ -213,7 +213,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "7872b9b2-9202-43ab-ab27-e8f8bc80f8b3"
+    mpid: "a4a884f8-d0e8-47c5-9bdc-5d085e28fe0a"
   }]);
 
   // Update category counts dynamically
