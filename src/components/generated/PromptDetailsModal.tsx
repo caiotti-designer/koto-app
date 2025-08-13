@@ -10,6 +10,7 @@ export interface Prompt {
   tags: string[];
   model: string;
   category: string;
+  subcategory?: string; // Add subcategory field
   coverImage?: string;
   createdAt: Date;
   mpid?: string;
