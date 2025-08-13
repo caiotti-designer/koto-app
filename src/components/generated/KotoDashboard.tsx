@@ -1036,7 +1036,12 @@ const KotoDashboard: React.FC = () => {
                       opacity: 0,
                       x: -10
                     }} className="flex items-center justify-between w-full min-w-0" data-magicpath-id="94" data-magicpath-path="KotoDashboard.tsx">
-                          <span className="font-medium text-sm truncate min-w-0 flex-1" data-magicpath-id="95" data-magicpath-path="KotoDashboard.tsx">
+                          <span className="font-medium text-sm truncate min-w-0 flex-1" data-magicpath-id="95" data-magicpath-path="KotoDashboard.tsx" style={{
+                        width: "auto",
+                        maxWidth: "100%",
+                        textAlign: "left",
+                        justifyContent: "flex-start"
+                      }}>
                             All
                           </span>
                         </motion.div>}
