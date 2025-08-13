@@ -56,91 +56,91 @@ interface Project {
 const iconOptions = [{
   name: 'Smile',
   icon: Smile,
-  mpid: "9a45e4aa-39dc-4ff6-b978-788824aa559f"
+  mpid: "13b46995-93d5-4b24-98c5-3a7c7c7f5665"
 }, {
   name: 'Heart',
   icon: Heart,
-  mpid: "fa397194-4bde-498d-a73b-f83da6ac8e81"
+  mpid: "a8adfdf2-5a3f-4722-898b-5e34a7f924ab"
 }, {
   name: 'Star',
   icon: Star,
-  mpid: "c1887079-b609-4055-82cf-4625dc0ba4f7"
+  mpid: "082af4aa-3b95-4c53-ab32-37bc1cf09a8c"
 }, {
   name: 'Zap',
   icon: ZapIcon,
-  mpid: "d200074c-8b00-44e5-a843-a95daef3b0df"
+  mpid: "de36ca1d-4a42-4a9d-b462-0b767c412c2c"
 }, {
   name: 'Coffee',
   icon: Coffee,
-  mpid: "bd3a8c2e-6b71-4afd-8793-5313f06ca85a"
+  mpid: "bff19ce0-4596-434c-839c-58c2a7d32679"
 }, {
   name: 'Music',
   icon: Music,
-  mpid: "9fe11e28-2e39-40da-80f0-6551f6a79d2e"
+  mpid: "7bec542f-f6c0-4f4c-b25b-ac723e99d28e"
 }, {
   name: 'Book',
   icon: Book,
-  mpid: "c952cf8d-f919-46a5-9cb2-6719da3c45db"
+  mpid: "a7f18aa8-4b65-4576-ad56-d21ced830e3b"
 }, {
   name: 'Gamepad',
   icon: Gamepad2,
-  mpid: "bf6fd978-e9de-4b77-89aa-b07639d93c32"
+  mpid: "e8e4b19f-ddf0-40cb-85b0-d8d64fd91bc6"
 }, {
   name: 'Laptop',
   icon: Laptop,
-  mpid: "87f10276-a856-4895-b5f0-ae96b81d9736"
+  mpid: "88ac4d23-c7fb-4e43-b1b4-9eac392c9f00"
 }, {
   name: 'Smartphone',
   icon: Smartphone,
-  mpid: "60fed8d8-69ea-4a2f-b75c-9229ad142e16"
+  mpid: "82acf549-4734-4688-8125-af4b694006b0"
 }, {
   name: 'Headphones',
   icon: Headphones,
-  mpid: "89032cd5-611f-4176-b62b-041c56a98c36"
+  mpid: "c564cd73-4123-42e9-a65e-beabe1d56cf5"
 }, {
   name: 'Car',
   icon: Car,
-  mpid: "0fdeae92-7b9c-462b-aaac-8197b5c06ae5"
+  mpid: "80e81a4d-900c-4870-b42d-7e5ee203ad20"
 }, {
   name: 'Home',
   icon: Home,
-  mpid: "eceeb4ea-7f60-4bd1-84c1-631ccbad3d70"
+  mpid: "ffdcf465-a871-4e16-a98a-d2a1efda21dd"
 }, {
   name: 'Plane',
   icon: Plane,
-  mpid: "915c4218-df64-488f-81c2-6a2eef4a1044"
+  mpid: "8b44adf4-04f9-4ce9-a253-6ec595cd4461"
 }, {
   name: 'Gift',
   icon: Gift,
-  mpid: "1215c6d1-2743-4e57-9928-acefdc94a8a4"
+  mpid: "abbea2d3-821b-4032-a671-5655a9e0c0ed"
 }, {
   name: 'Shopping',
   icon: ShoppingBag,
-  mpid: "ca15dc4e-b56d-4eed-b3a5-e39c08d99894"
+  mpid: "f25ed2a2-470c-4b4e-9fa1-170418510c7e"
 }, {
   name: 'Card',
   icon: CreditCard,
-  mpid: "0c367cf7-131e-4f7d-98f8-28d5b14bce60"
+  mpid: "e053a876-5ecd-4530-b7fb-7d5445c7eeff"
 }, {
   name: 'Mail',
   icon: Mail,
-  mpid: "c9d02488-a02a-4687-99f5-37b5d41ad78f"
+  mpid: "6af28e35-50f5-4804-8c47-d6c0e2c43e8a"
 }, {
   name: 'Phone',
   icon: Phone,
-  mpid: "f637107f-cddd-4a0b-9ac5-42418c4f24a9"
+  mpid: "f5b6446b-df5a-43cc-a7c0-072b4f95b931"
 }, {
   name: 'Map',
   icon: MapPin,
-  mpid: "9e8b134f-9c59-42c9-9d75-58d17e4a3fc8"
+  mpid: "e19de251-d082-4f5b-bc66-93647f8d5e61"
 }, {
   name: 'Calendar',
   icon: Calendar,
-  mpid: "727a309a-5880-48c2-ab6b-26476d90e72a"
+  mpid: "ad750082-ac60-4f5b-a5c2-7b3e443a344e"
 }, {
   name: 'Clock',
   icon: Clock,
-  mpid: "03aca017-e849-4494-84fd-6b25b477765f"
+  mpid: "776dc866-53d8-4603-8463-0b84f06de44e"
 }] as any[];
 const KotoDashboard: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -201,7 +201,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "b0e81151-bdf2-49ee-9fc2-a390d2e88e54"
+    mpid: "b0a1235f-d495-493c-ab03-f72631c854bc"
   }]);
 
   // Reset all data to defaults for new user
@@ -213,7 +213,7 @@ const KotoDashboard: React.FC = () => {
     count: 0,
     icon: Globe,
     expanded: false,
-    mpid: "54f79a59-7919-44c8-b5c0-86cca56114d4"
+    mpid: "df775c4a-d7dc-418b-8ebe-ee117add20c9"
   }]);
 
   // Update category counts dynamically
@@ -1023,14 +1023,24 @@ const KotoDashboard: React.FC = () => {
               <div className="space-y-1" data-magicpath-id="89" data-magicpath-path="KotoDashboard.tsx">
                 {/* All Button - Fixed on top with count */}
                 <div className="mb-2" data-magicpath-id="90" data-magicpath-path="KotoDashboard.tsx">
-                  <button onClick={() => setActiveCategory('all')} className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors max-w-[200px] ${activeCategory === 'all' ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'}`} data-magicpath-id="91" data-magicpath-path="KotoDashboard.tsx">
+                  <button onClick={() => setActiveCategory('all')} className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors max-w-[247px] ${activeCategory === 'all' ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'}`} data-magicpath-id="91" data-magicpath-path="KotoDashboard.tsx">
                     <Globe className="w-5 h-5 flex-shrink-0" data-magicpath-id="92" data-magicpath-path="KotoDashboard.tsx" />
-                    {!sidebarCollapsed && <div className="flex items-center justify-between w-full min-w-0" data-magicpath-id="93" data-magicpath-path="KotoDashboard.tsx">
-                        <span className="font-medium text-sm truncate" data-magicpath-id="94" data-magicpath-path="KotoDashboard.tsx">All</span>
-                        <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${activeCategory === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-400'}`} data-magicpath-id="95" data-magicpath-path="KotoDashboard.tsx">
-                          {activeTab === 'prompts' ? updatedCategories.find(c => c.id === 'all')?.count || 0 : updatedToolCategories.find(c => c.id === 'all-tools')?.count || 0}
-                        </span>
-                      </div>}
+                    <AnimatePresence mode="wait" data-magicpath-id="93" data-magicpath-path="KotoDashboard.tsx">
+                      {!sidebarCollapsed && <motion.div initial={{
+                      opacity: 0,
+                      x: -10
+                    }} animate={{
+                      opacity: 1,
+                      x: 0
+                    }} exit={{
+                      opacity: 0,
+                      x: -10
+                    }} className="flex items-center justify-between w-full min-w-0" data-magicpath-id="94" data-magicpath-path="KotoDashboard.tsx">
+                          <span className="font-medium text-sm truncate min-w-0 flex-1" data-magicpath-id="95" data-magicpath-path="KotoDashboard.tsx">
+                            All
+                          </span>
+                        </motion.div>}
+                    </AnimatePresence>
                   </button>
                 </div>
 
@@ -1041,7 +1051,7 @@ const KotoDashboard: React.FC = () => {
                 const hasSubcategories = categorySubcategories.length > 0;
                 return <div key={category.id} data-magicpath-id="96" data-magicpath-path="KotoDashboard.tsx">
                       <div className="flex items-center group" data-magicpath-id="97" data-magicpath-path="KotoDashboard.tsx">
-                        <button onClick={() => setActiveCategory(category.id)} onDoubleClick={() => handleDoubleClick(category.id, category.name)} onDragOver={handleDragOver} onDrop={(e: React.DragEvent) => handleDrop(e, category.id)} className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors relative max-w-[200px] ${isActive ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'} ${draggedItem ? 'border-2 border-dashed border-indigo-300 dark:border-indigo-600' : ''}`} data-magicpath-id="98" data-magicpath-path="KotoDashboard.tsx">
+                        <button onClick={() => setActiveCategory(category.id)} onDoubleClick={() => handleDoubleClick(category.id, category.name)} onDragOver={handleDragOver} onDrop={(e: React.DragEvent) => handleDrop(e, category.id)} className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors relative max-w-[247px] ${isActive ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'} ${draggedItem ? 'border-2 border-dashed border-indigo-300 dark:border-indigo-600' : ''}`} data-magicpath-id="98" data-magicpath-path="KotoDashboard.tsx">
                           <Icon className="w-5 h-5 flex-shrink-0" data-magicpath-id="99" data-magicpath-path="KotoDashboard.tsx" />
                           <AnimatePresence mode="wait" data-magicpath-id="100" data-magicpath-path="KotoDashboard.tsx">
                             {!sidebarCollapsed && <motion.div initial={{
@@ -1112,7 +1122,7 @@ const KotoDashboard: React.FC = () => {
                     }} className="ml-8 mt-1 space-y-1" data-magicpath-id="113" data-magicpath-path="KotoDashboard.tsx">
                             {categorySubcategories.map(subcategory => {
                         const subcategoryCount = activeTab === 'prompts' ? prompts.filter(p => p.category.toLowerCase().replace(/\s+/g, '-') === subcategory.parentId).length : tools.filter(t => t.category.toLowerCase().replace(/\s+/g, '-') === subcategory.parentId).length;
-                        return <button key={subcategory.id} onClick={() => setActiveCategory(subcategory.id)} onDoubleClick={() => handleDoubleClick(subcategory.id, subcategory.name)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors group max-w-[180px] ${activeCategory === subcategory.id ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-300'}`} data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="114" data-magicpath-path="KotoDashboard.tsx">
+                        return <button key={subcategory.id} onClick={() => setActiveCategory(subcategory.id)} onDoubleClick={() => handleDoubleClick(subcategory.id, subcategory.name)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors group max-w-[247px] ${activeCategory === subcategory.id ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-300'}`} data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="114" data-magicpath-path="KotoDashboard.tsx">
                                   <div className="flex items-center justify-between w-full min-w-0" data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="115" data-magicpath-path="KotoDashboard.tsx">
                                     {editingItem === subcategory.id ? <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} onBlur={() => handleRename(subcategory.id, 'subcategory')} onKeyPress={e => e.key === 'Enter' && handleRename(subcategory.id, 'subcategory')} className="bg-transparent border-none outline-none text-sm flex-1 min-w-0" autoFocus data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-id="116" data-magicpath-path="KotoDashboard.tsx" /> : <span className="truncate min-w-0 flex-1" title={subcategory.name} data-magicpath-uuid={(subcategory as any)["mpid"] ?? "unsafe"} data-magicpath-field="name:unknown" data-magicpath-id="117" data-magicpath-path="KotoDashboard.tsx">
                                         {subcategory.name}
