@@ -1,54 +1,78 @@
-# React + TypeScript + Vite
+# Koto App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Supabase Integration
 
-Currently, two official plugins are available:
+This application uses Supabase for backend services including:
+- Authentication (GitHub and Google OAuth)
+- Database storage for prompts and tools
+- File storage for cover images
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Environment Variables
 
-## Expanding the ESLint configuration
+The following environment variables are required:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+```
+VITE_SUPABASE_URL=your-supabase-project-url
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Local Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+1. Clone the repository
+2. Install dependencies: `yarn install`
+3. Create a `.env` file with the required environment variables
+4. Run the development server: `yarn dev`
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
-```
+## Deployment to Vercel
+
+### Prerequisites
+
+1. A GitHub repository with your code
+2. A Supabase project
+3. A Vercel account
+
+### Steps
+
+1. Push your code to GitHub
+2. Log in to Vercel and create a new project
+3. Import your GitHub repository
+4. Configure the following environment variables in Vercel:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+5. Deploy the project
+
+### Automatic Deployments
+
+Vercel will automatically deploy your application when you push changes to your GitHub repository.
+
+## Database Schema
+
+The application uses the following tables in Supabase:
+
+### prompts
+- id: string (primary key)
+- title: string
+- content: string
+- model: string
+- tags: string[] (array)
+- category: string
+- subcategory: string (nullable)
+- cover_image: string (nullable)
+- created_at: timestamp
+- user_id: string (foreign key to auth.users)
+
+### tools
+- id: string (primary key)
+- name: string
+- url: string
+- description: string (nullable)
+- category: string (nullable)
+- favicon: string (nullable)
+- created_at: timestamp
+- user_id: string (foreign key to auth.users)
+
+## Storage Buckets
+
+The application uses the following storage bucket in Supabase:
+
+- covers: For storing prompt cover images

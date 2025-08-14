@@ -22,16 +22,29 @@ const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 mediaQuery.addEventListener('change', forceLightMode);
 
 import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import App from './App.tsx';
 import { MoveProvider } from './dnd-kit/MoveContext.tsx';
 import { DndContext } from '@dnd-kit/core';
+import AuthCallback from './auth/callback.tsx';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+  },
+  {
+    path: '/auth/callback',
+    element: <AuthCallback />,
+  },
+]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <MoveProvider>
       <DndContext>
-        <App />
+        <RouterProvider router={router} />
       </DndContext>
     </MoveProvider>
   </StrictMode>

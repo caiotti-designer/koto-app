@@ -5,6 +5,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Menu, Bell, User, Settings, HelpCircle, Sun, Moon, ExternalLink, Share2, Trash2, Copy, Palette, Code, Briefcase, PenTool, Target, Users, BarChart3, Zap, Globe, Figma, Cpu, Tag, X, Upload, Camera, Smile, Heart, Star, Zap as ZapIcon, Coffee, Music, Book, Gamepad2, Laptop, Smartphone, Headphones, Car, Home, Plane, Gift, ShoppingBag, CreditCard, Mail, Phone, MapPin, Calendar, Clock, Eye, EyeOff, ChevronDown, ChevronRight, Edit2, LogOut, Check } from 'lucide-react';
 import PromptCard from './PromptCard';
 import PromptDetailsModal from './PromptDetailsModal';
+import supabase from '../../lib/supabaseClient';
+import {
+  fetchPrompts,
+  fetchTools,
+  createPrompt,
+  createTool,
+  uploadCover,
+  onAuthChange,
+  signInWithGitHub,
+  signInWithGoogle,
+  signOut as supaSignOut,
+} from '../../lib/data';
+import type { PromptRow, ToolRow } from '../../lib/data';
 interface Subcategory {
   id: string;
   name: string;
@@ -138,6 +151,7 @@ const KotoDashboard: React.FC = () => {
     type: 'prompt' | 'tool';
     item: Prompt | Tool;
   } | null>(null);
+  const [user, setUser] = useState<any>(null);
 
   // New project form state
   const [newProjectName, setNewProjectName] = useState('');
@@ -154,6 +168,7 @@ const KotoDashboard: React.FC = () => {
   const [newPromptTags, setNewPromptTags] = useState<string[]>([]);
   const [newPromptTagInput, setNewPromptTagInput] = useState('');
   const [newPromptCoverImage, setNewPromptCoverImage] = useState('');
+  const [newPromptCoverFile, setNewPromptCoverFile] = useState<File | null>(null);
 
   // New tool form state
   const [newToolName, setNewToolName] = useState('');
@@ -165,7 +180,13 @@ const KotoDashboard: React.FC = () => {
 
   // Settings state
   const [defaultTheme, setDefaultTheme] = useState<'light' | 'dark'>('light');
-  const [backgroundImage, setBackgroundImage] = useState('');
+  const [backgroundImage, setBackgroundImage] = useState(() => {
+    // Load background image from localStorage if available
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('koto_background_image') || '';
+    }
+    return '';
+  });
 
   // Reset all data to defaults for new user
   const [prompts, setPrompts] = useState<Prompt[]>([]);
@@ -268,6 +289,48 @@ const KotoDashboard: React.FC = () => {
       document.documentElement.classList.remove('dark');
     }
   }, [darkMode]);
+
+  // Auth subscription and initial load
+  useEffect(() => {
+    const sub = onAuthChange((u) => setUser(u));
+    return () => {
+      // best-effort cleanup for supabase v2 subscription wrapper
+      try { (sub as any)?.data?.subscription?.unsubscribe?.(); } catch {}
+    };
+  }, []);
+
+  // Load data from Supabase
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [promptRows, toolRows] = await Promise.all([fetchPrompts(), fetchTools()]);
+        const mapPrompt = (row: PromptRow): Prompt => ({
+          id: row.id,
+          title: row.title,
+          content: row.content,
+          model: row.model,
+          tags: row.tags || [],
+          category: row.category,
+          subcategory: row.subcategory || undefined,
+          coverImage: row.cover_image || undefined,
+          createdAt: new Date(row.created_at),
+        });
+        const mapTool = (row: ToolRow): Tool => ({
+          id: row.id,
+          name: row.name,
+          url: row.url,
+          description: row.description || undefined,
+          favicon: row.favicon || undefined,
+          category: row.category || 'General',
+        });
+        setPrompts(promptRows.map(mapPrompt));
+        setTools(toolRows.map(mapTool));
+      } catch (e) {
+        console.error('Failed to load data from Supabase', e);
+      }
+    };
+    load();
+  }, []);
 
   // Drag and drop handlers
   const handleDragStart = (e: React.DragEvent, type: 'prompt' | 'tool', item: Prompt | Tool) => {
@@ -375,8 +438,13 @@ const KotoDashboard: React.FC = () => {
   const handleAddTool = () => {
     setShowNewToolDialog(true);
   };
-  const handleCreatePrompt = () => {
+  const handleCreatePrompt = async () => {
     if (!newPromptTitle.trim() || !newPromptContent.trim()) return;
+    if (!user?.id) {
+      console.warn('You must be signed in to create prompts.');
+      setShowProfileMenu(true);
+      return;
+    }
 
     // Determine the correct category and subcategory for the new prompt
     let promptCategory = 'General';
@@ -395,18 +463,37 @@ const KotoDashboard: React.FC = () => {
         promptCategory = category ? category.name : 'General';
       }
     }
-    const newPrompt: Prompt = {
-      id: `prompt-${Date.now()}`,
-      title: newPromptTitle,
-      content: newPromptContent,
-      model: newPromptModel,
-      tags: newPromptTags,
-      category: promptCategory,
-      subcategory: promptSubcategory,
-      coverImage: newPromptCoverImage,
-      createdAt: new Date()
-    };
-    setPrompts(prev => [newPrompt, ...prev]);
+    // Upload cover if a file is present
+    let coverUrl = newPromptCoverImage || '';
+    try {
+      if (newPromptCoverFile) {
+        coverUrl = await uploadCover(newPromptCoverFile, user.id);
+      }
+      const created = await createPrompt({
+        title: newPromptTitle,
+        content: newPromptContent,
+        model: newPromptModel,
+        tags: newPromptTags,
+        category: promptCategory,
+        subcategory: promptSubcategory ?? null,
+        cover_image: coverUrl || null,
+        user_id: user.id,
+      });
+      const mapped: Prompt = {
+        id: created.id,
+        title: created.title,
+        content: created.content,
+        model: created.model,
+        tags: created.tags || [],
+        category: created.category,
+        subcategory: created.subcategory || undefined,
+        coverImage: created.cover_image || undefined,
+        createdAt: new Date(created.created_at),
+      };
+      setPrompts(prev => [mapped, ...prev]);
+    } catch (e) {
+      console.error('Failed to create prompt', e);
+    }
 
     // Reset form
     setNewPromptTitle('');
@@ -414,19 +501,37 @@ const KotoDashboard: React.FC = () => {
     setNewPromptModel('GPT-4');
     setNewPromptTags([]);
     setNewPromptCoverImage('');
+    setNewPromptCoverFile(null);
     setShowNewPromptDialog(false);
   };
-  const handleCreateTool = () => {
+  const handleCreateTool = async () => {
     if (!newToolName.trim() || !newToolUrl.trim()) return;
-    const newTool: Tool = {
-      id: `tool-${Date.now()}`,
-      name: newToolName,
-      url: newToolUrl,
-      description: newToolDescription,
-      favicon: toolFavicon,
-      category: newToolCategory || (activeCategory === 'all-tools' ? 'General' : getCurrentCategoryName()),
-    };
-    setTools(prev => [newTool, ...prev]);
+    if (!user?.id) {
+      console.warn('You must be signed in to create tools.');
+      setShowProfileMenu(true);
+      return;
+    }
+    try {
+      const created = await createTool({
+        name: newToolName,
+        url: newToolUrl,
+        description: newToolDescription || null,
+        favicon: toolFavicon || null,
+        category: (newToolCategory || (activeCategory === 'all-tools' ? 'General' : getCurrentCategoryName())) || 'General',
+        user_id: user.id,
+      });
+      const mapped: Tool = {
+        id: created.id,
+        name: created.name,
+        url: created.url,
+        description: created.description || undefined,
+        favicon: created.favicon || undefined,
+        category: created.category || 'General',
+      };
+      setTools(prev => [mapped, ...prev]);
+    } catch (e) {
+      console.error('Failed to create tool', e);
+    }
 
     // Reset form
     setNewToolName('');
@@ -463,7 +568,10 @@ const KotoDashboard: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = e => {
-        setBackgroundImage(e.target?.result as string);
+        const imageData = e.target?.result as string;
+        setBackgroundImage(imageData);
+        // Save to localStorage to persist across reloads
+        localStorage.setItem('koto_background_image', imageData);
       };
       reader.readAsDataURL(file);
     }
@@ -471,10 +579,10 @@ const KotoDashboard: React.FC = () => {
   const handleCoverImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setNewPromptCoverFile(file);
+      // preview locally
       const reader = new FileReader();
-      reader.onload = e => {
-        setNewPromptCoverImage(e.target?.result as string);
-      };
+      reader.onload = e => setNewPromptCoverImage(e.target?.result as string);
       reader.readAsDataURL(file);
     }
   };
@@ -635,14 +743,47 @@ const KotoDashboard: React.FC = () => {
   }, [newToolUrl]);
 
   // Missing handler functions for PromptDetailsModal
-  const handleEditPrompt = (prompt: Prompt) => {
-    // Update prompts list
-    setPrompts(prev => prev.map(p => (p.id === prompt.id ? prompt : p)));
-    // If the edited item is the one currently open in the modal, update it too
-    setSelectedPrompt(prev => (prev && prev.id === prompt.id ? { ...prompt } : prev));
+  const handleEditPrompt = async (prompt: Prompt) => {
+    try {
+      // persist
+      const patch: any = {
+        title: prompt.title,
+        content: prompt.content,
+        model: prompt.model,
+        tags: prompt.tags,
+        category: prompt.category,
+        subcategory: prompt.subcategory ?? null,
+        cover_image: prompt.coverImage ?? null,
+      };
+      const { updatePrompt } = await import('../../lib/data');
+      const updated = await updatePrompt(prompt.id, patch);
+      const mapped: Prompt = {
+        id: updated.id,
+        title: updated.title,
+        content: updated.content,
+        model: updated.model,
+        tags: updated.tags || [],
+        category: updated.category,
+        subcategory: updated.subcategory || undefined,
+        coverImage: updated.cover_image || undefined,
+        createdAt: new Date(updated.created_at),
+      };
+      // Update prompts list
+      setPrompts(prev => prev.map(p => (p.id === prompt.id ? mapped : p)));
+      // If the edited item is the one currently open in the modal, update it too
+      setSelectedPrompt(prev => (prev && prev.id === prompt.id ? { ...mapped } : prev));
+    } catch (e) {
+      console.error('Failed to update prompt', e);
+    }
   };
-  const handleDeletePrompt = (promptId: string) => {
-    setPrompts(prev => prev.filter(p => p.id !== promptId));
+  const handleDeletePrompt = async (promptId: string) => {
+    try {
+      const { deletePrompt } = await import('../../lib/data');
+      await deletePrompt(promptId);
+      setPrompts(prev => prev.filter(p => p.id !== promptId));
+    } catch (e) {
+      console.error('Failed to delete prompt', e);
+    }
   };
   const handleCopyPrompt = (content: string) => {
     // Copy to clipboard logic is handled in the modal
@@ -678,9 +819,27 @@ const KotoDashboard: React.FC = () => {
     const handleEdit = () => {
       setIsEditing(true);
     };
-    const handleSave = () => {
-      if (editedTool) {
-        setTools(prev => prev.map(t => t.id === tool.id ? editedTool : t));
+    const handleSave = async () => {
+      if (!editedTool) return;
+      try {
+        const { updateTool } = await import('../../lib/data');
+        const updated = await updateTool(tool.id, {
+          name: editedTool.name,
+          url: editedTool.url,
+          description: editedTool.description ?? null,
+          favicon: editedTool.favicon ?? null,
+          category: editedTool.category,
+        });
+        setTools(prev => prev.map(t => t.id === tool.id ? {
+          id: updated.id,
+          name: updated.name,
+          url: updated.url,
+          description: updated.description || undefined,
+          favicon: updated.favicon || undefined,
+          category: updated.category || 'General',
+        } : t));
+      } catch (e) {
+        console.error('Failed to update tool', e);
       }
       setIsEditing(false);
     };
@@ -702,8 +861,14 @@ const KotoDashboard: React.FC = () => {
     const handleShare = () => {
       console.log('Sharing tool:', tool.name);
     };
-    const handleDelete = () => {
-      setTools(prev => prev.filter(t => t.id !== tool.id));
+    const handleDelete = async () => {
+      try {
+        const { deleteTool } = await import('../../lib/data');
+        await deleteTool(tool.id);
+        setTools(prev => prev.filter(t => t.id !== tool.id));
+      } catch (e) {
+        console.error('Failed to delete tool', e);
+      }
       setShowDeleteConfirm(false);
       onClose();
     };
@@ -1219,8 +1384,8 @@ const KotoDashboard: React.FC = () => {
                         <User className="w-5 h-5 text-white" />
                       </div>
                       <div className="text-left text-white">
-                        <div className="text-sm font-medium">Login</div>
-                        <div className="text-xs text-white/80">Sign in to continue</div>
+                        <div className="text-sm font-medium">{user ? (user.user_metadata?.name || user.email || 'Account') : 'Login'}</div>
+                        <div className="text-xs text-white/80">{user ? 'Signed in' : 'Sign in to continue'}</div>
                       </div>
                     </motion.button>
 
@@ -1232,23 +1397,35 @@ const KotoDashboard: React.FC = () => {
                           exit={{ opacity: 0, y: 10 }}
                           className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1"
                         >
-                          <button className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                            <User className="w-4 h-4" />
-                            <span>Sign in</span>
-                          </button>
-                          <button className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                            <User className="w-4 h-4" />
-                            <span>Create Account</span>
-                          </button>
+                          {!user && (
+                            <>
+                              <button onClick={async () => { await signInWithGitHub(); }} className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
+                                <User className="w-4 h-4" />
+                                <span>Sign in with GitHub</span>
+                              </button>
+                              <button onClick={async () => { await signInWithGoogle(); }} className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
+                                <User className="w-4 h-4" />
+                                <span>Sign in with Google</span>
+                              </button>
+                              <hr className="my-2 border-slate-200 dark:border-slate-700" />
+                            </>
+                          )}
                           <button onClick={() => setShowSettingsDialog(true)} className="w-full px-4 py-1 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
                             <Settings className="w-4 h-4" />
                             <span>Settings</span>
                           </button>
                           <hr className="my-2 border-slate-200 dark:border-slate-700" />
-                          <button className="w-full px-4 py-2 text-left text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                            <HelpCircle className="w-4 h-4" />
-                            <span>Help & Support</span>
-                          </button>
+                          {user ? (
+                            <button onClick={async () => { await supaSignOut(); setShowProfileMenu(false); }} className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
+                              <LogOut className="w-4 h-4" />
+                              <span>Sign out</span>
+                            </button>
+                          ) : (
+                            <button className="w-full px-4 py-2 text-left text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
+                              <HelpCircle className="w-4 h-4" />
+                              <span>Help & Support</span>
+                            </button>
+                          )}
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -1738,8 +1915,10 @@ const KotoDashboard: React.FC = () => {
                     
                     {/* Save Button */}
                     <motion.button onClick={() => {
-                  // Save the background image to the header
-                  // This will automatically update the header background
+                  // Save the background image to the header and localStorage
+                  if (backgroundImage) {
+                    localStorage.setItem('koto_background_image', backgroundImage);
+                  }
                   setShowSettingsDialog(false);
                 }} whileHover={{
                   scale: 1.02
