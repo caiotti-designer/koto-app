@@ -28,6 +28,8 @@ import App from './App.tsx';
 import { MoveProvider } from './dnd-kit/MoveContext.tsx';
 import { DndContext } from '@dnd-kit/core';
 import AuthCallback from './auth/callback.tsx';
+import SharedView from './components/SharedView.tsx';
+import ProfileSettings from './components/ProfileSettings.tsx';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +39,22 @@ const router = createBrowserRouter([
   {
     path: '/auth/callback',
     element: <AuthCallback />,
+  },
+  {
+    path: '/shared/prompt',
+    element: <SharedView type="prompt" />,
+  },
+  {
+    path: '/shared/tool',
+    element: <SharedView type="tool" />,
+  },
+  {
+    path: '/profile/:username',
+    element: <SharedView type="profile" />,
+  },
+  {
+    path: '/settings/profile',
+    element: <ProfileSettings />,
   },
 ]);
 
