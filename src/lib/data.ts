@@ -59,8 +59,9 @@ export function onAuthChange(cb: (user: any) => void) {
 }
 
 // Storage: cover images
-export async function uploadCover(file: File, userId: string) {
-  const filePath = `${userId}/${Date.now()}_${file.name}`;
+export async function uploadCover(file: File, userId?: string) {
+  const userFolder = userId || 'anonymous';
+  const filePath = `${userFolder}/${Date.now()}_${file.name}`;
   const { error } = await supabase.storage.from('covers').upload(filePath, file, {
     cacheControl: '3600',
     upsert: false,
@@ -88,7 +89,7 @@ export async function fetchPrompts() {
   return (data || []) as PromptRow[];
 }
 
-export async function createPrompt(row: Partial<PromptRow> & { user_id: string }) {
+export async function createPrompt(row: Partial<PromptRow> & { user_id?: string }) {
   const { data, error } = await supabase.from('prompts').insert(row).select('*').single();
   if (error) throw error;
   return data as PromptRow;
@@ -115,7 +116,7 @@ export async function fetchTools() {
   return (data || []) as ToolRow[];
 }
 
-export async function createTool(row: Partial<ToolRow> & { user_id: string }) {
+export async function createTool(row: Partial<ToolRow> & { user_id?: string }) {
   const { data, error } = await supabase.from('tools').insert(row).select('*').single();
   if (error) throw error;
   return data as ToolRow;

@@ -440,11 +440,12 @@ const KotoDashboard: React.FC = () => {
   };
   const handleCreatePrompt = async () => {
     if (!newPromptTitle.trim() || !newPromptContent.trim()) return;
-    if (!user?.id) {
-      console.warn('You must be signed in to create prompts.');
-      setShowProfileMenu(true);
-      return;
-    }
+    // Allow anonymous users to create prompts
+    // if (!user?.id) {
+    //   console.warn('You must be signed in to create prompts.');
+    //   setShowProfileMenu(true);
+    //   return;
+    // }
 
     // Determine the correct category and subcategory for the new prompt
     let promptCategory = 'General';
@@ -467,7 +468,7 @@ const KotoDashboard: React.FC = () => {
     let coverUrl = newPromptCoverImage || '';
     try {
       if (newPromptCoverFile) {
-        coverUrl = await uploadCover(newPromptCoverFile, user.id);
+        coverUrl = await uploadCover(newPromptCoverFile, user?.id);
       }
       const created = await createPrompt({
         title: newPromptTitle,
@@ -477,7 +478,7 @@ const KotoDashboard: React.FC = () => {
         category: promptCategory,
         subcategory: promptSubcategory ?? null,
         cover_image: coverUrl || null,
-        user_id: user.id,
+        user_id: user?.id || null,
       });
       const mapped: Prompt = {
         id: created.id,
@@ -506,11 +507,12 @@ const KotoDashboard: React.FC = () => {
   };
   const handleCreateTool = async () => {
     if (!newToolName.trim() || !newToolUrl.trim()) return;
-    if (!user?.id) {
-      console.warn('You must be signed in to create tools.');
-      setShowProfileMenu(true);
-      return;
-    }
+    // Allow anonymous users to create tools
+    // if (!user?.id) {
+    //   console.warn('You must be signed in to create tools.');
+    //   setShowProfileMenu(true);
+    //   return;
+    // }
     try {
       const created = await createTool({
         name: newToolName,
@@ -518,7 +520,7 @@ const KotoDashboard: React.FC = () => {
         description: newToolDescription || null,
         favicon: toolFavicon || null,
         category: (newToolCategory || (activeCategory === 'all-tools' ? 'General' : getCurrentCategoryName())) || 'General',
-        user_id: user.id,
+        user_id: user?.id || null,
       });
       const mapped: Tool = {
         id: created.id,

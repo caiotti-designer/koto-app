@@ -37,7 +37,7 @@ CREATE POLICY "Users can view all prompts"
 
 CREATE POLICY "Users can insert their own prompts" 
   ON public.prompts FOR INSERT 
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid() = user_id OR auth.uid() IS NULL);
 
 CREATE POLICY "Users can update their own prompts" 
   ON public.prompts FOR UPDATE 
@@ -54,7 +54,7 @@ CREATE POLICY "Users can view all tools"
 
 CREATE POLICY "Users can insert their own tools" 
   ON public.tools FOR INSERT 
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid() = user_id OR auth.uid() IS NULL);
 
 CREATE POLICY "Users can update their own tools" 
   ON public.tools FOR UPDATE 
@@ -72,9 +72,9 @@ CREATE POLICY "Anyone can view cover images"
   ON storage.objects FOR SELECT
   USING (bucket_id = 'covers');
 
-CREATE POLICY "Authenticated users can upload cover images"
+CREATE POLICY "Anyone can upload cover images"
   ON storage.objects FOR INSERT
-  WITH CHECK (bucket_id = 'covers' AND auth.role() = 'authenticated');
+  WITH CHECK (bucket_id = 'covers');
 
 CREATE POLICY "Users can update their own cover images"
   ON storage.objects FOR UPDATE
