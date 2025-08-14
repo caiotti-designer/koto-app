@@ -814,7 +814,7 @@ const KotoDashboard: React.FC = () => {
     
     try {
       const { sharePrompt } = await import('../../lib/data');
-      const shareToken = await sharePrompt(prompt.id, user.id);
+      const shareToken = await sharePrompt(prompt.id);
       if (shareToken) {
         const shareUrl = `${window.location.origin}/shared/prompt?token=${shareToken}`;
         await navigator.clipboard.writeText(shareUrl);
@@ -858,16 +858,16 @@ const KotoDashboard: React.FC = () => {
         const updated = await updateTool(tool.id, {
           name: editedTool.name,
           url: editedTool.url,
-          description: editedTool.description ?? null,
-          favicon: editedTool.favicon ?? null,
+          description: editedTool.description ?? undefined,
+          favicon: editedTool.favicon ?? undefined,
           category: editedTool.category,
         });
         setTools(prev => prev.map(t => t.id === tool.id ? {
           id: updated.id,
           name: updated.name,
           url: updated.url,
-          description: updated.description || undefined,
-          favicon: updated.favicon || undefined,
+          description: updated.description ?? undefined,
+          favicon: updated.favicon ?? undefined,
           category: updated.category || 'General',
         } : t));
       } catch (e) {
@@ -895,7 +895,7 @@ const KotoDashboard: React.FC = () => {
       
       try {
         const { shareTool } = await import('../../lib/data');
-        const shareToken = await shareTool(tool.id, user.id);
+        const shareToken = await shareTool(tool.id);
         if (shareToken) {
           const shareUrl = `${window.location.origin}/shared/tool?token=${shareToken}`;
           await navigator.clipboard.writeText(shareUrl);

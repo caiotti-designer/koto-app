@@ -28,7 +28,7 @@ interface SharedViewProps {
 
 const SharedView: React.FC<SharedViewProps> = ({ type }) => {
   const params = useParams();
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
