@@ -44,24 +44,37 @@ export interface ToolRow {
 
 // Auth
 export async function signInWithGitHub() {
+  const redirectUrl = window.location.origin + '/auth/callback';
+  
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
-      redirectTo: window.location.origin + '/auth/callback'
+      redirectTo: redirectUrl
     }
   });
-  if (error) throw error;
+  
+  if (error) {
+    throw error;
+  }
+  
   return data;
 }
 
 export async function signInWithGoogle() {
+  const redirectUrl = window.location.origin + '/auth/callback';
+  
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: window.location.origin + '/auth/callback'
+      redirectTo: redirectUrl
     }
   });
-  if (error) throw error;
+  
+  if (error) {
+    throw error;
+  }
+  
+  console.log('[data.ts] Google OAuth data:', data);
   return data;
 }
 
@@ -71,8 +84,17 @@ export async function signOut() {
 }
 
 export function onAuthChange(cb: (user: any) => void) {
-  supabase.auth.getUser().then(({ data }) => cb(data.user));
-  return supabase.auth.onAuthStateChange((_event, session) => cb(session?.user ?? null));
+  // Get current user immediately
+  supabase.auth.getUser().then(({ data, error }) => {
+    cb(data.user);
+  });
+  
+  // Listen for auth state changes
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    cb(session?.user ?? null);
+  });
+  
+  return { data: { subscription } };
 }
 
 // Storage: cover images

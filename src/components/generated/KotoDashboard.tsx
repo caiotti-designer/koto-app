@@ -292,7 +292,9 @@ const KotoDashboard: React.FC = () => {
 
   // Auth subscription and initial load
   useEffect(() => {
-    const sub = onAuthChange((u) => setUser(u));
+    const sub = onAuthChange((u) => {
+      setUser(u);
+    });
     return () => {
       // best-effort cleanup for supabase v2 subscription wrapper
       try { (sub as any)?.data?.subscription?.unsubscribe?.(); } catch {}
@@ -1185,7 +1187,9 @@ const KotoDashboard: React.FC = () => {
           
           <div className="space-y-4">
             <motion.button
-              onClick={signInWithGitHub}
+              onClick={() => {
+                signInWithGitHub().catch(err => console.error('GitHub sign-in error:', err));
+              }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-medium transition-colors"
@@ -1197,7 +1201,9 @@ const KotoDashboard: React.FC = () => {
             </motion.button>
             
             <motion.button
-              onClick={signInWithGoogle}
+              onClick={() => {
+                signInWithGoogle().catch(err => console.error('Google sign-in error:', err));
+              }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-white hover:bg-gray-50 text-gray-900 rounded-xl font-medium transition-colors"
