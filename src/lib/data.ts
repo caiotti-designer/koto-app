@@ -49,7 +49,8 @@ export async function signInWithGitHub() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
-      redirectTo: redirectUrl
+      redirectTo: redirectUrl,
+      flowType: 'pkce',
     }
   });
   
@@ -66,7 +67,8 @@ export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: redirectUrl
+      redirectTo: redirectUrl,
+      flowType: 'pkce',
     }
   });
   
@@ -74,7 +76,6 @@ export async function signInWithGoogle() {
     throw error;
   }
   
-  console.log('[data.ts] Google OAuth data:', data);
   return data;
 }
 
