@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Menu, Bell, User, Settings, HelpCircle, Sun, Moon, ExternalLink, Share2, Trash2, Copy, Palette, Code, Briefcase, PenTool, Target, Users, BarChart3, Zap, Globe, Figma, Cpu, Tag, X, Upload, Camera, Smile, Heart, Star, Zap as ZapIcon, Coffee, Music, Book, Gamepad2, Laptop, Smartphone, Headphones, Car, Home, Plane, Gift, ShoppingBag, CreditCard, Mail, Phone, MapPin, Calendar, Clock, Eye, EyeOff, ChevronDown, ChevronRight, Edit2, LogOut, Check } from 'lucide-react';
+import { toast } from 'sonner';
 import PromptCard from './PromptCard';
 import PromptDetailsModal from './PromptDetailsModal';
 import supabase from '../../lib/supabaseClient';
@@ -165,6 +166,7 @@ const KotoDashboard: React.FC = () => {
   const [newPromptTitle, setNewPromptTitle] = useState('');
   const [newPromptContent, setNewPromptContent] = useState('');
   const [newPromptModel, setNewPromptModel] = useState('GPT-4');
+  const [customModelName, setCustomModelName] = useState('');
   const [newPromptTags, setNewPromptTags] = useState<string[]>([]);
   const [newPromptTagInput, setNewPromptTagInput] = useState('');
   const [newPromptCoverImage, setNewPromptCoverImage] = useState('');
@@ -177,6 +179,7 @@ const KotoDashboard: React.FC = () => {
   const [newToolCategory, setNewToolCategory] = useState('');
   const [isLoadingToolData, setIsLoadingToolData] = useState(false);
   const [toolFavicon, setToolFavicon] = useState('');
+  const [returnToToolDialog, setReturnToToolDialog] = useState(false);
 
   // Settings state
   const [defaultTheme, setDefaultTheme] = useState<'light' | 'dark'>('light');
@@ -289,6 +292,15 @@ const KotoDashboard: React.FC = () => {
       document.documentElement.classList.remove('dark');
     }
   }, [darkMode]);
+
+  // Auto-switch activeCategory when tab changes
+  useEffect(() => {
+    if (activeTab === 'prompts' && activeCategory === 'all-tools') {
+      setActiveCategory('all');
+    } else if (activeTab === 'toolbox' && activeCategory === 'all') {
+      setActiveCategory('all-tools');
+    }
+  }, [activeTab, activeCategory]);
 
   // Auth subscription and initial load
   useEffect(() => {
@@ -412,12 +424,21 @@ const KotoDashboard: React.FC = () => {
     // Set the new project as active category
     setActiveCategory(newCategory.id);
 
+    // If returning to tool dialog, set the new category and reopen tool dialog
+    if (returnToToolDialog) {
+      setNewToolCategory(newCategory.name);
+      setReturnToToolDialog(false);
+      setShowAddProjectDialog(false);
+      setShowNewToolDialog(true);
+    } else {
+      setShowAddProjectDialog(false);
+    }
+
     // Reset form
     setNewProjectName('');
     setSelectedIcon(iconOptions[0]);
     setNewProjectTags([]);
     setNewProjectSubcategories([]);
-    setShowAddProjectDialog(false);
   };
   const handleAddTag = () => {
     if (!newTagInput.trim() || newProjectTags.includes(newTagInput.trim())) return;
@@ -487,7 +508,7 @@ const KotoDashboard: React.FC = () => {
       const created = await createPrompt({
         title: newPromptTitle,
         content: newPromptContent,
-        model: newPromptModel,
+        model: newPromptModel === 'Custom' ? customModelName : newPromptModel,
         tags: newPromptTags,
         category: promptCategory,
         subcategory: promptSubcategory,
@@ -516,6 +537,7 @@ const KotoDashboard: React.FC = () => {
     setNewPromptTitle('');
     setNewPromptContent('');
     setNewPromptModel('GPT-4');
+    setCustomModelName('');
     setNewPromptTags([]);
     setNewPromptCoverImage('');
     setNewPromptCoverFile(null);
@@ -726,24 +748,83 @@ const KotoDashboard: React.FC = () => {
       if (!newToolDescription) {
         const url = newToolUrl.toLowerCase();
         let description = '';
+        
+        // AI Tools
         if (url.includes('openai.com') || url.includes('chatgpt')) {
           description = 'Advanced AI language model for conversations, writing, and problem-solving.';
         } else if (url.includes('claude.ai') || url.includes('anthropic')) {
           description = 'AI assistant by Anthropic for helpful, harmless, and honest conversations.';
-        } else if (url.includes('figma.com')) {
+        } else if (url.includes('midjourney.com')) {
+          description = 'AI-powered image generation tool for creating stunning artwork and designs.';
+        } else if (url.includes('runway.ml') || url.includes('runwayml.com')) {
+          description = 'AI-powered creative tools for video editing, image generation, and content creation.';
+        } else if (url.includes('stability.ai') || url.includes('stablediffusion')) {
+          description = 'Open-source AI model for generating images from text descriptions.';
+        } else if (url.includes('huggingface.co')) {
+          description = 'Platform for machine learning models, datasets, and AI applications.';
+        } 
+        // Design Tools
+        else if (url.includes('figma.com')) {
           description = 'Collaborative interface design tool for creating user interfaces and prototypes.';
-        } else if (url.includes('github.com')) {
-          description = 'Version control and collaboration platform for software development.';
-        } else if (url.includes('notion.so')) {
-          description = 'All-in-one workspace for notes, docs, and project management.';
         } else if (url.includes('canva.com')) {
           description = 'Graphic design platform for creating visual content and presentations.';
-        } else if (url.includes('linear.app')) {
-          description = 'Modern issue tracking and project management for software teams.';
+        } else if (url.includes('sketch.com')) {
+          description = 'Digital design toolkit for creating user interfaces and experiences.';
+        } else if (url.includes('adobe.com')) {
+          description = 'Creative software suite for design, photography, and digital content creation.';
+        } 
+        // Development Tools
+        else if (url.includes('github.com')) {
+          description = 'Version control and collaboration platform for software development.';
         } else if (url.includes('vercel.com')) {
           description = 'Platform for frontend frameworks and static sites deployment.';
-        } else {
-          description = `A useful tool for productivity and workflow enhancement.`;
+        } else if (url.includes('netlify.com')) {
+          description = 'Web development platform for building and deploying modern websites.';
+        } else if (url.includes('heroku.com')) {
+          description = 'Cloud platform for building, running, and scaling applications.';
+        } else if (url.includes('aws.amazon.com')) {
+          description = 'Amazon Web Services cloud computing platform and infrastructure.';
+        } 
+        // Productivity Tools
+        else if (url.includes('notion.so')) {
+          description = 'All-in-one workspace for notes, docs, and project management.';
+        } else if (url.includes('linear.app')) {
+          description = 'Modern issue tracking and project management for software teams.';
+        } else if (url.includes('slack.com')) {
+          description = 'Team communication and collaboration platform for workspaces.';
+        } else if (url.includes('trello.com')) {
+          description = 'Visual project management tool using boards, lists, and cards.';
+        } else if (url.includes('asana.com')) {
+          description = 'Work management platform for teams to organize and track projects.';
+        } else if (url.includes('airtable.com')) {
+          description = 'Cloud collaboration service that combines spreadsheet and database functionality.';
+        } 
+        // Analytics & Marketing
+        else if (url.includes('google.com/analytics')) {
+          description = 'Web analytics service for tracking and reporting website traffic.';
+        } else if (url.includes('mailchimp.com')) {
+          description = 'Email marketing platform for creating and managing campaigns.';
+        } else if (url.includes('hubspot.com')) {
+          description = 'Customer relationship management and marketing automation platform.';
+        } 
+        // Communication & Video
+        else if (url.includes('zoom.us')) {
+          description = 'Video conferencing and online meeting platform.';
+        } else if (url.includes('discord.com')) {
+          description = 'Voice, video, and text communication platform for communities.';
+        } else if (url.includes('loom.com')) {
+          description = 'Screen recording and video messaging tool for async communication.';
+        } 
+        // Fallback: Extract meaningful description from domain
+        else {
+          try {
+            const domain = urlObj.hostname.replace('www.', '').replace('app.', '');
+            const siteName = domain.split('.')[0];
+            const capitalizedName = siteName.charAt(0).toUpperCase() + siteName.slice(1);
+            description = `${capitalizedName} - A useful tool for productivity and workflow enhancement.`;
+          } catch {
+            description = 'A useful tool for productivity and workflow enhancement.';
+          }
         }
         setNewToolDescription(description);
       }
@@ -820,11 +901,17 @@ const KotoDashboard: React.FC = () => {
       if (shareToken) {
         const shareUrl = `${window.location.origin}/shared/prompt?token=${shareToken}`;
         await navigator.clipboard.writeText(shareUrl);
-        // You could add a toast notification here
-        console.log('Share URL copied to clipboard:', shareUrl);
+        toast.success('Share link copied to clipboard!', {
+          description: 'Anyone with this link can view your prompt',
+          duration: 3000,
+        });
       }
     } catch (error) {
       console.error('Failed to share prompt:', error);
+      toast.error('Failed to share prompt', {
+        description: 'Please try again later',
+        duration: 3000,
+      });
     }
   };
 
@@ -901,11 +988,17 @@ const KotoDashboard: React.FC = () => {
         if (shareToken) {
           const shareUrl = `${window.location.origin}/shared/tool?token=${shareToken}`;
           await navigator.clipboard.writeText(shareUrl);
-          // You could add a toast notification here
-          console.log('Share URL copied to clipboard:', shareUrl);
+          toast.success('Share link copied to clipboard!', {
+            description: 'Anyone with this link can view your tool',
+            duration: 3000,
+          });
         }
       } catch (error) {
         console.error('Failed to share tool:', error);
+        toast.error('Failed to share tool', {
+          description: 'Please try again later',
+          duration: 3000,
+        });
       }
     };
     const handleDelete = async () => {
@@ -1289,7 +1382,7 @@ const KotoDashboard: React.FC = () => {
               <div className="space-y-1">
                 {/* All Button - Fixed on top with count */}
                 <div className="mb-2">
-                  <button onClick={() => setActiveCategory('all')} className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors max-w-[247px] ${activeCategory === 'all' ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'}`}>
+                  <button onClick={() => setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools')} className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors max-w-[247px] ${(activeTab === 'prompts' && activeCategory === 'all') || (activeTab === 'toolbox' && activeCategory === 'all-tools') ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'}`}>
                     <Globe className="w-5 h-5 flex-shrink-0" />
                     <AnimatePresence mode="wait">
                       {!sidebarCollapsed && <motion.div initial={{
@@ -1785,17 +1878,39 @@ const KotoDashboard: React.FC = () => {
                 </div>
 
                 {/* Model */}
-                <div>
+                <div className="relative">
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Model
                   </label>
-                  <select value={newPromptModel} onChange={e => setNewPromptModel(e.target.value)} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white">
+                  <select value={newPromptModel} onChange={e => setNewPromptModel(e.target.value)} className="w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white appearance-none">
                     <option value="GPT-4">GPT-4</option>
-                    <option value="Claude">Claude</option>
+                    <option value="GPT-4 Turbo">GPT-4 Turbo</option>
+                    <option value="Claude-3.5 Sonnet">Claude-3.5 Sonnet</option>
+                    <option value="Claude-3 Opus">Claude-3 Opus</option>
+                    <option value="Gemini Pro">Gemini Pro</option>
+                    <option value="Llama 3.1">Llama 3.1</option>
                     <option value="Midjourney">Midjourney</option>
-                    <option value="DALL-E">DALL-E</option>
+                    <option value="DALL-E 3">DALL-E 3</option>
+                    <option value="Custom">Custom Model...</option>
                   </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 mt-3 w-4 h-4 text-slate-500 pointer-events-none" />
                 </div>
+                
+                {/* Custom Model Input */}
+                {newPromptModel === 'Custom' && (
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                      Custom Model Name
+                    </label>
+                    <input
+                      type="text"
+                      value={customModelName}
+                      onChange={e => setCustomModelName(e.target.value)}
+                      placeholder="Enter custom model name (e.g., GPT-5, Custom-LLM)"
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                    />
+                  </div>
+                )}
 
                 {/* Tags */}
                 <div>
@@ -1924,14 +2039,18 @@ const KotoDashboard: React.FC = () => {
                     Stacks
                   </label>
                   <div className="space-y-3">
-                    <select value={newToolCategory} onChange={e => setNewToolCategory(e.target.value)} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white">
-                      <option value="">Select a stack</option>
-                      {updatedToolCategories.filter(cat => cat.id !== 'all-tools').map(category => <option key={category.id} value={category.name}>
-                          {category.name}
-                        </option>)}
-                    </select>
+                    <div className="relative">
+                      <select value={newToolCategory} onChange={e => setNewToolCategory(e.target.value)} className="w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white appearance-none">
+                        <option value="">Select a stack</option>
+                        {updatedToolCategories.filter(cat => cat.id !== 'all-tools').map(category => <option key={category.id} value={category.name}>
+                            {category.name}
+                          </option>)}
+                      </select>
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                    </div>
                     
                     <button onClick={() => {
+                  setReturnToToolDialog(true);
                   setShowNewToolDialog(false);
                   setShowAddProjectDialog(true);
                 }} className="w-full flex items-center justify-center space-x-2 px-3 py-2 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:border-slate-400 dark:hover:border-slate-500 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">

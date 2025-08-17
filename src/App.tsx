@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Container, Theme } from './settings/types';
 import KotoDashboard from './components/generated/KotoDashboard';
+import { Toaster } from 'sonner';
 
 let theme: Theme = 'light';
 let container: Container = 'none';
@@ -23,12 +24,20 @@ function App() {
 
   if (container === 'centered') {
     return (
-      <div className="h-full w-full flex flex-col items-center justify-center">
-        {generatedComponent}
-      </div>
+      <>
+        <div className="h-full w-full flex flex-col items-center justify-center">
+          {generatedComponent}
+        </div>
+        <Toaster position="top-right" richColors />
+      </>
     );
   } else {
-    return generatedComponent;
+    return (
+      <>
+        {generatedComponent}
+        <Toaster position="top-right" richColors />
+      </>
+    );
   }
 }
 

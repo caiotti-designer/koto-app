@@ -9,7 +9,7 @@ export interface UserProfile {
   avatar_url?: string;
   profile_public: boolean;
   created_at: string;
-  updated_at: string;
+  // updated_at: string; // Commented out as this column may not exist in current database
 }
 
 export interface PromptRow {
@@ -25,7 +25,7 @@ export interface PromptRow {
   is_public: boolean;
   share_token?: string;
   created_at: string;
-  updated_at: string;
+  // updated_at: string; // Commented out as this column may not exist in current database
 }
 
 export interface ToolRow {
@@ -39,7 +39,7 @@ export interface ToolRow {
   is_public: boolean;
   share_token?: string;
   created_at: string;
-  updated_at: string;
+  // updated_at: string; // Commented out as this column may not exist in current database
 }
 
 // Auth
@@ -139,7 +139,7 @@ export async function fetchPrompts(userId?: string): Promise<PromptRow[]> {
   return data || [];
 }
 
-export async function createPrompt(prompt: Omit<PromptRow, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'is_public' | 'share_token'>, userId: string): Promise<PromptRow | null> {
+export async function createPrompt(prompt: Omit<PromptRow, 'id' | 'created_at' | 'user_id' | 'is_public' | 'share_token'>, userId: string): Promise<PromptRow | null> {
   const { data, error } = await supabase
     .from('prompts')
     .insert([{
@@ -159,7 +159,9 @@ export async function createPrompt(prompt: Omit<PromptRow, 'id' | 'created_at' |
 }
 
 export async function updatePrompt(id: string, patch: Partial<PromptRow>) {
-  const { data, error } = await supabase.from('prompts').update(patch).eq('id', id).select('*').single();
+  // Remove updated_at from patch if it exists, as the database might not have this column
+  const { updated_at, ...cleanPatch } = patch;
+  const { data, error } = await supabase.from('prompts').update(cleanPatch).eq('id', id).select('*').single();
   if (error) throw error;
   return data as PromptRow;
 }
@@ -189,7 +191,7 @@ export async function fetchTools(userId?: string): Promise<ToolRow[]> {
   return data || [];
 }
 
-export async function createTool(tool: Omit<ToolRow, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'is_public' | 'share_token'>, userId: string): Promise<ToolRow | null> {
+export async function createTool(tool: Omit<ToolRow, 'id' | 'created_at' | 'user_id' | 'is_public' | 'share_token'>, userId: string): Promise<ToolRow | null> {
   const { data, error } = await supabase
     .from('tools')
     .insert([{
@@ -209,7 +211,9 @@ export async function createTool(tool: Omit<ToolRow, 'id' | 'created_at' | 'upda
 }
 
 export async function updateTool(id: string, patch: Partial<ToolRow>) {
-  const { data, error } = await supabase.from('tools').update(patch).eq('id', id).select('*').single();
+  // Remove updated_at from patch if it exists, as the database might not have this column
+  const { updated_at, ...cleanPatch } = patch;
+  const { data, error } = await supabase.from('tools').update(cleanPatch).eq('id', id).select('*').single();
   if (error) throw error;
   return data as ToolRow;
 }
