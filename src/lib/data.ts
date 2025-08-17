@@ -160,7 +160,8 @@ export async function createPrompt(prompt: Omit<PromptRow, 'id' | 'created_at' |
 
 export async function updatePrompt(id: string, patch: Partial<PromptRow>) {
   // Remove updated_at from patch if it exists, as the database might not have this column
-  const { updated_at, ...cleanPatch } = patch;
+const cleanPatch = { ...patch } as any;
+if ('updated_at' in cleanPatch) delete cleanPatch.updated_at;
   const { data, error } = await supabase.from('prompts').update(cleanPatch).eq('id', id).select('*').single();
   if (error) throw error;
   return data as PromptRow;
@@ -212,7 +213,8 @@ export async function createTool(tool: Omit<ToolRow, 'id' | 'created_at' | 'user
 
 export async function updateTool(id: string, patch: Partial<ToolRow>) {
   // Remove updated_at from patch if it exists, as the database might not have this column
-  const { updated_at, ...cleanPatch } = patch;
+const cleanPatch = { ...patch } as any;
+if ('updated_at' in cleanPatch) delete cleanPatch.updated_at;
   const { data, error } = await supabase.from('tools').update(cleanPatch).eq('id', id).select('*').single();
   if (error) throw error;
   return data as ToolRow;
