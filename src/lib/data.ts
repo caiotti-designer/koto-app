@@ -34,6 +34,7 @@ export interface ToolRow {
   url: string;
   description?: string;
   category?: string;
+  subcategory?: string;
   favicon?: string;
   user_id: string;
   is_public: boolean;

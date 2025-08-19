@@ -1,2 +1,2 @@
-export type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'system';
 export type Container = 'centered' | 'none';

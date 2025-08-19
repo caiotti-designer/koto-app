@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Menu, Bell, User, Settings, HelpCircle, Sun, Moon, ExternalLink, Share2, Trash2, Copy, Palette, Code, Briefcase, PenTool, Target, Users, BarChart3, Zap, Globe, Figma, Cpu, Tag, X, Upload, Camera, Smile, Heart, Star, Zap as ZapIcon, Coffee, Music, Book, Gamepad2, Laptop, Smartphone, Headphones, Car, Home, Plane, Gift, ShoppingBag, CreditCard, Mail, Phone, MapPin, Calendar, Clock, Eye, EyeOff, ChevronDown, ChevronRight, Edit2, LogOut, Check } from 'lucide-react';
+import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Menu, Bell, User, Settings, HelpCircle, Sun, Moon, ExternalLink, Share2, Trash2, Copy, Palette, Code, Briefcase, PenTool, Target, Users, BarChart3, Zap, Globe, Figma, Cpu, Tag, X, Upload, Camera, Smile, Heart, Star, Zap as ZapIcon, Coffee, Music, Book, Gamepad2, Laptop, Smartphone, Headphones, Car, Home, Plane, Gift, ShoppingBag, CreditCard, Mail, Phone, MapPin, Calendar, Clock, Eye, EyeOff, ChevronDown, ChevronRight, Edit2, LogOut, Check, Database, Shield } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTheme } from '../../contexts/ThemeContext';
 import PromptCard from './PromptCard';
 import PromptDetailsModal from './PromptDetailsModal';
 import Logo from '../Logo';
@@ -13,6 +14,8 @@ import {
   fetchTools,
   createPrompt,
   createTool,
+  updatePrompt,
+  updateTool,
   uploadCover,
   onAuthChange,
   signInWithGitHub,
@@ -132,6 +135,7 @@ const iconOptions = [{
   icon: BarChart3
 }] as any[];
 const KotoDashboard: React.FC = () => {
+  const { theme, setTheme, actualTheme } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'prompts' | 'toolbox'>('prompts');
@@ -143,9 +147,11 @@ const KotoDashboard: React.FC = () => {
   const [showPromptDetailsDialog, setShowPromptDetailsDialog] = useState(false);
   const [showToolDetailsDialog, setShowToolDetailsDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  const [showProjectSettingsDialog, setShowProjectSettingsDialog] = useState(false);
+  const [editingProjectName, setEditingProjectName] = useState('');
+  const [editingProjectIcon, setEditingProjectIcon] = useState<any>(null);
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
-  const [darkMode, setDarkMode] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [editingItem, setEditingItem] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
@@ -183,7 +189,6 @@ const KotoDashboard: React.FC = () => {
   const [returnToToolDialog, setReturnToToolDialog] = useState(false);
 
   // Settings state
-  const [defaultTheme, setDefaultTheme] = useState<'light' | 'dark'>('light');
   const [backgroundImage, setBackgroundImage] = useState(() => {
     // Load background image from localStorage if available
     if (typeof window !== 'undefined') {
@@ -335,13 +340,7 @@ const KotoDashboard: React.FC = () => {
     const matchesCategory = tool.category.toLowerCase().replace(/\s+/g, '-') === activeCategory;
     return matchesSearch && matchesCategory;
   });
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
+  // Theme is now managed by ThemeContext
 
   // Auto-switch activeCategory when tab changes
   useEffect(() => {
@@ -433,7 +432,7 @@ const KotoDashboard: React.FC = () => {
     setDragOverTarget(null);
   };
   
-  const handleDrop = (e: React.DragEvent, targetCategoryId: string) => {
+  const handleDrop = async (e: React.DragEvent, targetCategoryId: string) => {
     e.preventDefault();
     if (!draggedItem) return;
     
@@ -447,17 +446,51 @@ const KotoDashboard: React.FC = () => {
     }
     
     if (draggedItem.type === 'prompt' && activeTab === 'prompts') {
+      const newCategory = targetCategory ? targetCategory.name : targetSubcategory?.parentId ? updatedCategories.find(cat => cat.id === targetSubcategory.parentId)?.name || draggedItem.item.category : draggedItem.item.category;
+      const newSubcategory = targetSubcategory ? targetSubcategory.id : undefined;
+      
+      // Update local state
       setPrompts(prev => prev.map(p => p.id === draggedItem.item.id ? {
         ...p,
-        category: targetCategory ? targetCategory.name : targetSubcategory?.parentId ? updatedCategories.find(cat => cat.id === targetSubcategory.parentId)?.name || p.category : p.category,
-        subcategory: targetSubcategory ? targetSubcategory.id : undefined
+        category: newCategory,
+        subcategory: newSubcategory
       } : p));
+      
+      // Update database
+      try {
+        await updatePrompt(draggedItem.item.id, {
+          category: newCategory,
+          subcategory: newSubcategory
+        });
+      } catch (error) {
+        console.error('Failed to update prompt in database:', error);
+        toast.error('Failed to save changes to database');
+        // Revert local state on error
+        setPrompts(prev => prev.map(p => p.id === (draggedItem.item as Prompt).id ? draggedItem.item as Prompt : p));
+      }
     } else if (draggedItem.type === 'tool' && activeTab === 'toolbox') {
+      const newCategory = targetCategory ? targetCategory.name : targetSubcategory?.parentId ? updatedToolCategories.find(cat => cat.id === targetSubcategory.parentId)?.name || draggedItem.item.category : draggedItem.item.category;
+      const newSubcategory = targetSubcategory ? targetSubcategory.id : undefined;
+      
+      // Update local state
       setTools(prev => prev.map(t => t.id === draggedItem.item.id ? {
         ...t,
-        category: targetCategory ? targetCategory.name : targetSubcategory?.parentId ? updatedToolCategories.find(cat => cat.id === targetSubcategory.parentId)?.name || t.category : t.category,
-        subcategory: targetSubcategory ? targetSubcategory.id : undefined
+        category: newCategory,
+        subcategory: newSubcategory
       } : t));
+      
+      // Update database
+      try {
+        await updateTool(draggedItem.item.id, {
+          category: newCategory,
+          subcategory: newSubcategory
+        });
+      } catch (error) {
+        console.error('Failed to update tool in database:', error);
+        toast.error('Failed to save changes to database');
+        // Revert local state on error
+        setTools(prev => prev.map(t => t.id === draggedItem.item.id ? draggedItem.item as Tool : t));
+      }
     }
     setDraggedItem(null);
   };
@@ -1452,12 +1485,136 @@ const KotoDashboard: React.FC = () => {
               </AnimatePresence>
             </motion.div>
           </motion.div>}
+
+        {/* Project/Stack Settings Dialog */}
+        {showProjectSettingsDialog && (
+          <motion.div 
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            onClick={() => setShowProjectSettingsDialog(false)}
+          >
+            <motion.div 
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-xl" 
+              initial={{ scale: 0.9, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }} 
+              exit={{ scale: 0.9, opacity: 0 }} 
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between mb-6">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                  Edit {activeTab === 'toolbox' ? 'Stack' : 'Project'}
+                </h2>
+                <button 
+                  onClick={() => setShowProjectSettingsDialog(false)} 
+                  className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Name Field */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    {activeTab === 'toolbox' ? 'Stack' : 'Project'} Name
+                  </label>
+                  <input
+                     type="text"
+                     value={editingProjectName}
+                     onChange={(e) => setEditingProjectName(e.target.value)}
+                     className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                     placeholder={`Enter ${activeTab === 'toolbox' ? 'stack' : 'project'} name`}
+                   />
+                </div>
+
+                {/* Icon Selection */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                    Choose Icon
+                  </label>
+                  <div className="grid grid-cols-6 gap-2">
+                     {[Code, Database, Globe, Palette, Settings, Star, Heart, Zap, Shield, Camera].map((IconComponent, index) => (
+                       <button
+                         key={index}
+                         onClick={() => setEditingProjectIcon(IconComponent)}
+                         className={`p-3 rounded-lg border-2 transition-colors flex items-center justify-center ${
+                           editingProjectIcon === IconComponent 
+                             ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' 
+                             : 'border-slate-200 dark:border-slate-600 hover:border-indigo-500'
+                         }`}
+                       >
+                         <IconComponent className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                       </button>
+                     ))}
+                   </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-slate-200 dark:border-slate-700">
+                <button 
+                  onClick={() => setShowProjectSettingsDialog(false)} 
+                  className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <motion.button
+                   onClick={async () => {
+                     try {
+                       // Find the current category
+                       const categoryList = activeTab === 'prompts' ? updatedCategories : updatedToolCategories;
+                       const categoryIndex = categoryList.findIndex(cat => cat.id === activeCategory);
+                       
+                       if (categoryIndex !== -1) {
+                         // Update the category
+                         const updatedCategory = {
+                           ...categoryList[categoryIndex],
+                           name: editingProjectName,
+                           icon: editingProjectIcon
+                         };
+                         
+                         // Update the categories array
+                         const newCategories = [...categoryList];
+                         newCategories[categoryIndex] = updatedCategory;
+                         
+                         // Update the state
+                         if (activeTab === 'prompts') {
+                           setCategories(newCategories);
+                         } else {
+                           setToolCategories(newCategories);
+                         }
+                         
+                         // Save to localStorage for persistence
+                         localStorage.setItem(
+                           activeTab === 'prompts' ? 'koto_prompt_categories' : 'koto_tool_categories',
+                           JSON.stringify(newCategories)
+                         );
+                         
+                         toast.success(`${activeTab === 'toolbox' ? 'Stack' : 'Project'} updated successfully!`);
+                         setShowProjectSettingsDialog(false);
+                       }
+                     } catch (error) {
+                       console.error('Error updating project:', error);
+                       toast.error('Failed to update project. Please try again.');
+                     }
+                   }}
+                   whileHover={{ scale: 1.02 }}
+                   whileTap={{ scale: 0.98 }}
+                   className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors"
+                 >
+                   Save Changes
+                 </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>;
   };
   // Authentication Guard
   if (!user) {
     return (
-      <div className={`h-screen w-full ${darkMode ? 'dark' : ''} bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center transition-colors duration-300`} style={{
+      <div className={`h-screen w-full ${actualTheme === 'dark' ? 'dark' : ''} bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center transition-colors duration-300`} style={{
         fontFamily: 'Space Grotesk, sans-serif'
       }}>
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 w-full max-w-md shadow-2xl border border-white/20">
@@ -1512,7 +1669,7 @@ const KotoDashboard: React.FC = () => {
     );
   }
 
-  return <div className={`h-screen w-full ${darkMode ? 'dark' : ''} bg-slate-50 dark:bg-slate-900 flex overflow-hidden transition-colors duration-300`} style={{
+  return <div className={`h-screen w-full ${actualTheme === 'dark' ? 'dark' : ''} bg-slate-50 dark:bg-slate-900 flex overflow-hidden transition-colors duration-300`} style={{
     fontFamily: 'Space Grotesk, sans-serif'
   }}>
       {/* Sidebar */}
@@ -1621,7 +1778,7 @@ const KotoDashboard: React.FC = () => {
                                 {/* Inline action buttons */}
                                 <div className="flex items-center space-x-1 flex-shrink-0">
                                   {/* Delete button */}
-                                  <button onClick={e => {
+                                  <div onClick={e => {
                               e.stopPropagation();
                               // Handle delete category
                               if (activeTab === 'prompts') {
@@ -1633,25 +1790,25 @@ const KotoDashboard: React.FC = () => {
                               if (activeCategory === category.id) {
                                 setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools');
                               }
-                            }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-all">
+                            }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-all cursor-pointer">
                                     <Trash2 className="w-4 h-4 text-red-500" />
-                                  </button>
+                                  </div>
                                   
                                   {/* Add subcategory button */}
-                                  <button onClick={e => {
+                                  <div onClick={e => {
                               e.stopPropagation();
                               handleAddSubcategoryToProject(category.id);
-                            }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-all">
+                            }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-all cursor-pointer">
                                     <Plus className="w-4 h-4 text-slate-400" />
-                                  </button>
+                                  </div>
                                   
                                   {/* Expand/collapse button for subcategories - always show if has subcategories or on hover */}
-                                  {(hasSubcategories || category.expanded) && <button onClick={e => {
+                                  {(hasSubcategories || category.expanded) && <div onClick={e => {
                               e.stopPropagation();
                               toggleCategoryExpansion(category.id);
-                            }} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors">
+                            }} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors cursor-pointer">
                                       {category.expanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
-                                    </button>}
+                                    </div>}
                                 </div>
                               </motion.div>}
                           </AnimatePresence>
@@ -1689,16 +1846,16 @@ const KotoDashboard: React.FC = () => {
                             </span>
                             
                             {/* Delete subcategory button */}
-                            <button onClick={e => {
+                            <div onClick={e => {
                               e.stopPropagation();
                               setSubcategories(prev => prev.filter(sub => sub.id !== subcategory.id));
                               // Reset to parent category if deleting active subcategory
                               if (activeCategory === subcategory.id) {
                                 setActiveCategory(subcategory.parentId);
                               }
-                            }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-all">
+                            }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-all cursor-pointer">
                               <Trash2 className="w-3 h-3 text-red-500" />
-                            </button>
+                            </div>
                           </div>
                         </button>;
                       })}
@@ -1717,9 +1874,12 @@ const KotoDashboard: React.FC = () => {
                 <Settings className="w-5 h-5 flex-shrink-0" />
                 {!sidebarCollapsed && <span className="font-medium text-sm">Settings</span>}
               </button>
-              <button onClick={() => setDarkMode(!darkMode)} className="w-full flex items-center space-x-3 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
-                {darkMode ? <Sun className="w-5 h-5 flex-shrink-0" /> : <Moon className="w-5 h-5 flex-shrink-0" />}
-                {!sidebarCollapsed && <span className="font-medium text-sm">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>}
+              <button onClick={() => {
+                const nextTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
+                setTheme(nextTheme);
+              }} className="w-full flex items-center space-x-3 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
+                {theme === 'light' ? <Sun className="w-5 h-5 flex-shrink-0" /> : theme === 'dark' ? <Moon className="w-5 h-5 flex-shrink-0" /> : <Settings className="w-5 h-5 flex-shrink-0" />}
+                {!sidebarCollapsed && <span className="font-medium text-sm">{theme === 'light' ? 'Light' : theme === 'dark' ? 'Dark' : 'System'}</span>}
               </button>
               <button className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
                 <HelpCircle className="w-5 h-5 flex-shrink-0" />
@@ -1849,7 +2009,7 @@ const KotoDashboard: React.FC = () => {
                   paddingLeft: "32px",
                   paddingRight: "32px"
                 }}>
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-3 group">
                       {(() => {
                       // Get the current category's icon
                       if (activeCategory === 'all' || activeCategory === 'all-tools') {
@@ -1883,6 +2043,29 @@ const KotoDashboard: React.FC = () => {
                           ? (activeCategory === 'all' ? 'All Prompts' : getCurrentCategoryName())
                           : (activeCategory === 'all-tools' ? 'All Tools' : getCurrentCategoryName())}
                       </h1>
+                      {/* Edit icon - conditional rendering with hover */}
+                      {(activeTab === 'prompts' || activeTab === 'toolbox') && activeCategory && activeCategory !== 'all' && activeCategory !== 'all-tools' && (
+                        <motion.div
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // Initialize editing state with current values
+                            setEditingProjectName(getCurrentCategoryName());
+                            const categoryList = activeTab === 'prompts' ? updatedCategories : updatedToolCategories;
+                            const category = categoryList.find(cat => cat.id === activeCategory);
+                            if (category) {
+                              setEditingProjectIcon(category.icon);
+                            }
+                            setShowProjectSettingsDialog(true);
+                          }}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all duration-200 cursor-pointer opacity-0 group-hover:opacity-100"
+                          title={`Edit ${activeTab === 'toolbox' ? 'Stack' : 'Project'}`}
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </motion.div>
+                      )}
                     </div>
                     <p className="text-white/80">
                       {getCurrentCategoryCount()} {activeTab === 'prompts' ? 'prompts' : 'tools'} available
@@ -2302,18 +2485,22 @@ const KotoDashboard: React.FC = () => {
                   </label>
                   <div className="flex space-x-3">
                     <button onClick={() => {
-                  setDefaultTheme('light');
-                  setDarkMode(false);
-                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${defaultTheme === 'light' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
+                  setTheme('light');
+                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${theme === 'light' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
                       <Sun className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" />
                       <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Light</div>
                     </button>
                     <button onClick={() => {
-                  setDefaultTheme('dark');
-                  setDarkMode(true);
-                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${defaultTheme === 'dark' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
+                  setTheme('dark');
+                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${theme === 'dark' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
                       <Moon className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" />
                       <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Dark</div>
+                    </button>
+                    <button onClick={() => {
+                  setTheme('system');
+                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${theme === 'system' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
+                      <Settings className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" />
+                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300">System</div>
                     </button>
                   </div>
                 </div>
