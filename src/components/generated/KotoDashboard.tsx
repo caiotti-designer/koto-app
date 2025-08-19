@@ -6,6 +6,7 @@ import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Men
 import { toast } from 'sonner';
 import PromptCard from './PromptCard';
 import PromptDetailsModal from './PromptDetailsModal';
+import Logo from '../Logo';
 import supabase from '../../lib/supabaseClient';
 import {
   fetchPrompts,
@@ -194,23 +195,72 @@ const KotoDashboard: React.FC = () => {
   // Reset all data to defaults for new user
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [tools, setTools] = useState<Tool[]>([]);
-  const [categories, setCategories] = useState<Category[]>([{
-    id: 'all',
-    name: 'All',
-    count: 0,
-    icon: Globe,
-    expanded: false
-  }]);
+  const [categories, setCategories] = useState<Category[]>(() => {
+    // Load categories from localStorage if available
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('koto_categories');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          // Restore icon references from iconOptions
+          return parsed.map((cat: any) => ({
+            ...cat,
+            icon: iconOptions.find(opt => opt.name === cat.iconName)?.icon || Globe
+          }));
+        } catch (e) {
+          console.warn('Failed to parse saved categories:', e);
+        }
+      }
+    }
+    return [{
+      id: 'all',
+      name: 'All',
+      count: 0,
+      icon: Globe,
+      expanded: false
+    }];
+  });
 
   // Missing state variables
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [toolCategories, setToolCategories] = useState<Category[]>([{
-    id: 'all-tools',
-    name: 'All Tools',
-    count: 0,
-    icon: Globe,
-    expanded: false
-  }]);
+  const [subcategories, setSubcategories] = useState<Subcategory[]>(() => {
+    // Load subcategories from localStorage if available
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('koto_subcategories');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.warn('Failed to parse saved subcategories:', e);
+        }
+      }
+    }
+    return [];
+  });
+  const [toolCategories, setToolCategories] = useState<Category[]>(() => {
+    // Load tool categories from localStorage if available
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('koto_tool_categories');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          // Restore icon references from iconOptions
+          return parsed.map((cat: any) => ({
+            ...cat,
+            icon: iconOptions.find(opt => opt.name === cat.iconName)?.icon || Globe
+          }));
+        } catch (e) {
+          console.warn('Failed to parse saved tool categories:', e);
+        }
+      }
+    }
+    return [{
+      id: 'all-tools',
+      name: 'All Tools',
+      count: 0,
+      icon: Globe,
+      expanded: false
+    }];
+  });
 
   // Update category counts dynamically
   const updatedCategories = categories.map(category => {
@@ -356,6 +406,8 @@ const KotoDashboard: React.FC = () => {
   }, [user]);
 
   // Drag and drop handlers
+  const [dragOverTarget, setDragOverTarget] = useState<string | null>(null);
+  
   const handleDragStart = (e: React.DragEvent, type: 'prompt' | 'tool', item: Prompt | Tool) => {
     setDraggedItem({
       type,
@@ -363,24 +415,48 @@ const KotoDashboard: React.FC = () => {
     });
     e.dataTransfer.effectAllowed = 'move';
   };
-  const handleDragOver = (e: React.DragEvent) => {
+  
+  const handleDragEnd = () => {
+    // Clear dragged item and any visual feedback when drag ends
+    setDraggedItem(null);
+    setDragOverTarget(null);
+  };
+  
+  const handleDragOver = (e: React.DragEvent, targetId: string) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
+    setDragOverTarget(targetId);
   };
+  
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOverTarget(null);
+  };
+  
   const handleDrop = (e: React.DragEvent, targetCategoryId: string) => {
     e.preventDefault();
     if (!draggedItem) return;
+    
+    // Check if target is a main category or subcategory
     const targetCategory = activeTab === 'prompts' ? updatedCategories.find(cat => cat.id === targetCategoryId) : updatedToolCategories.find(cat => cat.id === targetCategoryId);
-    if (!targetCategory || targetCategory.id === 'all' || targetCategory.id === 'all-tools') return;
+    const targetSubcategory = subcategories.find(sub => sub.id === targetCategoryId);
+    
+    if ((!targetCategory && !targetSubcategory) || targetCategoryId === 'all' || targetCategoryId === 'all-tools') {
+      setDraggedItem(null);
+      return;
+    }
+    
     if (draggedItem.type === 'prompt' && activeTab === 'prompts') {
       setPrompts(prev => prev.map(p => p.id === draggedItem.item.id ? {
         ...p,
-        category: targetCategory.name
+        category: targetCategory ? targetCategory.name : targetSubcategory?.parentId ? updatedCategories.find(cat => cat.id === targetSubcategory.parentId)?.name || p.category : p.category,
+        subcategory: targetSubcategory ? targetSubcategory.id : undefined
       } : p));
     } else if (draggedItem.type === 'tool' && activeTab === 'toolbox') {
       setTools(prev => prev.map(t => t.id === draggedItem.item.id ? {
         ...t,
-        category: targetCategory.name
+        category: targetCategory ? targetCategory.name : targetSubcategory?.parentId ? updatedToolCategories.find(cat => cat.id === targetSubcategory.parentId)?.name || t.category : t.category,
+        subcategory: targetSubcategory ? targetSubcategory.id : undefined
       } : t));
     }
     setDraggedItem(null);
@@ -405,9 +481,27 @@ const KotoDashboard: React.FC = () => {
       expanded: false,
     };
     if (activeTab === 'prompts') {
-      setCategories(prev => [...prev, newCategory]);
+      setCategories(prev => {
+        const updated = [...prev, newCategory];
+        // Save to localStorage with icon name for serialization
+        const serializable = updated.map(cat => ({
+          ...cat,
+          iconName: iconOptions.find(opt => opt.icon === cat.icon)?.name || 'Globe'
+        }));
+        localStorage.setItem('koto_categories', JSON.stringify(serializable));
+        return updated;
+      });
     } else {
-      setToolCategories(prev => [...prev, newCategory]);
+      setToolCategories(prev => {
+        const updated = [...prev, newCategory];
+        // Save to localStorage with icon name for serialization
+        const serializable = updated.map(cat => ({
+          ...cat,
+          iconName: iconOptions.find(opt => opt.icon === cat.icon)?.name || 'Globe'
+        }));
+        localStorage.setItem('koto_tool_categories', JSON.stringify(serializable));
+        return updated;
+      });
     }
 
     // Add subcategories (only for prompts)
@@ -418,7 +512,11 @@ const KotoDashboard: React.FC = () => {
         parentId: newCategory.id,
         count: 0,
       }));
-      setSubcategories(prev => [...prev, ...newSubcats]);
+      setSubcategories(prev => {
+        const updated = [...prev, ...newSubcats];
+        localStorage.setItem('koto_subcategories', JSON.stringify(updated));
+        return updated;
+      });
     }
 
     // Set the new project as active category
@@ -630,6 +728,45 @@ const KotoDashboard: React.FC = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  // Handle clipboard paste for cover images
+  const handleClipboardPaste = async (event: ClipboardEvent) => {
+    // Only handle paste when the new prompt modal is open
+    if (!showNewPromptDialog) return;
+    
+    const items = event.clipboardData?.items;
+    if (!items) return;
+    
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.type.indexOf('image') !== -1) {
+        const file = item.getAsFile();
+        if (file) {
+          setNewPromptCoverFile(file);
+          // preview locally
+          const reader = new FileReader();
+          reader.onload = e => setNewPromptCoverImage(e.target?.result as string);
+          reader.readAsDataURL(file);
+          
+          // Show success toast
+          toast.success('Image pasted as cover image!', {
+            description: 'The image from your clipboard has been set as the cover image.'
+          });
+          break;
+        }
+      }
+    }
+  };
+
+  // Add clipboard event listener when modal is open
+  React.useEffect(() => {
+    if (showNewPromptDialog) {
+      document.addEventListener('paste', handleClipboardPaste);
+      return () => {
+        document.removeEventListener('paste', handleClipboardPaste);
+      };
+    }
+  }, [showNewPromptDialog]);
   const handleDoubleClick = (itemId: string, currentName: string) => {
     setEditingItem(itemId);
     setEditingName(currentName);
@@ -638,21 +775,44 @@ const KotoDashboard: React.FC = () => {
     if (!editingName.trim()) return;
     if (type === 'category') {
       if (activeTab === 'prompts') {
-        setCategories(prev => prev.map(cat => cat.id === itemId ? {
-          ...cat,
-          name: editingName.trim()
-        } : cat));
+        setCategories(prev => {
+          const updated = prev.map(cat => cat.id === itemId ? {
+            ...cat,
+            name: editingName.trim()
+          } : cat);
+          // Save to localStorage
+          const serializedCategories = updated.map(cat => ({
+            ...cat,
+            icon: cat.icon.name || 'FolderOpen'
+          }));
+          localStorage.setItem('koto_categories', JSON.stringify(serializedCategories));
+          return updated;
+        });
       } else {
-        setToolCategories(prev => prev.map(cat => cat.id === itemId ? {
-          ...cat,
-          name: editingName.trim()
-        } : cat));
+        setToolCategories(prev => {
+          const updated = prev.map(cat => cat.id === itemId ? {
+            ...cat,
+            name: editingName.trim()
+          } : cat);
+          // Save to localStorage
+          const serializedToolCategories = updated.map(cat => ({
+            ...cat,
+            icon: cat.icon.name || 'Wrench'
+          }));
+          localStorage.setItem('koto_tool_categories', JSON.stringify(serializedToolCategories));
+          return updated;
+        });
       }
     } else {
-      setSubcategories(prev => prev.map(sub => sub.id === itemId ? {
-        ...sub,
-        name: editingName.trim()
-      } : sub));
+      setSubcategories(prev => {
+        const updated = prev.map(sub => sub.id === itemId ? {
+          ...sub,
+          name: editingName.trim()
+        } : sub);
+        // Save to localStorage
+        localStorage.setItem('koto_subcategories', JSON.stringify(updated));
+        return updated;
+      });
     }
     setEditingItem(null);
     setEditingName('');
@@ -660,26 +820,57 @@ const KotoDashboard: React.FC = () => {
   const handleAddSubcategoryToProject = (parentId: string) => {
     // Create a new subcategory with a default name based on active tab
     const subcatName = activeTab === 'prompts' ? 'New subproject' : 'New substack';
+    // Generate unique ID using timestamp to avoid conflicts
+    const uniqueId = `${parentId}-${subcatName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
     const newSubcat: Subcategory = {
-      id: `${parentId}-${subcatName.toLowerCase().replace(/\s+/g, '-')}`,
+      id: uniqueId,
       name: subcatName,
       parentId: parentId,
       count: 0,
     };
-    setSubcategories(prev => [...prev, newSubcat]);
+    setSubcategories(prev => {
+      const updated = [...prev, newSubcat];
+      // Save to localStorage
+      localStorage.setItem('koto_subcategories', JSON.stringify(updated));
+      return updated;
+    });
 
     // Also expand the parent category to show the new subcategory
     if (activeTab === 'prompts') {
-      setCategories(prev => prev.map(cat => cat.id === parentId ? {
-        ...cat,
-        expanded: true
-      } : cat));
+      setCategories(prev => {
+        const updated = prev.map(cat => cat.id === parentId ? {
+          ...cat,
+          expanded: true
+        } : cat);
+        // Save to localStorage
+        const serializedCategories = updated.map(cat => ({
+          ...cat,
+          icon: cat.icon.name || 'FolderOpen'
+        }));
+        localStorage.setItem('koto_categories', JSON.stringify(serializedCategories));
+        return updated;
+      });
     } else {
-      setToolCategories(prev => prev.map(cat => cat.id === parentId ? {
-        ...cat,
-        expanded: true
-      } : cat));
+      setToolCategories(prev => {
+        const updated = prev.map(cat => cat.id === parentId ? {
+          ...cat,
+          expanded: true
+        } : cat);
+        // Save to localStorage
+        const serializedToolCategories = updated.map(cat => ({
+          ...cat,
+          icon: cat.icon.name || 'Wrench'
+        }));
+        localStorage.setItem('koto_tool_categories', JSON.stringify(serializedToolCategories));
+        return updated;
+      });
     }
+
+    // Automatically start editing the newly created subcategory
+    setTimeout(() => {
+      setEditingItem(uniqueId);
+      setEditingName(subcatName);
+    }, 100); // Small delay to ensure the DOM is updated
   };
   const getCurrentCategoryName = () => {
     if (activeCategory === 'all') {
@@ -1346,8 +1537,8 @@ const KotoDashboard: React.FC = () => {
                 opacity: 0,
                 x: -20
               }} className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">K</span>
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                      <Logo size="custom-40" className="text-indigo-500" />
                     </div>
                     <h1 className="text-xl font-bold text-slate-900 dark:text-white">Koto</h1>
                   </motion.div>}
@@ -1410,7 +1601,7 @@ const KotoDashboard: React.FC = () => {
                 const hasSubcategories = categorySubcategories.length > 0;
                 return <div key={category.id}>
                       <div className="flex items-center group">
-                        <button onClick={() => setActiveCategory(category.id)} onDoubleClick={() => handleDoubleClick(category.id, category.name)} onDragOver={handleDragOver} onDrop={(e: React.DragEvent) => handleDrop(e, category.id)} className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors relative max-w-[247px] ${isActive ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'} ${draggedItem ? 'border-2 border-dashed border-indigo-300 dark:border-indigo-600' : ''}`}>
+                        <button onClick={() => setActiveCategory(category.id)} onDoubleClick={() => handleDoubleClick(category.id, category.name)} onDragOver={(e: React.DragEvent) => handleDragOver(e, category.id)} onDragLeave={handleDragLeave} onDrop={(e: React.DragEvent) => handleDrop(e, category.id)} className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative max-w-[247px] ${isActive ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'} ${draggedItem && dragOverTarget === category.id ? 'shadow-lg transform -translate-y-1' : ''}`}>
                           <Icon className="w-5 h-5 flex-shrink-0" />
                           <AnimatePresence mode="wait">
                             {!sidebarCollapsed && <motion.div initial={{
@@ -1481,7 +1672,7 @@ const KotoDashboard: React.FC = () => {
                     }} className="ml-8 mt-1 space-y-1">
                             {categorySubcategories.map(subcategory => {
                         const subcategoryCount = prompts.filter(p => p.subcategory === subcategory.id).length;
-                        return <button key={subcategory.id} onClick={() => setActiveCategory(subcategory.id)} onDoubleClick={() => handleDoubleClick(subcategory.id, subcategory.name)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors group max-w-[247px] ${activeCategory === subcategory.id ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-300'}`}>
+                        return <button key={subcategory.id} onClick={() => setActiveCategory(subcategory.id)} onDoubleClick={() => handleDoubleClick(subcategory.id, subcategory.name)} onDragOver={(e: React.DragEvent) => handleDragOver(e, subcategory.id)} onDragLeave={handleDragLeave} onDrop={(e: React.DragEvent) => handleDrop(e, subcategory.id)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200 group max-w-[247px] ${activeCategory === subcategory.id ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-300'} ${draggedItem && dragOverTarget === subcategory.id ? 'shadow-lg transform -translate-y-1' : ''}`}>
                           {editingItem === subcategory.id ? <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} onBlur={() => handleRename(subcategory.id, 'subcategory')} onKeyPress={e => e.key === 'Enter' && handleRename(subcategory.id, 'subcategory')} className="bg-transparent border-none outline-none text-sm font-medium flex-1 min-w-0" autoFocus /> : <span className="font-medium truncate min-w-0 flex-1 text-left" title={subcategory.name}>
                               {subcategory.name}
                             </span>}
@@ -1544,12 +1735,11 @@ const KotoDashboard: React.FC = () => {
         {/* Content Area */}
         <main className="flex-1 overflow-auto px-0">
           {/* Hero Section */}
-          <div className="relative h-64 bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 overflow-hidden" style={{
-          backgroundImage: backgroundImage ? `url('${backgroundImage}')` : `url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=400&fit=crop')`,
+          <div className="relative h-64 overflow-hidden" style={{
+          backgroundImage: backgroundImage ? `url('${backgroundImage}')` : `url('/koto-background-image.webp')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}>
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-900/50 to-pink-900/50"></div>
             
             {/* Unified Header Row moved inside content container below */}
 
@@ -1559,10 +1749,11 @@ const KotoDashboard: React.FC = () => {
               width: "96%",
               maxWidth: "96%"
             }}>
-                {/* Header Row inside container: Tabs (left) and Login (right) */}
+                {/* Header Row inside container: Logo, Tabs (left) and Login (right) */}
                 <div className="w-full flex items-stretch justify-between mb-6 h-14">
                   {/* Tabs */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-1 inline-flex h-full" style={{ display: 'flex', alignItems: 'center' }}>
+                  <div className="flex items-center">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-1 inline-flex h-full" style={{ display: 'flex', alignItems: 'center' }}>
                     <div className="flex space-x-1" style={{ alignItems: 'center' }}>
                       <button onClick={() => setActiveTab('prompts')} className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all h-full ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}>
                         <MessageSquare className="w-4 h-4" />
@@ -1573,6 +1764,7 @@ const KotoDashboard: React.FC = () => {
                         <span>Tool Box</span>
                       </button>
                     </div>
+                  </div>
                   </div>
 
                   {/* Profile Menu */}
@@ -1726,9 +1918,9 @@ const KotoDashboard: React.FC = () => {
             <div className="w-[96%] mx-auto">
               {/* Show prompts/tools if they exist, otherwise show empty state */}
               {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full justify-items-stretch auto-rows-fr">
-                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className="justify-self-start w-full h-full" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'prompt', prompt)}>
+                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className="justify-self-start w-full h-full" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'prompt', prompt)} onDragEnd={handleDragEnd}>
                           <PromptCard title={prompt.title} description={prompt.content} tags={prompt.tags} model={prompt.model} coverImage={prompt.coverImage} onClick={() => handlePromptClick(prompt)} />
-                        </div>) : filteredTools.map(tool => <div key={tool.id} className="justify-self-start w-full h-full bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-xl border border-slate-200 dark:border-slate-700 cursor-pointer transition-all duration-200 hover:scale-102 hover:-translate-y-1" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'tool', tool)} onClick={() => handleToolClick(tool)}>
+                        </div>) : filteredTools.map(tool => <div key={tool.id} className="justify-self-start w-full h-full bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-xl border border-slate-200 dark:border-slate-700 cursor-pointer transition-all duration-200 hover:scale-102 hover:-translate-y-1" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'tool', tool)} onDragEnd={handleDragEnd} onClick={() => handleToolClick(tool)}>
                           <div className="flex items-center space-x-4 mb-4">
                             {tool.favicon && <img src={tool.favicon} alt={`${tool.name} favicon`} className="w-10 h-10 rounded-lg" onError={e => {
                     (e.target as HTMLImageElement).style.display = 'none';
@@ -1947,6 +2139,9 @@ const KotoDashboard: React.FC = () => {
                         <Camera className="w-6 h-6 mx-auto mb-2 text-slate-400" />
                         <div className="text-sm text-slate-600 dark:text-slate-400">
                           Click to upload cover image
+                        </div>
+                        <div className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                          or paste an image from clipboard (Ctrl+V)
                         </div>
                       </div>
                     </label>
