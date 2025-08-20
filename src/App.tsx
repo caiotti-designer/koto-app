@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Container, Theme } from './settings/types';
 import KotoDashboard from './components/generated/KotoDashboard';
+
 import { Toaster } from 'sonner';
 
 let theme: Theme = 'light';
@@ -34,6 +35,9 @@ function App() {
   } else {
     return (
       <>
+        <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 100000 }}>
+    
+        </div>
         {generatedComponent}
         <Toaster position="top-right" richColors />
       </>

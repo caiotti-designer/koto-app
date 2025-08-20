@@ -150,6 +150,16 @@ const KotoDashboard: React.FC = () => {
   const [showProjectSettingsDialog, setShowProjectSettingsDialog] = useState(false);
   const [editingProjectName, setEditingProjectName] = useState('');
   const [editingProjectIcon, setEditingProjectIcon] = useState<any>(null);
+  
+  // New simple edit modal state
+  const [showSimpleEditModal, setShowSimpleEditModal] = useState(false);
+  const [simpleEditName, setSimpleEditName] = useState('');
+  const [simpleEditIcon, setSimpleEditIcon] = useState<any>(null);
+  
+  // Debug useEffect to monitor modal state changes
+  React.useEffect(() => {
+    console.log('DEBUG: showSimpleEditModal state changed to:', showSimpleEditModal);
+  }, [showSimpleEditModal]);
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -1486,6 +1496,9 @@ const KotoDashboard: React.FC = () => {
             </motion.div>
           </motion.div>}
 
+
+
+
         {/* Project/Stack Settings Dialog */}
         {showProjectSettingsDialog && (
           <motion.div 
@@ -1669,9 +1682,10 @@ const KotoDashboard: React.FC = () => {
     );
   }
 
-  return <div className={`h-screen w-full ${actualTheme === 'dark' ? 'dark' : ''} bg-slate-50 dark:bg-slate-900 flex overflow-hidden transition-colors duration-300`} style={{
-    fontFamily: 'Space Grotesk, sans-serif'
-  }}>
+  return (
+    <div className={`h-screen w-full ${actualTheme === 'dark' ? 'dark' : ''} bg-slate-50 dark:bg-slate-900 flex overflow-hidden transition-colors duration-300`} style={{
+      fontFamily: 'Space Grotesk, sans-serif'
+    }}>
       {/* Sidebar */}
       <motion.aside animate={{
       width: sidebarCollapsed ? 80 : 280
@@ -2043,28 +2057,57 @@ const KotoDashboard: React.FC = () => {
                           ? (activeCategory === 'all' ? 'All Prompts' : getCurrentCategoryName())
                           : (activeCategory === 'all-tools' ? 'All Tools' : getCurrentCategoryName())}
                       </h1>
-                      {/* Edit icon - conditional rendering with hover */}
+                      {/* Edit icon - conditional rendering restored */}
                       {(activeTab === 'prompts' || activeTab === 'toolbox') && activeCategory && activeCategory !== 'all' && activeCategory !== 'all-tools' && (
-                        <motion.div
+                        <button
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            // Initialize editing state with current values
-                            setEditingProjectName(getCurrentCategoryName());
+                            console.log('DEBUG: Edit button clicked!');
+                            console.log('DEBUG: activeTab:', activeTab);
+                            console.log('DEBUG: activeCategory:', activeCategory);
+                            
+                            // Initialize simple edit modal state with current values
+                            const categoryName = getCurrentCategoryName();
+                            console.log('DEBUG: Setting name to:', categoryName);
+                            setSimpleEditName(categoryName);
+                            
                             const categoryList = activeTab === 'prompts' ? updatedCategories : updatedToolCategories;
+                            console.log('DEBUG: Available categories:', categoryList.map(cat => ({ id: cat.id, name: cat.name })));
+                            console.log('DEBUG: Looking for category with ID:', activeCategory);
                             const category = categoryList.find(cat => cat.id === activeCategory);
-                            if (category) {
-                              setEditingProjectIcon(category.icon);
+                            console.log('DEBUG: Found category:', category);
+                            
+                            // Always set a fallback icon first (use icon name, not component)
+                            console.log('DEBUG: Setting fallback icon first');
+                            const fallbackIconName = iconOptions.find(opt => opt.icon === iconOptions[0].icon)?.name || '🎨';
+                            setSimpleEditIcon(fallbackIconName);
+                            
+                            if (category && category.icon) {
+                              console.log('DEBUG: Found category icon, overriding fallback:', category.icon);
+                              // Find the icon name from iconOptions or use emoji fallback
+                              const iconName = iconOptions.find(opt => opt.icon === category.icon)?.name || '🎨';
+                              setSimpleEditIcon(iconName);
+                            } else {
+                              console.log('DEBUG: No category icon found, keeping fallback');
                             }
-                            setShowProjectSettingsDialog(true);
+                            
+                            console.log('DEBUG: Opening simple edit modal');
+                            console.log('DEBUG: iconOptions[0].icon:', iconOptions[0].icon);
+                            
+                            // Force state update in next tick to avoid batching issues
+                            setTimeout(() => {
+                              console.log('DEBUG: Setting modal state to true in setTimeout');
+                              setShowSimpleEditModal(true);
+                            }, 0);
+                            
+                            console.log('DEBUG: Modal state set to true (queued)');
                           }}
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all duration-200 cursor-pointer opacity-0 group-hover:opacity-100"
+                          className="opacity-0 group-hover:opacity-100 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all duration-200 cursor-pointer ml-2"
                           title={`Edit ${activeTab === 'toolbox' ? 'Stack' : 'Project'}`}
                         >
                           <Edit2 className="w-4 h-4" />
-                        </motion.div>
+                        </button>
                       )}
                     </div>
                     <p className="text-white/80">
@@ -2558,15 +2601,178 @@ const KotoDashboard: React.FC = () => {
 
       {/* Prompt Details Modal */}
       <PromptDetailsModal prompt={selectedPrompt} isOpen={showPromptDetailsDialog} onClose={() => {
-      setShowPromptDetailsDialog(false);
-      setSelectedPrompt(null);
-    }} onEdit={handleEditPrompt} onDelete={handleDeletePrompt} onCopy={handleCopyPrompt} onShare={handleSharePrompt} />
+        setShowPromptDetailsDialog(false);
+        setSelectedPrompt(null);
+      }} onEdit={handleEditPrompt} onDelete={handleDeletePrompt} onCopy={handleCopyPrompt} onShare={handleSharePrompt} />
 
       {/* Tool Details Modal */}
       <ToolDetailsModal tool={selectedTool} isOpen={showToolDetailsDialog} onClose={() => {
-      setShowToolDetailsDialog(false);
-      setSelectedTool(null);
-    }} />
-    </div>;
+        setShowToolDetailsDialog(false);
+        setSelectedTool(null);
+      }} />
+
+      {/* Simple Edit Modal */}
+      <AnimatePresence>
+        {showSimpleEditModal && (
+          <motion.div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowSimpleEditModal(false)}
+          >
+            <motion.div
+              className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-xl"
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
+                  Edit {activeTab === 'toolbox' ? 'Stack' : 'Project'}
+                </h2>
+                <button
+                  onClick={() => setShowSimpleEditModal(false)}
+                  className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5 text-slate-500" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    value={simpleEditName}
+                    onChange={(e) => setSimpleEditName(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                    placeholder="Enter name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Icon
+                  </label>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                        {simpleEditIcon ? (
+                          (() => {
+                            // Check if it's an icon name from iconOptions
+                            const iconOption = iconOptions.find(opt => opt.name === simpleEditIcon);
+                            if (iconOption) {
+                              const IconComponent = iconOption.icon;
+                              return <IconComponent className="w-5 h-5 text-slate-600 dark:text-slate-400" />;
+                            }
+                            // Otherwise, treat it as an emoji
+                            return <span className="text-lg">{simpleEditIcon}</span>;
+                          })()
+                        ) : (
+                          <Palette className="w-5 h-5 text-slate-400" />
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        value={simpleEditIcon || ''}
+                        onChange={(e) => setSimpleEditIcon(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                        placeholder="Enter emoji or select icon below"
+                      />
+                    </div>
+                    
+                    {/* Icon Picker Grid */}
+                    <div className="grid grid-cols-6 gap-2 max-h-32 overflow-y-auto p-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800">
+                      {iconOptions.map(option => {
+                        const IconComponent = option.icon;
+                        const isSelected = simpleEditIcon === option.name;
+                        return (
+                          <button
+                            key={option.name}
+                            type="button"
+                            onClick={() => setSimpleEditIcon(option.name)}
+                            className={`p-2 rounded-lg border-2 transition-colors ${
+                              isSelected
+                                ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30'
+                                : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                            }`}
+                          >
+                            <IconComponent className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowSimpleEditModal(false)}
+                  className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    // Find the current category
+                    const categoryList = activeTab === 'prompts' ? updatedCategories : updatedToolCategories;
+                    const categoryIndex = categoryList.findIndex(cat => cat.id === activeCategory);
+                    
+                    if (categoryIndex !== -1) {
+                      // Find the icon component from iconOptions or keep current icon
+                      const iconOption = iconOptions.find(opt => opt.name === simpleEditIcon);
+                      const newIcon = iconOption ? iconOption.icon : categoryList[categoryIndex].icon;
+                      
+                      // Update the category
+                      const updatedCategory = {
+                        ...categoryList[categoryIndex],
+                        name: simpleEditName.trim(),
+                        icon: newIcon
+                      };
+                      
+                      // Update the categories array
+                      const newCategories = [...categoryList];
+                      newCategories[categoryIndex] = updatedCategory;
+                      
+                      // Update the state
+                      if (activeTab === 'prompts') {
+                        setCategories(newCategories);
+                        // Save to localStorage with icon name for serialization
+                        const serializable = newCategories.map(cat => ({
+                          ...cat,
+                          iconName: iconOptions.find(opt => opt.icon === cat.icon)?.name || 'Globe'
+                        }));
+                        localStorage.setItem('koto_categories', JSON.stringify(serializable));
+                      } else {
+                        setToolCategories(newCategories);
+                        // Save to localStorage with icon name for serialization
+                        const serializable = newCategories.map(cat => ({
+                          ...cat,
+                          iconName: iconOptions.find(opt => opt.icon === cat.icon)?.name || 'Globe'
+                        }));
+                        localStorage.setItem('koto_tool_categories', JSON.stringify(serializable));
+                      }
+                    }
+                    
+                    setShowSimpleEditModal(false);
+                  }}
+                  disabled={!simpleEditName.trim()}
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-lg transition-colors"
+                >
+                  Save
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 };
+
 export default KotoDashboard;
