@@ -3,6 +3,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Link, Loader2, Globe, Sparkles } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
 interface NewToolDialogProps {
   open: boolean;
   onClose: () => void;
@@ -214,23 +218,23 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
                   <p className="text-sm text-gray-500">Paste a URL for automatic info filling</p>
                 </div>
               </div>
-              <button onClick={handleClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <Button onClick={handleClose} variant="ghost" size="icon" className="p-2">
                 <X className="w-5 h-5 text-gray-500" />
-              </button>
+              </Button>
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {/* URL Input */}
               <div>
-                <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-2">
+                <Label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-2">
                   Website URL *
-                </label>
+                </Label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Globe className="h-5 w-5 text-gray-400" />
                   </div>
-                  <input type="url" id="url" value={url} onChange={e => handleUrlChange(e.target.value)} placeholder="https://example.com" className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" required />
+                  <Input type="url" id="url" value={url} onChange={e => handleUrlChange(e.target.value)} placeholder="https://example.com" className="block w-full pl-10 pr-3 py-3" required />
                   {isAnalyzing && <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                       <Loader2 className="h-5 w-5 text-indigo-500 animate-spin" />
                     </div>}
@@ -243,10 +247,10 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
 
               {/* Name Input */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                <Label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                   Tool Name *
-                </label>
-                <input type="text" id="name" value={name} onChange={e => setName(e.target.value)} placeholder="e.g., Figma" className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" required />
+                </Label>
+                <Input type="text" id="name" value={name} onChange={e => setName(e.target.value)} placeholder="e.g., Figma" className="block w-full px-3 py-3" required />
               </div>
 
               {/* Category Select */}
@@ -264,15 +268,15 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
 
               {/* Logo Input */}
               <div>
-                <label htmlFor="logo" className="block text-sm font-medium text-gray-700 mb-2">
+                <Label htmlFor="logo" className="block text-sm font-medium text-gray-700 mb-2">
                   Logo (Emoji)
-                </label>
+                </Label>
                 <div className="relative">
                   <div className="flex items-center space-x-3">
-                    <button type="button" onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="w-12 h-12 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl flex items-center justify-center text-2xl transition-all duration-200 hover:scale-105 active:scale-95">
+                    <Button type="button" onClick={() => setShowEmojiPicker(!showEmojiPicker)} variant="outline" className="w-12 h-12 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl flex items-center justify-center text-2xl transition-all duration-200 hover:scale-105 active:scale-95">
                       {logo || '🔗'}
-                    </button>
-                    <input type="text" id="logo" value={logo} onChange={e => setLogo(e.target.value)} placeholder="Tap to choose emoji" className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-gray-50" maxLength={2} readOnly />
+                    </Button>
+                    <Input type="text" id="logo" value={logo} onChange={e => setLogo(e.target.value)} placeholder="Tap to choose emoji" className="flex-1 px-4 py-3 bg-gray-50" maxLength={2} readOnly />
                   </div>
 
                   {/* iOS-style Emoji Picker */}
@@ -356,24 +360,26 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
 
               {/* Description Input */}
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                <Label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
                   Description
-                </label>
-                <textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Brief description of what this tool does..." rows={3} className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none" />
+                </Label>
+                <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Brief description of what this tool does..." rows={3} className="block w-full px-3 py-3 resize-none" />
               </div>
 
               {/* Actions */}
               <div className="flex items-center justify-end space-x-3 pt-4">
-                <button type="button" onClick={handleClose} className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                <Button type="button" onClick={handleClose} variant="ghost" className="px-4 py-2">
                   Cancel
-                </button>
-                <motion.button type="submit" disabled={!name || !url || !category || isAnalyzing} className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors" whileHover={{
+                </Button>
+                <motion.div whileHover={{
               scale: 1.02
             }} whileTap={{
               scale: 0.98
             }}>
-                  Add Tool
-                </motion.button>
+                  <Button type="submit" disabled={!name || !url || !category || isAnalyzing} className="px-6 py-2">
+                    Add Tool
+                  </Button>
+                </motion.div>
               </div>
             </form>
           </motion.div>

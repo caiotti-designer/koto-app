@@ -6,8 +6,14 @@ import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Men
 import { toast } from 'sonner';
 import { useTheme } from '../../contexts/ThemeContext';
 import PromptCard from './PromptCard';
+import ToolCard from './ToolCard';
 import PromptDetailsModal from './PromptDetailsModal';
 import Logo from '../Logo';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
+import { Badge } from '../ui/badge';
 import supabase from '../../lib/supabaseClient';
 import {
   fetchPrompts,
@@ -434,7 +440,7 @@ const KotoDashboard: React.FC = () => {
     // Count tools in this category and its subcategories
     const directTools = tools.filter(t => t.category.toLowerCase().replace(/\s+/g, '-') === category.id);
     const subcategoryTools = subcategories.filter(sub => sub.parentId === category.id).reduce((count, sub) => {
-      return count + tools.filter(t => t.category.toLowerCase().replace(/\s+/g, '-') === sub.parentId).length;
+      return count + tools.filter(t => t.subcategory === sub.id).length;
     }, 0);
     return {
       ...category,
@@ -468,7 +474,7 @@ const KotoDashboard: React.FC = () => {
     // Check if it's a subcategory
     const subcategory = subcategories.find(sub => sub.id === activeCategory);
     if (subcategory) {
-      const matchesSubcategory = tool.category.toLowerCase().replace(/\s+/g, '-') === subcategory.parentId;
+      const matchesSubcategory = tool.subcategory === subcategory.id;
       return matchesSearch && matchesSubcategory;
     }
 
@@ -1074,7 +1080,7 @@ const KotoDashboard: React.FC = () => {
       if (activeTab === 'prompts') {
         return prompts.filter(p => p.subcategory === subcategory.id).length;
       } else {
-        return tools.filter(t => t.category.toLowerCase().replace(/\s+/g, '-') === subcategory.parentId).length;
+        return tools.filter(t => t.subcategory === subcategory.id).length;
       }
     }
 
@@ -1411,55 +1417,13 @@ const KotoDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Header Actions */}
-                <div className="absolute top-4 right-4 flex items-center space-x-2">
-                  {!isEditing ? <>
-                      <motion.button onClick={handleCopy} whileHover={{
-                  scale: 1.05
-                }} whileTap={{
-                  scale: 0.95
-                }} className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors">
-                        {copySuccess ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                      </motion.button>
-                      
-                      <motion.button onClick={handleShare} whileHover={{
-                  scale: 1.05
-                }} whileTap={{
-                  scale: 0.95
-                }} className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors">
-                        <Share2 className="w-5 h-5" />
-                      </motion.button>
-                      
-                      <motion.button onClick={handleEdit} whileHover={{
-                  scale: 1.05
-                }} whileTap={{
-                  scale: 0.95
-                }} className="p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors">
-                        <Edit2 className="w-5 h-5" />
-                      </motion.button>
-                    </> : <>
-                      <motion.button onClick={handleCancel} whileHover={{
-                  scale: 1.05
-                }} whileTap={{
-                  scale: 0.95
-                }} className="px-4 py-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors">
-                        Cancel
-                      </motion.button>
-                      
-                      <motion.button onClick={handleSave} whileHover={{
-                  scale: 1.05
-                }} whileTap={{
-                  scale: 0.95
-                }} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors">
-                        Save
-                      </motion.button>
-                    </>}
-                  
+                {/* Header Actions - Only Close Button */}
+                <div className="absolute top-4 right-4">
                   <motion.button onClick={onClose} whileHover={{
                 scale: 1.05
               }} whileTap={{
                 scale: 0.95
-              }} className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-color-color">
+              }} className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors">
                     <X className="w-5 h-5" />
                   </motion.button>
                 </div>
@@ -1501,80 +1465,37 @@ const KotoDashboard: React.FC = () => {
               </div>
 
               {/* Footer Actions */}
-              <div className="border-t border-slate-200 dark:border-slate-700 p-6">
-                <div className="flex items-center justify-between">
-                  {/* Left Actions */}
-                  <div className="flex items-center space-x-3">
-                    {!isEditing && <>
-                        <motion.button onClick={handleCopy} whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }} className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
-                          {copySuccess ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                          <span className="text-sm font-medium">
-                            {copySuccess ? 'Copied!' : 'Copy URL'}
-                          </span>
-                        </motion.button>
-                        
-                        <motion.button onClick={handleShare} whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }} className="flex items-center space-x-2 px-4 py-1 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
-                          <Share2 className="w-4 h-4" />
-                          <span className="text-sm font-medium">Share</span>
-                        </motion.button>
-
-                        <motion.button onClick={handleCheckTool} whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }} className="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors">
-                          <ExternalLink className="w-4 h-4" />
-                          <span className="text-sm font-medium">Check Tool</span>
-                        </motion.button>
-                      </>}
-                  </div>
-
-                  {/* Right Actions */}
-                  <div className="flex items-center space-x-3">
-                    {!isEditing ? <>
-                        <motion.button onClick={handleEdit} whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }} className="flex items-center space-x-2 px-4 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors">
-                          <Edit2 className="w-4 h-4" />
-                          <span className="text-sm font-medium">Edit</span>
-                        </motion.button>
-                        
-                        <motion.button onClick={() => setShowDeleteConfirm(true)} whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }} className="flex items-center space-x-2 px-4 py-1 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors">
-                          <Trash2 className="w-4 h-4" />
-                          <span className="text-sm font-medium">Delete</span>
-                        </motion.button>
-                      </> : <>
-                        <motion.button onClick={handleCancel} whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }} className="px-6 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
-                          Cancel
-                        </motion.button>
-                        
-                        <motion.button onClick={handleSave} whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }} className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors">
-                          Save Changes
-                        </motion.button>
-                      </>}
-                  </div>
+              <div className="border-t border-slate-200 dark:border-slate-700 px-6 py-4" style={{marginTop: '16px'}}>
+                <div className="flex items-center justify-end space-x-3">
+                  {!isEditing ? <>
+                      <Button onClick={handleCopy} variant="outline" size="sm" className="h-9 px-4">
+                        {copySuccess ? <Check className="w-4 h-4 mr-1" /> : <Copy className="w-4 h-4 mr-1" />}
+                        {copySuccess ? 'Copied!' : 'Copy URL'}
+                      </Button>
+                      
+                      <Button onClick={handleShare} variant="outline" size="sm" className="h-9 px-4">
+                        <Share2 className="w-4 h-4 mr-1" />
+                        Share
+                      </Button>
+                      
+                      <Button onClick={handleEdit} variant="default" size="sm" className="h-9 px-4">
+                        <Edit2 className="w-4 h-4 mr-1" />
+                        Edit
+                      </Button>
+                      
+                      <Button onClick={() => setShowDeleteConfirm(true)} variant="destructive" size="sm" className="h-9 px-4">
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Delete
+                      </Button>
+                    </> : <>
+                      <Button onClick={handleCancel} variant="ghost" size="sm" className="h-9 px-4">
+                        Cancel
+                      </Button>
+                      
+                      <Button onClick={handleSave} variant="default" size="sm" className="h-9 px-4">
+                        Save Changes
+                      </Button>
+                    </>}
                 </div>
               </div>
 
@@ -1608,12 +1529,20 @@ const KotoDashboard: React.FC = () => {
                           Are you sure you want to delete "{tool.name}"? This action cannot be undone.
                         </p>
                         <div className="flex space-x-3">
-                          <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 px-4 py-1 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
+                          <Button 
+                            variant="ghost" 
+                            onClick={() => setShowDeleteConfirm(false)} 
+                            className="flex-1"
+                          >
                             Cancel
-                          </button>
-                          <button onClick={handleDelete} className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            onClick={handleDelete} 
+                            className="flex-1"
+                          >
                             Delete
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </motion.div>
@@ -1841,9 +1770,13 @@ const KotoDashboard: React.FC = () => {
                   </motion.div>}
               </AnimatePresence>
               
-              <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              >
                 <ChevronLeft className={`w-5 h-5 text-slate-600 dark:text-slate-400 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -1851,7 +1784,13 @@ const KotoDashboard: React.FC = () => {
           {!sidebarCollapsed && <div className="p-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <input type="text" placeholder="Search prompts..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-700 border-0 rounded-lg text-sm placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-slate-600 transition-colors" />
+                <Input 
+                  type="text" 
+                  placeholder="Search prompts..." 
+                  value={searchQuery} 
+                  onChange={e => setSearchQuery(e.target.value)} 
+                  className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-700 border-0 text-sm placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-slate-600"
+                />
               </div>
             </div>}
 
@@ -1862,15 +1801,24 @@ const KotoDashboard: React.FC = () => {
                   <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                     {activeTab === 'toolbox' ? 'STACKS' : 'PROJECTS'}
                   </h2>
-                  <button onClick={() => setShowAddProjectDialog(true)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setShowAddProjectDialog(true)}
+                    className="h-6 w-6 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                  >
                     <Plus className="w-4 h-4" />
-                  </button>
+                  </Button>
                 </div>}
               
               <div className="space-y-1">
                 {/* All Button - Fixed on top with count */}
                 <div className="mb-2">
-                  <button onClick={() => setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools')} className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors max-w-[247px] ${(activeTab === 'prompts' && activeCategory === 'all') || (activeTab === 'toolbox' && activeCategory === 'all-tools') ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'}`}>
+                  <Button 
+                    variant={((activeTab === 'prompts' && activeCategory === 'all') || (activeTab === 'toolbox' && activeCategory === 'all-tools')) ? "default" : "ghost"} 
+                    onClick={() => setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools')} 
+                    className={`w-full justify-start space-x-3 h-auto py-2.5 max-w-[247px] ${((activeTab === 'prompts' && activeCategory === 'all') || (activeTab === 'toolbox' && activeCategory === 'all-tools')) ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                  >
                     <Globe className="w-5 h-5 flex-shrink-0" />
                     <AnimatePresence mode="wait">
                       {!sidebarCollapsed && <motion.div initial={{
@@ -1888,7 +1836,7 @@ const KotoDashboard: React.FC = () => {
                           </span>
                         </motion.div>}
                     </AnimatePresence>
-                  </button>
+                  </Button>
                 </div>
 
                 {(activeTab === 'prompts' ? updatedCategories.filter(cat => cat.id !== 'all') : updatedToolCategories.filter(cat => cat.id !== 'all-tools')).map(category => {
@@ -1968,7 +1916,9 @@ const KotoDashboard: React.FC = () => {
                       height: 0
                     }} className="ml-8 mt-1 space-y-1">
                             {categorySubcategories.map(subcategory => {
-                        const subcategoryCount = prompts.filter(p => p.subcategory === subcategory.id).length;
+                        const subcategoryCount = activeTab === 'prompts' 
+                          ? prompts.filter(p => p.subcategory === subcategory.id).length
+                          : tools.filter(t => t.subcategory === subcategory.id).length;
                         return <button key={subcategory.id} onClick={() => setActiveCategory(subcategory.id)} onDoubleClick={() => handleDoubleClick(subcategory.id, subcategory.name)} onDragOver={(e: React.DragEvent) => handleDragOver(e, subcategory.id)} onDragLeave={handleDragLeave} onDrop={(e: React.DragEvent) => handleDrop(e, subcategory.id)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200 group max-w-[247px] ${activeCategory === subcategory.id ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-300'} ${draggedItem && dragOverTarget === subcategory.id ? 'shadow-lg transform -translate-y-1' : ''}`}>
                           {editingItem === subcategory.id ? <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} onBlur={() => handleRename(subcategory.id, 'subcategory')} onKeyPress={e => e.key === 'Enter' && handleRename(subcategory.id, 'subcategory')} className="bg-transparent border-none outline-none text-sm font-medium flex-1 min-w-0" autoFocus /> : <span className="font-medium truncate min-w-0 flex-1 text-left" title={subcategory.name}>
                               {subcategory.name}
@@ -2055,14 +2005,24 @@ const KotoDashboard: React.FC = () => {
                   <div className="flex items-center">
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-1 inline-flex h-full" style={{ display: 'flex', alignItems: 'center' }}>
                     <div className="flex space-x-1" style={{ alignItems: 'center' }}>
-                      <button onClick={() => setActiveTab('prompts')} className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all h-full ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}>
+                      <motion.button 
+                        onClick={() => setActiveTab('prompts')} 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all h-full ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                      >
                         <MessageSquare className="w-4 h-4" />
                         <span>Prompts</span>
-                      </button>
-                      <button onClick={() => setActiveTab('toolbox')} className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all h-full ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}>
+                      </motion.button>
+                      <motion.button 
+                        onClick={() => setActiveTab('toolbox')} 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all h-full ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                      >
                         <Wrench className="w-4 h-4" />
                         <span>Tool Box</span>
-                      </button>
+                      </motion.button>
                     </div>
                   </div>
                   </div>
@@ -2272,31 +2232,17 @@ const KotoDashboard: React.FC = () => {
               {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full justify-items-stretch auto-rows-fr">
                   {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className="justify-self-start w-full h-full" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'prompt', prompt)} onDragEnd={handleDragEnd}>
                           <PromptCard title={prompt.title} description={prompt.content} tags={prompt.tags} model={prompt.model} coverImage={prompt.coverImage} onClick={() => handlePromptClick(prompt)} />
-                        </div>) : filteredTools.map(tool => <div key={tool.id} className="justify-self-start w-full h-full bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-xl border border-slate-200 dark:border-slate-700 cursor-pointer transition-all duration-200 hover:scale-102 hover:-translate-y-1" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'tool', tool)} onDragEnd={handleDragEnd} onClick={() => handleToolClick(tool)}>
-                          <div className="flex items-center space-x-4 mb-4">
-                            {tool.favicon && <img src={tool.favicon} alt={`${tool.name} favicon`} className="w-10 h-10 rounded-lg" onError={e => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }} />}
-                            <div className="flex-1">
-                              <h1 className="text-lg font-semibold text-slate-900 dark:text-white truncate">
-                                {tool.name}
-                              </h1>
-                              <p className="text-sm text-slate-500 dark:text-slate-400 truncate">
-                                {tool.category}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          {tool.description && <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-2 mb-4">
-                              {tool.description}
-                            </p>}
-                          
-                          <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700">
-                            <span className="text-xs text-slate-500 dark:text-slate-400 truncate flex-1">
-                              {tool.url}
-                            </span>
-                            <ExternalLink className="w-4 h-4 text-slate-400 ml-2 flex-shrink-0" />
-                          </div>
+                        </div>) : filteredTools.map(tool => <div key={tool.id} className="justify-self-start w-full h-full" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'tool', tool)} onDragEnd={handleDragEnd}>
+                          <ToolCard 
+                            name={tool.name}
+                            description={tool.description}
+                            category={tool.category}
+                            stack={updatedToolCategories.find(cat => cat.id === tool.category.toLowerCase().replace(/\s+/g, '-'))?.name}
+                            substack={tool.subcategory ? subcategories.find(sub => sub.id === tool.subcategory)?.name : undefined}
+                            url={tool.url}
+                            favicon={tool.favicon}
+                            onClick={() => handleToolClick(tool)}
+                          />
                         </div>)}
                 </div> : (/* Empty State for New User */
             <div className="text-center py-12 w-full">
@@ -2349,10 +2295,16 @@ const KotoDashboard: React.FC = () => {
               <div className="space-y-6">
                 {/* Stack/Project Name */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     {activeTab === 'toolbox' ? 'Stack' : 'Project'} Name
-                  </label>
-                  <input type="text" value={newProjectName} onChange={e => setNewProjectName(e.target.value)} placeholder={`Enter ${activeTab === 'toolbox' ? 'stack' : 'project'} name`} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+                  </Label>
+                  <Input 
+                    type="text" 
+                    value={newProjectName} 
+                    onChange={e => setNewProjectName(e.target.value)} 
+                    placeholder={`Enter ${activeTab === 'toolbox' ? 'stack' : 'project'} name`} 
+                    className="w-full bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                  />
                 </div>
 
                 {/* Stack/Project Icon */}
@@ -2399,12 +2351,18 @@ const KotoDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex justify-end space-x-3 pt-4">
-                  <button onClick={() => setShowAddProjectDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => setShowAddProjectDialog(false)}
+                  >
                     Cancel
-                  </button>
-                  <button onClick={handleAddProject} disabled={!newProjectName.trim()} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-lg transition-colors">
+                  </Button>
+                  <Button 
+                    onClick={handleAddProject} 
+                    disabled={!newProjectName.trim()}
+                  >
                     Add {activeTab === 'toolbox' ? 'Stack' : 'Project'}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </motion.div>
@@ -2435,18 +2393,32 @@ const KotoDashboard: React.FC = () => {
               <div className="space-y-6">
                 {/* Title */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  <Label htmlFor="prompt-title" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Title
-                  </label>
-                  <input type="text" value={newPromptTitle} onChange={e => setNewPromptTitle(e.target.value)} placeholder="Enter prompt title" className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+                  </Label>
+                  <Input
+                    id="prompt-title"
+                    type="text"
+                    value={newPromptTitle}
+                    onChange={e => setNewPromptTitle(e.target.value)}
+                    placeholder="Enter prompt title"
+                    className="w-full"
+                  />
                 </div>
 
                 {/* Content */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  <Label htmlFor="prompt-content" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Content
-                  </label>
-                  <textarea value={newPromptContent} onChange={e => setNewPromptContent(e.target.value)} placeholder="Enter prompt content" rows={4} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+                  </Label>
+                  <Textarea
+                    id="prompt-content"
+                    value={newPromptContent}
+                    onChange={e => setNewPromptContent(e.target.value)}
+                    placeholder="Enter prompt content"
+                    rows={4}
+                    className="w-full"
+                  />
                 </div>
 
                 {/* Model */}
@@ -2498,12 +2470,12 @@ const KotoDashboard: React.FC = () => {
                   
                   {/* Tags Display */}
                   {newPromptTags.length > 0 && <div className="flex flex-wrap gap-1.5">
-                      {newPromptTags.map(tag => <span key={tag} className="inline-flex items-center px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs rounded-full">
+                      {newPromptTags.map(tag => <Badge key={tag} variant="outline" className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800 text-xs rounded-full">
                           {tag}
                           <button onClick={() => removePromptTag(tag)} className="ml-1 hover:text-indigo-900 dark:hover:text-indigo-100">
                             <X className="w-3 h-3" />
                           </button>
-                        </span>)}
+                        </Badge>)}
                     </div>}
                 </div>
 
@@ -2536,12 +2508,18 @@ const KotoDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex justify-end space-x-3 pt-4">
-                  <button onClick={() => setShowNewPromptDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => setShowNewPromptDialog(false)}
+                  >
                     Cancel
-                  </button>
-                  <button onClick={handleCreatePrompt} disabled={!newPromptTitle.trim() || !newPromptContent.trim()} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-lg transition-colors">
+                  </Button>
+                  <Button 
+                    onClick={handleCreatePrompt} 
+                    disabled={!newPromptTitle.trim() || !newPromptContent.trim()}
+                  >
                     Create Prompt
-                  </button>
+                  </Button>
                 </div>
               </div>
             </motion.div>
@@ -2636,12 +2614,18 @@ const KotoDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex justify-end space-x-3 pt-4">
-                  <button onClick={() => setShowNewToolDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => setShowNewToolDialog(false)}
+                  >
                     Cancel
-                  </button>
-                  <button onClick={handleCreateTool} disabled={!newToolName.trim() || !newToolUrl.trim()} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-slate-600 text-white rounded-lg transition-colors">
+                  </Button>
+                  <Button 
+                    onClick={handleCreateTool} 
+                    disabled={!newToolName.trim() || !newToolUrl.trim()}
+                  >
                     Create Tool
-                  </button>
+                  </Button>
                 </div>
               </div>
             </motion.div>
@@ -2745,9 +2729,12 @@ const KotoDashboard: React.FC = () => {
               </div>
 
               <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-slate-200 dark:border-slate-700">
-                <button onClick={() => setShowSettingsDialog(false)} className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setShowSettingsDialog(false)}
+                >
                   Close
-                </button>
+                </Button>
               </div>
             </motion.div>
           </motion.div>}

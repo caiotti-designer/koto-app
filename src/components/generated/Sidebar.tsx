@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, MessageSquare, Wrench, Settings, HelpCircle, ExternalLink } from 'lucide-react';
+import { Button } from '../ui/button';
 interface Tool {
   id: string;
   name: string;
@@ -97,16 +98,25 @@ const Sidebar: React.FC<SidebarProps> = ({
               </motion.div>}
           </AnimatePresence>
           
-          <button onClick={mobileMenuOpen ? onCloseMobileMenu : onToggleCollapse} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={mobileMenuOpen ? onCloseMobileMenu : onToggleCollapse}
+          >
             {mobileMenuOpen ? <ChevronLeft className="w-5 h-5 text-gray-600" /> : collapsed ? <ChevronRight className="w-5 h-5 text-gray-600" /> : <ChevronLeft className="w-5 h-5 text-gray-600" />}
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 p-4">
         <div className="space-y-2">
-          {navItems.map(item => <button key={item.id} onClick={() => onTabChange(item.tab)} className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors ${activeTab === item.tab ? 'bg-indigo-50 text-indigo-600 border border-indigo-200' : 'text-gray-700 hover:bg-gray-100'}`}>
+          {navItems.map(item => <Button 
+            key={item.id} 
+            variant={activeTab === item.tab ? "default" : "ghost"} 
+            onClick={() => onTabChange(item.tab)} 
+            className={`w-full justify-start space-x-3 h-auto py-3 ${activeTab === item.tab ? 'bg-indigo-50 text-indigo-600 border border-indigo-200' : 'text-gray-700'}`}
+          >
               <item.icon className="w-5 h-5 flex-shrink-0" />
               <AnimatePresence mode="wait">
                 {(!collapsed || mobileMenuOpen) && <motion.span initial={{
@@ -122,7 +132,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     {item.label}
                   </motion.span>}
               </AnimatePresence>
-            </button>)}
+            </Button>)}
         </div>
 
         {/* Quick Tools Section */}
@@ -149,7 +159,11 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Bottom Navigation */}
       <div className="p-4 border-t border-gray-200">
         <div className="space-y-2">
-          {bottomItems.map(item => <button key={item.id} className="w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+          {bottomItems.map(item => <Button 
+            key={item.id} 
+            variant="ghost" 
+            className="w-full justify-start space-x-3 h-auto py-3 text-gray-700"
+          >
               <item.icon className="w-5 h-5 flex-shrink-0" />
               <AnimatePresence mode="wait">
                 {(!collapsed || mobileMenuOpen) && <motion.span initial={{
@@ -165,7 +179,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     {item.label}
                   </motion.span>}
               </AnimatePresence>
-            </button>)}
+            </Button>)}
         </div>
       </div>
     </div>;

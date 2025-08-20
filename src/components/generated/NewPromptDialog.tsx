@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, Save, Tag, ChevronDown } from 'lucide-react';
+import { Badge } from '../ui/badge';
 interface Prompt {
   title: string;
   content: string;
@@ -226,13 +227,13 @@ const NewPromptDialog: React.FC<NewPromptDialogProps> = ({
                   <div className="space-y-2">
                     <input type="text" value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={handleAddTag} placeholder="Type a tag and press Enter..." className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" />
                     {formData.tags.length > 0 && <div className="flex flex-wrap gap-2">
-                        {formData.tags.map((tag, index) => <span key={index} className="inline-flex items-center px-3 py-1 bg-indigo-50 text-indigo-700 text-sm rounded-full">
+                        {formData.tags.map((tag, index) => <Badge key={index} variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 rounded-full">
                             <Tag className="w-3 h-3 mr-1" />
                             {tag}
                             <button onClick={() => handleRemoveTag(tag)} className="ml-2 text-indigo-500 hover:text-indigo-700">
                               <X className="w-3 h-3" />
                             </button>
-                          </span>)}
+                          </Badge>)}
                       </div>}
                   </div>
                 </div>

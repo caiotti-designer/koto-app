@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '../ui/card';
+import { Badge } from '../ui/badge';
 export interface PromptCardProps {
   title?: string;
   description?: string;
@@ -29,45 +31,44 @@ export default function PromptCard({
   }} transition={{
     duration: 0.2,
     ease: "easeOut"
-  }} className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 dark:border-slate-700 cursor-pointer transition-all duration-200 group" style={{
+  }} className="cursor-pointer transition-all duration-200 group" style={{
     fontFamily: 'Space Grotesk, sans-serif'
   }}>
+    <Card className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 dark:border-slate-700 h-full flex flex-col p-0">
       {/* Cover Image - Only show if provided */}
-      {coverImage && <div className="relative w-full h-48 overflow-hidden">
+      {coverImage && <div className="relative w-full h-48 overflow-hidden rounded-t-2xl">
           <img src={coverImage} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
         </div>}
 
-      {/* Content */}
-      <div className={`p-5 space-y-4 ${!coverImage ? 'pt-6' : ''}`}>
-        {/* Title */}
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-white leading-tight truncate" title={title}>
+      <CardHeader className={`${!coverImage ? 'pt-6' : 'pt-5'} pb-0 px-6`}>
+        <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white leading-tight truncate" title={title}>
           {truncateText(title || '', 30)}
-        </h3>
-
-        {/* Description */}
-        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-2" title={description}>
+        </CardTitle>
+        <CardDescription className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-2" title={description}>
           {truncateText(description || '', 80)}
-        </p>
+        </CardDescription>
+      </CardHeader>
 
-        {/* Tags */}
+      <CardContent className="flex-1 pt-4 px-6">
+
         <div className="flex flex-wrap gap-1.5">
-          {tags.slice(0, 3).map((tag, index) => <span key={tag} className={`px-2.5 py-1 text-xs font-medium rounded-full transition-colors truncate max-w-20 ${index === 0 ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800' : index === 1 ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800' : 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border border-pink-200 dark:border-pink-800'}`} title={tag}>
+          {tags.slice(0, 3).map((tag, index) => <Badge key={tag} variant="outline" className={`rounded-full transition-colors truncate max-w-28 ${index === 0 ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800' : index === 1 ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800' : 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border-pink-200 dark:border-pink-800'}`} title={tag}>
               {truncateText(tag, 12)}
-            </span>)}
-          {tags.length > 3 && <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-600">
+            </Badge>)}
+          {tags.length > 3 && <Badge variant="outline" className="rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-600">
               +{tags.length - 3}
-            </span>}
+            </Badge>}
         </div>
+      </CardContent>
 
-        {/* Model Badge */}
-        <div className="border-t border-slate-100 dark:border-slate-700 pt-4 mt-4">
-          <div className="flex justify-end">
-            <span className="px-3 py-1.5 text-xs font-medium bg-slate-50 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 rounded-full border border-slate-200 dark:border-slate-600 truncate max-w-24" title={model}>
-              {truncateText(model || '', 15)}
-            </span>
-          </div>
+      <CardFooter className="relative !pt-4 pb-4 mt-auto px-6 before:content-[''] before:absolute before:top-0 before:left-4 before:right-4 before:h-px before:bg-slate-100 dark:before:bg-slate-700">
+        <div className="flex justify-end w-full">
+          <Badge variant="outline" className="bg-slate-50 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-600 rounded-full truncate max-w-32" title={model}>
+            {truncateText(model || '', 15)}
+          </Badge>
         </div>
-      </div>
-    </motion.div>;
+      </CardFooter>
+    </Card>
+  </motion.div>;
 }

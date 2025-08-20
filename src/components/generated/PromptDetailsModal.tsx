@@ -3,6 +3,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Edit2, Copy, Share2, Trash2, Camera, Tag, Plus, Check, ExternalLink, Download, Heart, Star, Bookmark } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
+import { Badge } from '../ui/badge';
 export interface Prompt {
   id: string;
   title: string;
@@ -185,13 +190,13 @@ export default function PromptDetailsModal({
               <div className="space-y-6">
                 {/* Title */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                  <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Title
-                  </label>
-                  {isEditing ? <input type="text" value={editedPrompt?.title || ''} onChange={e => setEditedPrompt(prev => prev ? {
+                  </Label>
+                  {isEditing ? <Input type="text" value={editedPrompt?.title || ''} onChange={e => setEditedPrompt(prev => prev ? {
                 ...prev,
                 title: e.target.value
-              } : null)} className="w-full px-4 py-3 text-2xl font-bold border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" /> : <h1 className="text-3xl font-bold text-slate-900 dark:text-white leading-tight">
+              } : null)} className="w-full px-4 py-3 text-2xl font-bold" /> : <h1 className="text-3xl font-bold text-slate-900 dark:text-white leading-tight">
                       {prompt.title}
                     </h1>}
                 </div>
@@ -199,9 +204,9 @@ export default function PromptDetailsModal({
                 {/* Model & Category */}
                 <div className="flex items-center space-x-4">
                   <div className="flex-1">
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       Model
-                    </label>
+                    </Label>
                     {isEditing ? <select value={editedPrompt?.model || ''} onChange={e => setEditedPrompt(prev => prev ? {
                   ...prev,
                   model: e.target.value
@@ -218,9 +223,9 @@ export default function PromptDetailsModal({
                   </div>
                   
                   <div className="flex-1">
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       Category
-                    </label>
+                    </Label>
                     <span className="inline-flex items-center px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg text-sm font-medium">
                       {prompt.category}
                     </span>
@@ -229,37 +234,37 @@ export default function PromptDetailsModal({
 
                 {/* Tags */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                  <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                     Tags
-                  </label>
+                  </Label>
                   
                   {isEditing && <div className="flex space-x-2 mb-3">
-                      <input type="text" value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleAddTag()} placeholder="Add new tag" className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm" />
-                      <button onClick={handleAddTag} className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">
+                      <Input type="text" value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleAddTag()} placeholder="Add new tag" className="flex-1 px-3 py-2 text-sm" />
+                      <Button onClick={handleAddTag} className="px-3 py-2">
                         <Plus className="w-4 h-4" />
-                      </button>
+                      </Button>
                     </div>}
                   
                   <div className="flex flex-wrap gap-2">
-                    {(isEditing ? editedPrompt?.tags : prompt.tags)?.map((tag, index) => <span key={tag} className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-full transition-colors ${index % 3 === 0 ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800' : index % 3 === 1 ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800' : 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border border-pink-200 dark:border-pink-800'}`}>
+                    {(isEditing ? editedPrompt?.tags : prompt.tags)?.map((tag, index) => <Badge key={tag} variant="outline" className={`rounded-full transition-colors ${index % 3 === 0 ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800' : index % 3 === 1 ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800' : 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border-pink-200 dark:border-pink-800'}`}>
                         <Tag className="w-3 h-3 mr-1" />
                         {tag}
                         {isEditing && <button onClick={() => handleRemoveTag(tag)} className="ml-2 hover:text-red-500 transition-colors">
                             <X className="w-3 h-3" />
                           </button>}
-                      </span>)}
+                      </Badge>)}
                   </div>
                 </div>
 
                 {/* Content */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                  <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                     Prompt Content
-                  </label>
-                  {isEditing ? <textarea value={editedPrompt?.content || ''} onChange={e => setEditedPrompt(prev => prev ? {
+                  </Label>
+                  {isEditing ? <Textarea value={editedPrompt?.content || ''} onChange={e => setEditedPrompt(prev => prev ? {
                 ...prev,
                 content: e.target.value
-              } : null)} rows={8} className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white resize-none" /> : <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 border border-slate-200 dark:border-slate-600">
+              } : null)} rows={8} className="w-full px-4 py-3 resize-none" /> : <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 border border-slate-200 dark:border-slate-600">
                       <pre className="whitespace-pre-wrap text-slate-700 dark:text-slate-300 text-sm leading-relaxed font-mono">
                         {prompt.content}
                       </pre>
@@ -268,9 +273,9 @@ export default function PromptDetailsModal({
 
                 {/* Cover Image Management: show uploader only when no cover exists */}
                 {isEditing && !(editedPrompt?.coverImage || prompt.coverImage) && <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                    <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                       Cover Image
-                    </label>
+                    </Label>
                     <div className="space-y-3">
                       <input type="file" accept="image/*" onChange={handleCoverImageUpload} className="hidden" id="edit-cover-image-upload" />
                       <label htmlFor="edit-cover-image-upload" className="flex items-center justify-center w-full p-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl hover:border-slate-400 dark:hover:border-slate-500 cursor-pointer transition-colors">
