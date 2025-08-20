@@ -53,6 +53,7 @@ interface Tool {
   url: string;
   description?: string;
   favicon?: string;
+  subcategory?: string;
 }
 interface Category {
   id: string;
@@ -536,6 +537,7 @@ const KotoDashboard: React.FC = () => {
           description: row.description || undefined,
           favicon: row.favicon || undefined,
           category: row.category || 'General',
+          subcategory: row.subcategory || undefined,
         });
         setPrompts(promptRows.map(mapPrompt));
         setTools(toolRows.map(mapTool));
@@ -843,6 +845,7 @@ const KotoDashboard: React.FC = () => {
           description: created.description || undefined,
           favicon: created.favicon || undefined,
           category: created.category || 'General',
+          subcategory: created.subcategory || undefined,
         };
         setTools(prev => [mapped, ...prev]);
       }
@@ -1316,6 +1319,7 @@ const KotoDashboard: React.FC = () => {
           description: editedTool.description ?? undefined,
           favicon: editedTool.favicon ?? undefined,
           category: editedTool.category,
+          subcategory: editedTool.subcategory ?? undefined,
         });
         setTools(prev => prev.map(t => t.id === tool.id ? {
           id: updated.id,
@@ -1324,6 +1328,7 @@ const KotoDashboard: React.FC = () => {
           description: updated.description ?? undefined,
           favicon: updated.favicon ?? undefined,
           category: updated.category || 'General',
+          subcategory: updated.subcategory || undefined,
         } : t));
       } catch (e) {
         console.error('Failed to update tool', e);
