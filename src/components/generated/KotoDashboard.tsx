@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Menu, Bell, User, Settings, HelpCircle, Sun, Moon, ExternalLink, Share2, Trash2, Copy, Palette, Code, Briefcase, PenTool, Target, Users, BarChart3, Zap, Globe, Figma, Cpu, Tag, X, Upload, Camera, Smile, Heart, Star, Zap as ZapIcon, Coffee, Music, Book, Gamepad2, Laptop, Smartphone, Headphones, Car, Home, Plane, Gift, ShoppingBag, CreditCard, Mail, Phone, MapPin, Calendar, Clock, Eye, EyeOff, ChevronDown, ChevronRight, Edit2, LogOut, Check, Database, Shield } from 'lucide-react';
+import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Menu, Bell, User, Settings, HelpCircle, Sun, Moon, ExternalLink, Share2, Trash2, Copy, Palette, Code, Code2, Briefcase, PenTool, Target, Users, BarChart3, Zap, Globe, Figma, Cpu, Tag, X, Upload, Camera, Smile, Heart, Star, Zap as ZapIcon, Coffee, Music, Book, BookOpen, Gamepad2, Laptop, Smartphone, Headphones, Car, Home, Plane, Gift, ShoppingBag, CreditCard, Mail, Phone, MapPin, Calendar, Clock, Eye, EyeOff, ChevronDown, ChevronRight, Edit2, LogOut, Check, Database, Shield, ShieldCheck, ShieldAlert, ShieldX, Server, Cloud, CloudSnow, CloudRain, Terminal, Package, Package2, PackageOpen, Layers, Workflow, GitBranch, Container, Boxes, Box, FileCode, FileCode2, Monitor, Tablet, Watch, Tv, Radio, Headset, Microphone, Video, Image, FileText, Folder, Archive, Download, Upload as UploadIcon, Share, Lock, Unlock, Key, UserCheck, UserPlus, UserMinus, Users2, Team, Building, Building2, Factory, Store, Warehouse, Truck, Ship, Rocket, Satellite, Wifi, Bluetooth, Usb, HardDrive, MemoryStick, SdCard, Disc, PlayCircle, PauseCircle, StopCircle, SkipForward, SkipBack, Volume2, VolumeX, Mic, MicOff, Camera as CameraIcon, VideoOff, Scissors, Paintbrush, Paintbrush2, Brush, Pen, Pencil, Edit, Edit3, Type, AlignLeft, AlignCenter, AlignRight, Bold, Italic, Underline, Strikethrough, List, ListOrdered, CheckSquare, Square, Circle, Triangle, Hexagon, Octagon, Diamond, Shapes, Grid, Layout, Sidebar, PanelLeft, PanelRight, PanelTop, PanelBottom, Maximize, Minimize, RotateCcw, RotateCw, FlipHorizontal, FlipVertical, Move, MousePointer, Hand, Grab, ZoomIn, ZoomOut, Focus, Scan, QrCode, Barcode, Hash, AtSign, Percent, DollarSign, Euro, PoundSterling, Yen, Bitcoin, TrendingUp, TrendingDown, Activity, Pulse, Zap as Lightning, Flame, Snowflake, Sun as SunIcon, Moon as MoonIcon, CloudLightning, Umbrella, Rainbow, Thermometer, Wind, Compass, Map, Navigation, Route, Flag, Bookmark, Award, Medal, Trophy, Crown, Gem, Sparkles, Wand2, Magic, Puzzle, Gamepad, Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, Spade, Club, Diamond as DiamondSuit, Heart as HeartSuit, Cherry, Apple, Grape, Banana, Orange, Lemon, Strawberry, Carrot, Corn, Wheat, Leaf, Tree, Flower, Flower2, Bug, Fish, Bird, Cat, Dog, Rabbit, Turtle, Snail, Butterfly, Bee, Spider, Ant, Worm, Microscope, Telescope, Atom, Dna, Pill, Syringe, Stethoscope, Thermometer as ThermometerIcon, Bandage, Cross, Plus as PlusIcon, Minus, Equal, Divide, Multiply, Calculator, Abacus, Binary, Infinity, Pi, Sigma, Alpha, Beta, Gamma, Delta, Lambda, Omega, Function, Variable, Parentheses, Brackets, Braces, Quote, DoubleQuote, Apostrophe, Semicolon, Colon, Comma, Period, Question, Exclamation, Ampersand, Asterisk, Slash, Backslash, Pipe, Tilde, Caret, Underscore, Hyphen, Space, Tab, Enter, Backspace, Delete, Insert, Home as HomeIcon, End, PageUp, PageDown, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ArrowUpLeft, ArrowUpRight, ArrowDownLeft, ArrowDownRight, CornerUpLeft, CornerUpRight, CornerDownLeft, CornerDownRight, ChevronsUp, ChevronsDown, ChevronsLeft, ChevronsRight, MoreHorizontal, MoreVertical, Menu as MenuIcon, X as XIcon, Check as CheckIcon, Minus as MinusIcon, Plus as PlusIcon2, Equal as EqualIcon, Slash as SlashIcon, Backslash as BackslashIcon, Pipe as PipeIcon, Ampersand as AmpersandIcon, AtSign as AtSignIcon, Hash as HashIcon, Percent as PercentIcon, DollarSign as DollarSignIcon, Euro as EuroIcon, PoundSterling as PoundSterlingIcon, Yen as YenIcon, Bitcoin as BitcoinIcon, Infinity as InfinityIcon, Pi as PiIcon, Sigma as SigmaIcon, Alpha as AlphaIcon, Beta as BetaIcon, Gamma as GammaIcon, Delta as DeltaIcon, Lambda as LambdaIcon, Omega as OmegaIcon, GraduationCap } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from '../../contexts/ThemeContext';
 import PromptCard from './PromptCard';
@@ -67,73 +67,198 @@ interface Project {
   subcategories: string[];
   createdAt: Date;
 }
-const iconOptions = [{
-  name: 'React',
-  icon: Code
-}, {
-  name: 'Vue',
-  icon: Zap
-}, {
-  name: 'Angular',
-  icon: Target
-}, {
-  name: 'Node.js',
-  icon: Cpu
-}, {
-  name: 'Python',
-  icon: Code
-}, {
-  name: 'JavaScript',
-  icon: Zap
-}, {
-  name: 'TypeScript',
-  icon: Code
-}, {
-  name: 'Design',
-  icon: Palette
-}, {
-  name: 'Mobile',
-  icon: Smartphone
-}, {
-  name: 'Web',
-  icon: Globe
-}, {
-  name: 'Database',
-  icon: BarChart3
-}, {
-  name: 'DevOps',
-  icon: Wrench
-}, {
-  name: 'AI/ML',
-  icon: Cpu
-}, {
-  name: 'Blockchain',
-  icon: Link
-}, {
-  name: 'Gaming',
-  icon: Gamepad2
-}, {
-  name: 'E-commerce',
-  icon: ShoppingBag
-}, {
-  name: 'Finance',
-  icon: CreditCard
-}, {
-  name: 'Healthcare',
-  icon: Heart
-}, {
-  name: 'Education',
-  icon: Book
-}, {
-  name: 'Social',
-  icon: Users
-}, {
-  name: 'Productivity',
-  icon: Calendar
-}, {
-  name: 'Analytics',
-  icon: BarChart3
-}] as any[];
+const iconOptions = [
+  // Frontend Frameworks & Libraries
+  { name: 'React', icon: Code },
+  { name: 'Vue', icon: Zap },
+  { name: 'Angular', icon: Target },
+  { name: 'Svelte', icon: Lightning },
+  { name: 'Next.js', icon: Globe },
+  { name: 'Nuxt.js', icon: Layers },
+  { name: 'Gatsby', icon: Rocket },
+  { name: 'Astro', icon: Star },
+  
+  // Backend & Runtime
+  { name: 'Node.js', icon: Server },
+  { name: 'Deno', icon: Terminal },
+  { name: 'Express', icon: Route },
+  { name: 'Fastify', icon: Zap },
+  { name: 'NestJS', icon: Boxes },
+  { name: 'Koa', icon: Workflow },
+  
+  // Programming Languages
+  { name: 'JavaScript', icon: FileCode },
+  { name: 'TypeScript', icon: Code2 },
+  { name: 'Python', icon: FileCode2 },
+  { name: 'Java', icon: Coffee },
+  { name: 'C#', icon: Hash },
+  { name: 'Go', icon: Activity },
+  { name: 'Rust', icon: Cpu },
+  { name: 'PHP', icon: FileCode },
+  { name: 'Ruby', icon: Gem },
+  { name: 'Swift', icon: Smartphone },
+  { name: 'Kotlin', icon: Smartphone },
+  { name: 'Dart', icon: Target },
+  { name: 'C++', icon: Cpu },
+  { name: 'C', icon: Terminal },
+  
+  // Databases
+  { name: 'PostgreSQL', icon: Database },
+  { name: 'MySQL', icon: HardDrive },
+  { name: 'MongoDB', icon: Leaf },
+  { name: 'Redis', icon: MemoryStick },
+  { name: 'SQLite', icon: Archive },
+  { name: 'Supabase', icon: Database },
+  { name: 'Firebase', icon: Flame },
+  { name: 'PlanetScale', icon: Globe },
+  
+  // Cloud & DevOps
+  { name: 'AWS', icon: Cloud },
+  { name: 'Azure', icon: CloudSnow },
+  { name: 'GCP', icon: CloudRain },
+  { name: 'Vercel', icon: Triangle },
+  { name: 'Netlify', icon: Globe },
+  { name: 'Docker', icon: Container },
+  { name: 'Kubernetes', icon: Boxes },
+  { name: 'Terraform', icon: Building },
+  { name: 'Jenkins', icon: Workflow },
+  { name: 'GitHub Actions', icon: GitBranch },
+  
+  // Mobile Development
+  { name: 'React Native', icon: Smartphone },
+  { name: 'Flutter', icon: Tablet },
+  { name: 'Ionic', icon: Phone },
+  { name: 'Xamarin', icon: Smartphone },
+  { name: 'Cordova', icon: Smartphone },
+  { name: 'iOS', icon: Smartphone },
+  { name: 'Android', icon: Smartphone },
+  
+  // Design & UI
+  { name: 'Figma', icon: Figma },
+  { name: 'Adobe XD', icon: Palette },
+  { name: 'Sketch', icon: Paintbrush },
+  { name: 'Photoshop', icon: Image },
+  { name: 'Illustrator', icon: Pen },
+  { name: 'Tailwind CSS', icon: Brush },
+  { name: 'Material UI', icon: Circle },
+  { name: 'Chakra UI', icon: Circle },
+  { name: 'Ant Design', icon: Layout },
+  
+  // Testing & Quality
+  { name: 'Jest', icon: CheckSquare },
+  { name: 'Cypress', icon: Eye },
+  { name: 'Playwright', icon: Monitor },
+  { name: 'Selenium', icon: Bug },
+  { name: 'Vitest', icon: Lightning },
+  { name: 'ESLint', icon: Shield },
+  { name: 'Prettier', icon: Brush },
+  
+  // AI & Machine Learning
+  { name: 'TensorFlow', icon: Cpu },
+  { name: 'PyTorch', icon: Flame },
+  { name: 'OpenAI', icon: Sparkles },
+  { name: 'Hugging Face', icon: Heart },
+  { name: 'Jupyter', icon: Book },
+  { name: 'Pandas', icon: BarChart3 },
+  { name: 'NumPy', icon: Calculator },
+  
+  // Blockchain & Web3
+  { name: 'Ethereum', icon: Diamond },
+  { name: 'Solidity', icon: FileCode },
+  { name: 'Web3.js', icon: Link },
+  { name: 'Hardhat', icon: Wrench },
+  { name: 'Truffle', icon: Package },
+  { name: 'MetaMask', icon: CreditCard },
+  
+  // Gaming
+  { name: 'Unity', icon: Gamepad2 },
+  { name: 'Unreal Engine', icon: Gamepad },
+  { name: 'Godot', icon: Gamepad2 },
+  { name: 'Three.js', icon: Box },
+  { name: 'Babylon.js', icon: Boxes },
+  
+  // Industry Categories
+  { name: 'E-commerce', icon: ShoppingBag },
+  { name: 'Finance', icon: CreditCard },
+  { name: 'FinTech', icon: TrendingUp },
+  { name: 'Healthcare', icon: Heart },
+  { name: 'MedTech', icon: Stethoscope },
+  { name: 'Education', icon: Book },
+  { name: 'EdTech', icon: GraduationCap },
+  { name: 'Social Media', icon: Users },
+  { name: 'Entertainment', icon: Music },
+  { name: 'Travel', icon: Plane },
+  { name: 'Food & Beverage', icon: Coffee },
+  { name: 'Real Estate', icon: Building },
+  { name: 'Automotive', icon: Car },
+  { name: 'IoT', icon: Wifi },
+  { name: 'Logistics', icon: Truck },
+  { name: 'Agriculture', icon: Leaf },
+  
+  // Project Types
+  { name: 'Web App', icon: Globe },
+  { name: 'Mobile App', icon: Smartphone },
+  { name: 'Desktop App', icon: Monitor },
+  { name: 'API Service', icon: Server },
+  { name: 'Library', icon: Package },
+  { name: 'CLI Tool', icon: Terminal },
+  { name: 'Plugin', icon: Puzzle },
+  { name: 'Theme', icon: Palette },
+  { name: 'Template', icon: Layout },
+  { name: 'Boilerplate', icon: FileCode },
+  
+  // Tools & Utilities
+  { name: 'Webpack', icon: Package },
+  { name: 'Vite', icon: Lightning },
+  { name: 'Rollup', icon: Package2 },
+  { name: 'Parcel', icon: PackageOpen },
+  { name: 'Babel', icon: Code },
+  { name: 'PostCSS', icon: Brush },
+  { name: 'Sass', icon: Palette },
+  { name: 'Less', icon: Paintbrush2 },
+  { name: 'Stylus', icon: Pen },
+  
+  // Analytics & Monitoring
+  { name: 'Google Analytics', icon: BarChart3 },
+  { name: 'Mixpanel', icon: Activity },
+  { name: 'Amplitude', icon: TrendingUp },
+  { name: 'Sentry', icon: Shield },
+  { name: 'LogRocket', icon: Video },
+  { name: 'Datadog', icon: Monitor },
+  
+  // Communication & Collaboration
+  { name: 'Slack', icon: MessageSquare },
+  { name: 'Discord', icon: Users },
+  { name: 'Teams', icon: Users2 },
+  { name: 'Zoom', icon: Video },
+  { name: 'Notion', icon: FileText },
+  { name: 'Confluence', icon: BookOpen },
+  
+  // Productivity
+  { name: 'Productivity', icon: Calendar },
+  { name: 'Task Management', icon: CheckSquare },
+  { name: 'Time Tracking', icon: Clock },
+  { name: 'Project Management', icon: Briefcase },
+  { name: 'Documentation', icon: FileText },
+  { name: 'Knowledge Base', icon: Book },
+  
+  // Security
+  { name: 'Security', icon: Shield },
+  { name: 'Authentication', icon: Key },
+  { name: 'Authorization', icon: Lock },
+  { name: 'Encryption', icon: ShieldCheck },
+  { name: 'VPN', icon: ShieldAlert },
+  { name: 'Firewall', icon: ShieldX },
+  
+  // Generic/Fallback
+  { name: 'Frontend', icon: Monitor },
+  { name: 'Backend', icon: Server },
+  { name: 'Full Stack', icon: Layers },
+  { name: 'DevOps', icon: Wrench },
+  { name: 'Design', icon: Palette },
+  { name: 'Analytics', icon: BarChart3 },
+  { name: 'Other', icon: Package }
+] as any[];
 const KotoDashboard: React.FC = () => {
   const { theme, setTheme, actualTheme } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -148,6 +273,7 @@ const KotoDashboard: React.FC = () => {
   const [showToolDetailsDialog, setShowToolDetailsDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const [showProjectSettingsDialog, setShowProjectSettingsDialog] = useState(false);
+  const [iconSearchQuery, setIconSearchQuery] = useState('');
   const [editingProjectName, setEditingProjectName] = useState('');
   const [editingProjectIcon, setEditingProjectIcon] = useState<any>(null);
   
@@ -2234,13 +2360,41 @@ const KotoDashboard: React.FC = () => {
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     {activeTab === 'toolbox' ? 'Stack' : 'Project'} Icon
                   </label>
-                  <div className="grid grid-cols-6 gap-2 max-h-32 overflow-y-auto">
-                    {iconOptions.map(option => {
-                  const IconComponent = option.icon;
-                  return <button key={option.name} onClick={() => setSelectedIcon(option)} className={`p-2 rounded-lg border-2 transition-colors ${selectedIcon.name === option.name ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
-                          <IconComponent className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-                        </button>;
-                })}
+                  
+                  {/* Icon Search */}
+                  <div className="mb-3">
+                    <input
+                      type="text"
+                      value={iconSearchQuery}
+                      onChange={(e) => setIconSearchQuery(e.target.value)}
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm"
+                      placeholder="Search icons..."
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-8 gap-2 max-h-64 overflow-y-auto p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800">
+                    {iconOptions
+                      .filter(option => 
+                        option.name.toLowerCase().includes(iconSearchQuery.toLowerCase())
+                      )
+                      .map(option => {
+                        const IconComponent = option.icon;
+                        return (
+                          <button 
+                            key={option.name} 
+                            onClick={() => setSelectedIcon(option)} 
+                            className={`p-2 rounded-lg border-2 transition-colors hover:scale-105 ${
+                              selectedIcon.name === option.name 
+                                ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' 
+                                : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                            }`}
+                            title={option.name}
+                          >
+                            <IconComponent className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+                          </button>
+                        );
+                      })
+                    }
                   </div>
                 </div>
 
@@ -2685,26 +2839,43 @@ const KotoDashboard: React.FC = () => {
                       />
                     </div>
                     
+                    {/* Icon Search */}
+                    <div className="mb-3">
+                      <input
+                        type="text"
+                        value={iconSearchQuery}
+                        onChange={(e) => setIconSearchQuery(e.target.value)}
+                        className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm"
+                        placeholder="Search icons..."
+                      />
+                    </div>
+                    
                     {/* Icon Picker Grid */}
-                    <div className="grid grid-cols-6 gap-2 max-h-32 overflow-y-auto p-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800">
-                      {iconOptions.map(option => {
-                        const IconComponent = option.icon;
-                        const isSelected = simpleEditIcon === option.name;
-                        return (
-                          <button
-                            key={option.name}
-                            type="button"
-                            onClick={() => setSimpleEditIcon(option.name)}
-                            className={`p-2 rounded-lg border-2 transition-colors ${
-                              isSelected
-                                ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30'
-                                : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
-                            }`}
-                          >
-                            <IconComponent className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-                          </button>
-                        );
-                      })}
+                    <div className="grid grid-cols-8 gap-2 max-h-64 overflow-y-auto p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800">
+                      {iconOptions
+                        .filter(option => 
+                          option.name.toLowerCase().includes(iconSearchQuery.toLowerCase())
+                        )
+                        .map(option => {
+                          const IconComponent = option.icon;
+                          const isSelected = simpleEditIcon === option.name;
+                          return (
+                            <button
+                              key={option.name}
+                              type="button"
+                              onClick={() => setSimpleEditIcon(option.name)}
+                              className={`p-2 rounded-lg border-2 transition-colors hover:scale-105 ${
+                                isSelected
+                                  ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30'
+                                  : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                              }`}
+                              title={option.name}
+                            >
+                              <IconComponent className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+                            </button>
+                          );
+                        })
+                      }
                     </div>
                   </div>
                 </div>

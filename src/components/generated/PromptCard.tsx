@@ -26,12 +26,15 @@ export default function PromptCard({
     y: -4
   }} whileTap={{
     scale: 0.98
-  }} className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 dark:border-slate-700 cursor-pointer transition-all duration-300 group" style={{
+  }} transition={{
+    duration: 0.2,
+    ease: "easeOut"
+  }} className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 dark:border-slate-700 cursor-pointer transition-all duration-200 group" style={{
     fontFamily: 'Space Grotesk, sans-serif'
   }}>
       {/* Cover Image - Only show if provided */}
       {coverImage && <div className="relative w-full h-48 overflow-hidden">
-          <img src={coverImage} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+          <img src={coverImage} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
         </div>}
 
