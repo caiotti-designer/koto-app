@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import supabase from '../lib/supabaseClient';
 import { 
   MessageSquare, 
   Wrench, 
@@ -29,6 +30,7 @@ interface SharedViewProps {
 const SharedView: React.FC<SharedViewProps> = ({ type }) => {
   const params = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -106,8 +108,21 @@ const SharedView: React.FC<SharedViewProps> = ({ type }) => {
     }
   };
 
-  const handleGoBack = () => {
-    window.history.back();
+  const handleGoBack = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // User is logged in, navigate to dashboard
+        navigate('/');
+      } else {
+        // User is not logged in, navigate to sign in (which is also the main page)
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Error checking auth status:', error);
+      // Fallback to main page
+      navigate('/');
+    }
   };
 
   if (loading) {

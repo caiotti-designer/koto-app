@@ -14,6 +14,19 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import { Badge } from '../ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui/tooltip';
 import supabase from '../../lib/supabaseClient';
 import {
   fetchPrompts,
@@ -295,7 +308,7 @@ const KotoDashboard: React.FC = () => {
   }, [showSimpleEditModal]);
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+
   const [editingItem, setEditingItem] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [draggedItem, setDraggedItem] = useState<{
@@ -333,11 +346,11 @@ const KotoDashboard: React.FC = () => {
 
   // Settings state
   const [backgroundImage, setBackgroundImage] = useState(() => {
-    // Load background image from localStorage if available
+    // Load background image from localStorage if available, otherwise use default
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('koto_background_image') || '';
+      return localStorage.getItem('koto_background_image') || '/koto-background-image.webp';
     }
-    return '';
+    return '/koto-background-image.webp';
   });
 
   // Reset all data to defaults for new user
@@ -550,19 +563,32 @@ const KotoDashboard: React.FC = () => {
 
   // Drag and drop handlers
   const [dragOverTarget, setDragOverTarget] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   
   const handleDragStart = (e: React.DragEvent, type: 'prompt' | 'tool', item: Prompt | Tool) => {
     setDraggedItem({
       type,
       item
     });
+    setIsDragging(true);
     e.dataTransfer.effectAllowed = 'move';
+    
+    // Add visual feedback to the dragged element
+    const target = e.currentTarget as HTMLElement;
+    target.style.opacity = '0.5';
+    target.style.transform = 'rotate(5deg)';
   };
   
-  const handleDragEnd = () => {
+  const handleDragEnd = (e: React.DragEvent) => {
     // Clear dragged item and any visual feedback when drag ends
     setDraggedItem(null);
     setDragOverTarget(null);
+    setIsDragging(false);
+    
+    // Reset visual feedback
+    const target = e.currentTarget as HTMLElement;
+    target.style.opacity = '1';
+    target.style.transform = 'none';
   };
   
   const handleDragOver = (e: React.DragEvent, targetId: string) => {
@@ -573,7 +599,14 @@ const KotoDashboard: React.FC = () => {
   
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    setDragOverTarget(null);
+    // Only clear if we're actually leaving the target
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+      setDragOverTarget(null);
+    }
   };
   
   const handleDrop = async (e: React.DragEvent, targetCategoryId: string) => {
@@ -751,7 +784,10 @@ const KotoDashboard: React.FC = () => {
     // Require authentication
     if (!user?.id) {
       console.warn('You must be signed in to create prompts.');
-      setShowProfileMenu(true);
+// Show sign in dialog instead of profile menu since it's not defined
+toast.error('Please sign in to continue', {
+  description: 'You must be signed in to perform this action'
+});
       return;
     }
 
@@ -824,7 +860,8 @@ const KotoDashboard: React.FC = () => {
     // Require authentication
     if (!user?.id) {
       console.warn('You must be signed in to create tools.');
-      setShowProfileMenu(true);
+// Remove invalid state setter that doesn't exist
+return;
       return;
     }
     
@@ -1473,26 +1510,54 @@ const KotoDashboard: React.FC = () => {
               <div className="border-t border-slate-200 dark:border-slate-700 px-6 py-4" style={{marginTop: '16px'}}>
                 <div className="flex items-center justify-end space-x-3">
                   {!isEditing ? <>
-                      <Button onClick={handleCopy} variant="outline" size="sm" className="h-9 px-4">
-                        {copySuccess ? <Check className="w-4 h-4 mr-1" /> : <Copy className="w-4 h-4 mr-1" />}
-                        {copySuccess ? 'Copied!' : 'Copy URL'}
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button onClick={handleCopy} variant="outline" size="sm" className="h-9 px-4">
+                            {copySuccess ? <Check className="w-4 h-4 mr-1" /> : <Copy className="w-4 h-4 mr-1" />}
+                            {copySuccess ? 'Copied!' : 'Copy URL'}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Copy tool URL to clipboard</p>
+                        </TooltipContent>
+                      </Tooltip>
                       
-                      <Button onClick={handleShare} variant="outline" size="sm" className="h-9 px-4">
-                        <Share2 className="w-4 h-4 mr-1" />
-                        Share
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button onClick={handleShare} variant="outline" size="sm" className="h-9 px-4">
+                            <Share2 className="w-4 h-4 mr-1" />
+                            Share
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Share tool with others</p>
+                        </TooltipContent>
+                      </Tooltip>
                       
-                      <Button onClick={handleEdit} variant="default" size="sm" className="h-9 px-4">
-                        <Edit2 className="w-4 h-4 mr-1" />
-                        Edit
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button onClick={handleEdit} variant="default" size="sm" className="h-9 px-4">
+                            <Edit2 className="w-4 h-4 mr-1" />
+                            Edit
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Edit tool details</p>
+                        </TooltipContent>
+                      </Tooltip>
                       
-                      <Button onClick={() => setShowDeleteConfirm(true)} variant="destructive" size="sm" className="h-9 px-4">
-                        <Trash2 className="w-4 h-4 mr-1" />
-                        Delete
-                      </Button>
-                    </> : <>
+                      <Tooltip>
+                         <TooltipTrigger asChild>
+                           <Button onClick={() => setShowDeleteConfirm(true)} variant="destructive" size="sm" className="h-9 px-4">
+                             <Trash2 className="w-4 h-4 mr-1" />
+                             Delete
+                           </Button>
+                         </TooltipTrigger>
+                         <TooltipContent>
+                           <p>Delete this tool</p>
+                         </TooltipContent>
+                       </Tooltip>
+                     </> : <>
                       <Button onClick={handleCancel} variant="ghost" size="sm" className="h-9 px-4">
                         Cancel
                       </Button>
@@ -1693,7 +1758,7 @@ const KotoDashboard: React.FC = () => {
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 w-full max-w-md shadow-2xl border border-white/20">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <MessageSquare className="w-8 h-8 text-white" />
+              <Logo size="lg" className="text-white" />
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">Welcome to Koto</h1>
             <p className="text-white/80">Sign in to access your personal workspace</p>
@@ -1743,9 +1808,10 @@ const KotoDashboard: React.FC = () => {
   }
 
   return (
-    <div className={`h-screen w-full ${actualTheme === 'dark' ? 'dark' : ''} bg-slate-50 dark:bg-slate-900 flex overflow-hidden transition-colors duration-300`} style={{
-      fontFamily: 'Space Grotesk, sans-serif'
-    }}>
+    <TooltipProvider>
+      <div className={`h-screen w-full ${actualTheme === 'dark' ? 'dark' : ''} bg-slate-50 dark:bg-slate-900 flex overflow-hidden transition-colors duration-300`} style={{
+        fontFamily: 'Space Grotesk, sans-serif'
+      }}>
       {/* Sidebar */}
       <motion.aside animate={{
       width: sidebarCollapsed ? 80 : 280
@@ -1775,13 +1841,20 @@ const KotoDashboard: React.FC = () => {
                   </motion.div>}
               </AnimatePresence>
               
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              >
-                <ChevronLeft className={`w-5 h-5 text-slate-600 dark:text-slate-400 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  >
+                    <ChevronLeft className={`w-5 h-5 text-slate-600 dark:text-slate-400 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>{sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
 
@@ -1851,7 +1924,7 @@ const KotoDashboard: React.FC = () => {
                 const hasSubcategories = categorySubcategories.length > 0;
                 return <div key={category.id}>
                       <div className="flex items-center group">
-                        <button onClick={() => setActiveCategory(category.id)} onDoubleClick={() => handleDoubleClick(category.id, category.name)} onDragOver={(e: React.DragEvent) => handleDragOver(e, category.id)} onDragLeave={handleDragLeave} onDrop={(e: React.DragEvent) => handleDrop(e, category.id)} className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative max-w-[247px] ${isActive ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'} ${draggedItem && dragOverTarget === category.id ? 'shadow-lg transform -translate-y-1' : ''}`}>
+                        <button onClick={() => setActiveCategory(category.id)} onDoubleClick={() => handleDoubleClick(category.id, category.name)} onDragOver={(e: React.DragEvent) => handleDragOver(e, category.id)} onDragLeave={handleDragLeave} onDrop={(e: React.DragEvent) => handleDrop(e, category.id)} className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative max-w-[247px] ${isActive ? 'bg-slate-800 dark:bg-slate-700 text-white' : dragOverTarget === category.id && isDragging ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 ring-2 ring-green-300 dark:ring-green-600 ring-opacity-50 shadow-lg transform scale-105' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'}`}>
                           <Icon className="w-5 h-5 flex-shrink-0" />
                           <AnimatePresence mode="wait">
                             {!sidebarCollapsed && <motion.div initial={{
@@ -1868,40 +1941,63 @@ const KotoDashboard: React.FC = () => {
                                     {category.name}
                                   </span>}
                                 
-                                {/* Inline action buttons */}
+                                {/* Category Actions Dropdown */}
                                 <div className="flex items-center space-x-1 flex-shrink-0">
-                                  {/* Delete button */}
-                                  <div onClick={e => {
-                              e.stopPropagation();
-                              // Handle delete category
-                              if (activeTab === 'prompts') {
-                                setCategories(prev => prev.filter(cat => cat.id !== category.id));
-                              } else {
-                                setToolCategories(prev => prev.filter(cat => cat.id !== category.id));
-                              }
-                              // Reset to 'all' if deleting active category
-                              if (activeCategory === category.id) {
-                                setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools');
-                              }
-                            }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-all cursor-pointer">
-                                    <Trash2 className="w-4 h-4 text-red-500" />
-                                  </div>
-                                  
-                                  {/* Add subcategory button */}
-                                  <div onClick={e => {
-                              e.stopPropagation();
-                              handleAddSubcategoryToProject(category.id);
-                            }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-all cursor-pointer">
-                                    <Plus className="w-4 h-4 text-slate-400" />
-                                  </div>
-                                  
-                                  {/* Expand/collapse button for subcategories - always show if has subcategories or on hover */}
-                                  {(hasSubcategories || category.expanded) && <div onClick={e => {
+                                  {/* Expand/collapse button for subcategories - always show if has subcategories */}
+                                  {hasSubcategories && <div onClick={e => {
                               e.stopPropagation();
                               toggleCategoryExpansion(category.id);
                             }} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors cursor-pointer">
                                       {category.expanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
                                     </div>}
+                                  
+                                  {/* Actions Dropdown */}
+                                  <DropdownMenu>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <DropdownMenuTrigger asChild>
+                                          <div 
+                                            onClick={e => e.stopPropagation()}
+                                            className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-all cursor-pointer"
+                                          >
+                                            <MoreHorizontal className="w-4 h-4 text-slate-400" />
+                                          </div>
+                                        </DropdownMenuTrigger>
+                                      </TooltipTrigger>
+                                      <TooltipContent side="right">
+                                        <p>Category actions</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                    <DropdownMenuContent align="end" className="w-48">
+                                      <DropdownMenuItem onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddSubcategoryToProject(category.id);
+                                      }}>
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Add Subcategory
+                                      </DropdownMenuItem>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem 
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          // Handle delete category
+                                          if (activeTab === 'prompts') {
+                                            setCategories(prev => prev.filter(cat => cat.id !== category.id));
+                                          } else {
+                                            setToolCategories(prev => prev.filter(cat => cat.id !== category.id));
+                                          }
+                                          // Reset to 'all' if deleting active category
+                                          if (activeCategory === category.id) {
+                                            setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools');
+                                          }
+                                        }}
+                                        className="text-red-600 dark:text-red-400"
+                                      >
+                                        <Trash2 className="w-4 h-4 mr-2" />
+                                        Delete Category
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
                                 </div>
                               </motion.div>}
                           </AnimatePresence>
@@ -1924,7 +2020,7 @@ const KotoDashboard: React.FC = () => {
                         const subcategoryCount = activeTab === 'prompts' 
                           ? prompts.filter(p => p.subcategory === subcategory.id).length
                           : tools.filter(t => t.subcategory === subcategory.id).length;
-                        return <button key={subcategory.id} onClick={() => setActiveCategory(subcategory.id)} onDoubleClick={() => handleDoubleClick(subcategory.id, subcategory.name)} onDragOver={(e: React.DragEvent) => handleDragOver(e, subcategory.id)} onDragLeave={handleDragLeave} onDrop={(e: React.DragEvent) => handleDrop(e, subcategory.id)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200 group max-w-[247px] ${activeCategory === subcategory.id ? 'bg-slate-700 dark:bg-slate-600 text-white' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-300'} ${draggedItem && dragOverTarget === subcategory.id ? 'shadow-lg transform -translate-y-1' : ''}`}>
+                        return <button key={subcategory.id} onClick={() => setActiveCategory(subcategory.id)} onDoubleClick={() => handleDoubleClick(subcategory.id, subcategory.name)} onDragOver={(e: React.DragEvent) => handleDragOver(e, subcategory.id)} onDragLeave={handleDragLeave} onDrop={(e: React.DragEvent) => handleDrop(e, subcategory.id)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200 group max-w-[247px] ${activeCategory === subcategory.id ? 'bg-slate-700 dark:bg-slate-600 text-white' : dragOverTarget === subcategory.id && isDragging ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 ring-2 ring-green-300 dark:ring-green-600 ring-opacity-50 shadow-lg transform scale-105' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-300'}`}>
                           {editingItem === subcategory.id ? <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} onBlur={() => handleRename(subcategory.id, 'subcategory')} onKeyPress={e => e.key === 'Enter' && handleRename(subcategory.id, 'subcategory')} className="bg-transparent border-none outline-none text-sm font-medium flex-1 min-w-0" autoFocus /> : <span className="font-medium truncate min-w-0 flex-1 text-left" title={subcategory.name}>
                               {subcategory.name}
                             </span>}
@@ -1940,17 +2036,40 @@ const KotoDashboard: React.FC = () => {
                               {subcategoryCount}
                             </span>
                             
-                            {/* Delete subcategory button */}
-                            <div onClick={e => {
-                              e.stopPropagation();
-                              setSubcategories(prev => prev.filter(sub => sub.id !== subcategory.id));
-                              // Reset to parent category if deleting active subcategory
-                              if (activeCategory === subcategory.id) {
-                                setActiveCategory(subcategory.parentId);
-                              }
-                            }} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-all cursor-pointer">
-                              <Trash2 className="w-3 h-3 text-red-500" />
-                            </div>
+                            {/* Subcategory Actions Dropdown */}
+                            <DropdownMenu>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <DropdownMenuTrigger asChild>
+                                    <div 
+                                      onClick={e => e.stopPropagation()}
+                                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-all cursor-pointer"
+                                    >
+                                      <MoreHorizontal className="w-3 h-3 text-slate-400" />
+                                    </div>
+                                  </DropdownMenuTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent side="right">
+                                  <p>Subcategory actions</p>
+                                </TooltipContent>
+                              </Tooltip>
+                              <DropdownMenuContent align="end" className="w-48">
+                                <DropdownMenuItem 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSubcategories(prev => prev.filter(sub => sub.id !== subcategory.id));
+                                    // Reset to parent category if deleting active subcategory
+                                    if (activeCategory === subcategory.id) {
+                                      setActiveCategory(subcategory.parentId);
+                                    }
+                                  }}
+                                  className="text-red-600 dark:text-red-400"
+                                >
+                                  <Trash2 className="w-4 h-4 mr-2" />
+                                  Delete Subcategory
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         </button>;
                       })}
@@ -1965,21 +2084,42 @@ const KotoDashboard: React.FC = () => {
           {/* Bottom Navigation */}
           <div className="p-4 border-t border-slate-200 dark:border-slate-700">
             <div className="space-y-1">
-              <button onClick={() => setShowSettingsDialog(true)} className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
-                <Settings className="w-5 h-5 flex-shrink-0" />
-                {!sidebarCollapsed && <span className="font-medium text-sm">Settings</span>}
-              </button>
-              <button onClick={() => {
-                const nextTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
-                setTheme(nextTheme);
-              }} className="w-full flex items-center space-x-3 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
-                {theme === 'light' ? <Sun className="w-5 h-5 flex-shrink-0" /> : theme === 'dark' ? <Moon className="w-5 h-5 flex-shrink-0" /> : <Settings className="w-5 h-5 flex-shrink-0" />}
-                {!sidebarCollapsed && <span className="font-medium text-sm">{theme === 'light' ? 'Light' : theme === 'dark' ? 'Dark' : 'System'}</span>}
-              </button>
-              <button className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
-                <HelpCircle className="w-5 h-5 flex-shrink-0" />
-                {!sidebarCollapsed && <span className="font-medium text-sm">Help</span>}
-              </button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button onClick={() => setShowSettingsDialog(true)} className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <Settings className="w-5 h-5 flex-shrink-0" />
+                    {!sidebarCollapsed && <span className="font-medium text-sm">Settings</span>}
+                  </button>
+                </TooltipTrigger>
+                {sidebarCollapsed && <TooltipContent side="right">
+                  <p>Settings</p>
+                </TooltipContent>}
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button onClick={() => {
+                    const nextTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
+                    setTheme(nextTheme);
+                  }} className="w-full flex items-center space-x-3 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
+                    {theme === 'light' ? <Sun className="w-5 h-5 flex-shrink-0" /> : theme === 'dark' ? <Moon className="w-5 h-5 flex-shrink-0" /> : <Monitor className="w-5 h-5 flex-shrink-0" />}
+                    {!sidebarCollapsed && <span className="font-medium text-sm">{theme === 'light' ? 'Light' : theme === 'dark' ? 'Dark' : 'System'}</span>}
+                  </button>
+                </TooltipTrigger>
+                {sidebarCollapsed && <TooltipContent side="right">
+                  <p>Switch to {theme === 'light' ? 'Dark' : theme === 'dark' ? 'System' : 'Light'} theme</p>
+                </TooltipContent>}
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
+                    <HelpCircle className="w-5 h-5 flex-shrink-0" />
+                    {!sidebarCollapsed && <span className="font-medium text-sm">Help</span>}
+                  </button>
+                </TooltipTrigger>
+                {sidebarCollapsed && <TooltipContent side="right">
+                  <p>Help & Support</p>
+                </TooltipContent>}
+              </Tooltip>
             </div>
           </div>
         </div>
@@ -1991,7 +2131,7 @@ const KotoDashboard: React.FC = () => {
         <main className="flex-1 overflow-auto px-0">
           {/* Hero Section */}
           <div className="relative h-64 overflow-hidden" style={{
-          backgroundImage: backgroundImage ? `url('${backgroundImage}')` : `url('/koto-background-image.webp')`,
+          backgroundImage: `url('${backgroundImage}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}>
@@ -2033,66 +2173,64 @@ const KotoDashboard: React.FC = () => {
                   </div>
 
                   {/* Profile Menu */}
-                  <div className="relative h-full">
-                    <motion.button onClick={() => setShowProfileMenu(!showProfileMenu)} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center space-x-3 pl-2 pr-4 py-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl transition-colors h-full">
-                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
-                        <User className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="text-left text-white">
-                        <div className="text-sm font-medium">{user ? (user.user_metadata?.name || user.email || 'Account') : 'Login'}</div>
-                        <div className="text-xs text-white/80">{user ? 'Signed in' : 'Sign in to continue'}</div>
-                      </div>
-                    </motion.button>
-
-                    <AnimatePresence>
-                      {showProfileMenu && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1"
+                  <div className="h-full">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <motion.button 
+                          whileHover={{ scale: 1.05 }} 
+                          whileTap={{ scale: 0.95 }} 
+                          className="flex items-center space-x-3 pl-2 pr-4 py-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl transition-colors h-full"
                         >
-                          {!user && (
-                            <>
-                              <button onClick={async () => { await signInWithGitHub(); }} className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                                <User className="w-4 h-4" />
-                                <span>Sign in with GitHub</span>
-                              </button>
-                              <button onClick={async () => { await signInWithGoogle(); }} className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                                <User className="w-4 h-4" />
-                                <span>Sign in with Google</span>
-                              </button>
-                              <hr className="my-2 border-slate-200 dark:border-slate-700" />
-                            </>
-                          )}
-                          {user && (
-                            <>
-                              <button onClick={() => { window.location.href = '/settings/profile'; setShowProfileMenu(false); }} className="w-full px-4 py-2 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                                <User className="w-4 h-4" />
-                                <span>Profile Settings</span>
-                              </button>
-                              <hr className="my-2 border-slate-200 dark:border-slate-700" />
-                            </>
-                          )}
-                          <button onClick={() => setShowSettingsDialog(true)} className="w-full px-4 py-1 text-left text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                            <Settings className="w-4 h-4" />
-                            <span>App Settings</span>
-                          </button>
-                          <hr className="my-2 border-slate-200 dark:border-slate-700" />
-                          {user ? (
-                            <button onClick={async () => { await supaSignOut(); setShowProfileMenu(false); }} className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                              <LogOut className="w-4 h-4" />
-                              <span>Sign out</span>
-                            </button>
-                          ) : (
-                            <button className="w-full px-4 py-2 text-left text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-2">
-                              <HelpCircle className="w-4 h-4" />
-                              <span>Help & Support</span>
-                            </button>
-                          )}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+                            <User className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="text-left text-white">
+                            <div className="text-sm font-medium">{user ? (user.user_metadata?.name || user.email || 'Account') : 'Login'}</div>
+                            <div className="text-xs text-white/80">{user ? 'Signed in' : 'Sign in to continue'}</div>
+                          </div>
+                        </motion.button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-48" align="end">
+                        {!user && (
+                          <>
+                            <DropdownMenuItem onClick={async () => { await signInWithGitHub(); }}>
+                              <User className="w-4 h-4 mr-2" />
+                              Sign in with GitHub
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={async () => { await signInWithGoogle(); }}>
+                              <User className="w-4 h-4 mr-2" />
+                              Sign in with Google
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                          </>
+                        )}
+                        {user && (
+                          <>
+                            <DropdownMenuItem onClick={() => { window.location.href = '/settings/profile'; }}>
+                              <User className="w-4 h-4 mr-2" />
+                              Profile Settings
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                          </>
+                        )}
+                        <DropdownMenuItem onClick={() => setShowSettingsDialog(true)}>
+                          <Settings className="w-4 h-4 mr-2" />
+                          App Settings
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        {user ? (
+                          <DropdownMenuItem onClick={async () => { await supaSignOut(); }} variant="destructive">
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Sign out
+                          </DropdownMenuItem>
+                        ) : (
+                          <DropdownMenuItem>
+                            <HelpCircle className="w-4 h-4 mr-2" />
+                            Help & Support
+                          </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </div>
                 {/* Header row handled above (tabs + login) */}
@@ -2150,55 +2288,61 @@ const KotoDashboard: React.FC = () => {
                       </h1>
                       {/* Edit icon - conditional rendering restored */}
                       {(activeTab === 'prompts' || activeTab === 'toolbox') && activeCategory && activeCategory !== 'all' && activeCategory !== 'all-tools' && (
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            console.log('DEBUG: Edit button clicked!');
-                            console.log('DEBUG: activeTab:', activeTab);
-                            console.log('DEBUG: activeCategory:', activeCategory);
-                            
-                            // Initialize simple edit modal state with current values
-                            const categoryName = getCurrentCategoryName();
-                            console.log('DEBUG: Setting name to:', categoryName);
-                            setSimpleEditName(categoryName);
-                            
-                            const categoryList = activeTab === 'prompts' ? updatedCategories : updatedToolCategories;
-                            console.log('DEBUG: Available categories:', categoryList.map(cat => ({ id: cat.id, name: cat.name })));
-                            console.log('DEBUG: Looking for category with ID:', activeCategory);
-                            const category = categoryList.find(cat => cat.id === activeCategory);
-                            console.log('DEBUG: Found category:', category);
-                            
-                            // Always set a fallback icon first (use icon name, not component)
-                            console.log('DEBUG: Setting fallback icon first');
-                            const fallbackIconName = iconOptions.find(opt => opt.icon === iconOptions[0].icon)?.name || '🎨';
-                            setSimpleEditIcon(fallbackIconName);
-                            
-                            if (category && category.icon) {
-                              console.log('DEBUG: Found category icon, overriding fallback:', category.icon);
-                              // Find the icon name from iconOptions or use emoji fallback
-                              const iconName = iconOptions.find(opt => opt.icon === category.icon)?.name || '🎨';
-                              setSimpleEditIcon(iconName);
-                            } else {
-                              console.log('DEBUG: No category icon found, keeping fallback');
-                            }
-                            
-                            console.log('DEBUG: Opening simple edit modal');
-                            console.log('DEBUG: iconOptions[0].icon:', iconOptions[0].icon);
-                            
-                            // Force state update in next tick to avoid batching issues
-                            setTimeout(() => {
-                              console.log('DEBUG: Setting modal state to true in setTimeout');
-                              setShowSimpleEditModal(true);
-                            }, 0);
-                            
-                            console.log('DEBUG: Modal state set to true (queued)');
-                          }}
-                          className="opacity-0 group-hover:opacity-100 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all duration-200 cursor-pointer ml-2"
-                          title={`Edit ${activeTab === 'toolbox' ? 'Stack' : 'Project'}`}
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('DEBUG: Edit button clicked!');
+                                console.log('DEBUG: activeTab:', activeTab);
+                                console.log('DEBUG: activeCategory:', activeCategory);
+                                
+                                // Initialize simple edit modal state with current values
+                                const categoryName = getCurrentCategoryName();
+                                console.log('DEBUG: Setting name to:', categoryName);
+                                setSimpleEditName(categoryName);
+                                
+                                const categoryList = activeTab === 'prompts' ? updatedCategories : updatedToolCategories;
+                                console.log('DEBUG: Available categories:', categoryList.map(cat => ({ id: cat.id, name: cat.name })));
+                                console.log('DEBUG: Looking for category with ID:', activeCategory);
+                                const category = categoryList.find(cat => cat.id === activeCategory);
+                                console.log('DEBUG: Found category:', category);
+                                
+                                // Always set a fallback icon first (use icon name, not component)
+                                console.log('DEBUG: Setting fallback icon first');
+                                const fallbackIconName = iconOptions.find(opt => opt.icon === iconOptions[0].icon)?.name || '🎨';
+                                setSimpleEditIcon(fallbackIconName);
+                                
+                                if (category && category.icon) {
+                                  console.log('DEBUG: Found category icon, overriding fallback:', category.icon);
+                                  // Find the icon name from iconOptions or use emoji fallback
+                                  const iconName = iconOptions.find(opt => opt.icon === category.icon)?.name || '🎨';
+                                  setSimpleEditIcon(iconName);
+                                } else {
+                                  console.log('DEBUG: No category icon found, keeping fallback');
+                                }
+                                
+                                console.log('DEBUG: Opening simple edit modal');
+                                console.log('DEBUG: iconOptions[0].icon:', iconOptions[0].icon);
+                                
+                                // Force state update in next tick to avoid batching issues
+                                setTimeout(() => {
+                                  console.log('DEBUG: Setting modal state to true in setTimeout');
+                                  setShowSimpleEditModal(true);
+                                }, 0);
+                                
+                                console.log('DEBUG: Modal state set to true (queued)');
+                              }}
+                              className="opacity-0 group-hover:opacity-100 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all duration-200 cursor-pointer ml-2"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Edit {activeTab === 'toolbox' ? 'Stack' : 'Project'}</p>
+                          </TooltipContent>
+                        </Tooltip>
                       )}
                     </div>
                     <p className="text-white/80">
@@ -2231,13 +2375,17 @@ const KotoDashboard: React.FC = () => {
           </div>
 
           {/* Content Grid */}
-          <div className="py-6 px-0">
+          <div className="py-6 px-0 relative">
+            {/* Drag overlay */}
+            {isDragging && (
+              <div className="absolute inset-0 bg-blue-50/30 dark:bg-blue-900/10 backdrop-blur-[1px] z-10 pointer-events-none rounded-lg" />
+            )}
             <div className="w-[96%] mx-auto">
               {/* Show prompts/tools if they exist, otherwise show empty state */}
-              {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full justify-items-stretch auto-rows-fr">
-                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className="justify-self-start w-full h-full" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'prompt', prompt)} onDragEnd={handleDragEnd}>
+              {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full justify-items-stretch auto-rows-fr transition-all duration-300 ${isDragging ? 'scale-[0.98]' : 'scale-100'}`}>
+                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className={`justify-self-start w-full h-full transition-all duration-200 ${draggedItem?.item?.id === prompt.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'prompt', prompt)} onDragEnd={handleDragEnd}>
                           <PromptCard title={prompt.title} description={prompt.content} tags={prompt.tags} model={prompt.model} coverImage={prompt.coverImage} onClick={() => handlePromptClick(prompt)} />
-                        </div>) : filteredTools.map(tool => <div key={tool.id} className="justify-self-start w-full h-full" draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'tool', tool)} onDragEnd={handleDragEnd}>
+                        </div>) : filteredTools.map(tool => <div key={tool.id} className={`justify-self-start w-full h-full transition-all duration-200 ${draggedItem?.item?.id === tool.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'tool', tool)} onDragEnd={handleDragEnd}>
                           <ToolCard 
                             name={tool.name}
                             description={tool.description}
@@ -2685,7 +2833,7 @@ const KotoDashboard: React.FC = () => {
                     <button onClick={() => {
                   setTheme('system');
                 }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${theme === 'system' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
-                      <Settings className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" />
+                      <Monitor className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" />
                       <div className="text-sm font-medium text-slate-700 dark:text-slate-300">System</div>
                     </button>
                   </div>
@@ -2709,17 +2857,25 @@ const KotoDashboard: React.FC = () => {
                     
                     {backgroundImage && <div className="relative">
                         <img src={backgroundImage} alt="Background preview" className="w-full h-20 object-cover rounded-lg" />
-                        <button onClick={() => setBackgroundImage('')} className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors">
-                          <X className="w-3 h-3" />
-                        </button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button onClick={() => {
+                              setBackgroundImage('/koto-background-image.webp');
+                              localStorage.setItem('koto_background_image', '/koto-background-image.webp');
+                            }} className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors">
+                              <X className="w-3 h-3" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Remove background image</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>}
                     
                     {/* Save Button */}
                     <motion.button onClick={() => {
                   // Save the background image to the header and localStorage
-                  if (backgroundImage) {
-                    localStorage.setItem('koto_background_image', backgroundImage);
-                  }
+                  localStorage.setItem('koto_background_image', backgroundImage);
                   setShowSettingsDialog(false);
                 }} whileHover={{
                   scale: 1.02
@@ -2934,7 +3090,8 @@ const KotoDashboard: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </TooltipProvider>
   );
 };
 

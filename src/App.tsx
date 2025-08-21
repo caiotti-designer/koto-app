@@ -1,22 +1,12 @@
 import { useMemo } from 'react';
-import { Container, Theme } from './settings/types';
+import { Container } from './settings/types';
 import KotoDashboard from './components/generated/KotoDashboard';
 
 import { Toaster } from 'sonner';
 
-let theme: Theme = 'light';
 let container: Container = 'none';
 
 function App() {
-  function setTheme(theme: Theme) {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }
-
-  setTheme(theme);
 
   const generatedComponent = useMemo(() => {
     // THIS IS WHERE THE TOP LEVEL GENRATED COMPONENT WILL BE RETURNED!
