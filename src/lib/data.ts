@@ -120,6 +120,33 @@ export async function removeCover(publicUrl: string) {
   await supabase.storage.from('covers').remove([path]);
 }
 
+// Storage: avatar images
+export async function uploadAvatar(file: File, userId: string) {
+  const filePath = `${userId}/avatar_${Date.now()}_${file.name}`;
+  console.log('Uploading avatar to path:', filePath);
+  
+  const { error } = await supabase.storage.from('avatars').upload(filePath, file, {
+    cacheControl: '3600',
+    upsert: false,
+  });
+  if (error) {
+    console.error('Avatar upload error:', error);
+    throw error;
+  }
+  
+  const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+  console.log('Generated avatar URL:', data.publicUrl);
+  return data.publicUrl;
+}
+
+export async function removeAvatar(publicUrl: string) {
+  // Convert public URL to path: everything after /object/public/avatars/
+  const idx = publicUrl.indexOf('/object/public/avatars/');
+  if (idx === -1) return; // nothing to do
+  const path = publicUrl.substring(idx + '/object/public/avatars/'.length);
+  await supabase.storage.from('avatars').remove([path]);
+}
+
 // Prompts CRUD
 export async function fetchPrompts(userId?: string): Promise<PromptRow[]> {
   if (!userId) {
@@ -250,12 +277,21 @@ export async function fetchUserProfile(userId: string): Promise<UserProfile | nu
 }
 
 export async function updateUserProfile(userId: string, updates: Partial<UserProfile>): Promise<UserProfile | null> {
+  // Use upsert to create profile if it doesn't exist or update if it does
+  const profileData = {
+    id: userId,
+    ...updates
+  };
+
+  console.log('updateUserProfile called with:', { userId, updates, profileData });
+
   const { data, error } = await supabase
     .from('user_profiles')
-    .update(updates)
-    .eq('id', userId)
+    .upsert(profileData, { onConflict: 'id' })
     .select()
     .single();
+
+  console.log('Supabase upsert result:', { data, error });
 
   if (error) {
     console.error('Error updating user profile:', error);

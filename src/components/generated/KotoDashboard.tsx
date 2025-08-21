@@ -40,6 +40,7 @@ import {
   signInWithGitHub,
   signInWithGoogle,
   signOut as supaSignOut,
+  fetchUserProfile,
 } from '../../lib/data';
 import type { PromptRow, ToolRow } from '../../lib/data';
 interface Subcategory {
@@ -316,6 +317,7 @@ const KotoDashboard: React.FC = () => {
     item: Prompt | Tool;
   } | null>(null);
   const [user, setUser] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
 
   // New project form state
   const [newProjectName, setNewProjectName] = useState('');
@@ -348,9 +350,20 @@ const KotoDashboard: React.FC = () => {
   const [backgroundImage, setBackgroundImage] = useState(() => {
     // Load background image from localStorage if available, otherwise use default
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('koto_background_image') || '/koto-background-image.webp';
+      return localStorage.getItem('koto_background_image') || '/koto-background-image-default.webp';
     }
-    return '/koto-background-image.webp';
+    return '/koto-background-image-default.webp';
+  });
+  const [backgroundOption, setBackgroundOption] = useState<'default' | 'custom' | 'none'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('koto_background_option');
+      if (saved) return saved as 'default' | 'custom' | 'none';
+      const image = localStorage.getItem('koto_background_image');
+      if (!image || image === '/koto-background-image-default.webp') return 'default';
+      if (image === 'none') return 'none';
+      return 'custom';
+    }
+    return 'default';
   });
 
   // Reset all data to defaults for new user
@@ -517,6 +530,44 @@ const KotoDashboard: React.FC = () => {
       try { (sub as any)?.data?.subscription?.unsubscribe?.(); } catch {}
     };
   }, []);
+
+  // Load user profile when user changes
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      if (!user?.id) {
+        setUserProfile(null);
+        return;
+      }
+
+      try {
+        const profileData = await fetchUserProfile(user.id);
+        setUserProfile(profileData);
+      } catch (error) {
+        console.error('Error loading user profile:', error);
+      }
+    };
+
+    loadUserProfile();
+  }, [user]);
+
+  // Refresh user profile when window gains focus (user returns from profile settings)
+  useEffect(() => {
+    const handleFocus = async () => {
+      if (user?.id) {
+        try {
+          console.log('Refreshing user profile for user:', user.id);
+          const profileData = await fetchUserProfile(user.id);
+          console.log('Refreshed profile data:', profileData);
+          setUserProfile(profileData);
+        } catch (error) {
+          console.error('Error refreshing user profile:', error);
+        }
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [user?.id]);
 
   // Load data from Supabase when user is authenticated
   useEffect(() => {
@@ -927,11 +978,27 @@ return;
       reader.onload = e => {
         const imageData = e.target?.result as string;
         setBackgroundImage(imageData);
+        setBackgroundOption('custom');
         // Save to localStorage to persist across reloads
         localStorage.setItem('koto_background_image', imageData);
+        localStorage.setItem('koto_background_option', 'custom');
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleBackgroundOptionChange = (option: 'default' | 'custom' | 'none') => {
+    setBackgroundOption(option);
+    localStorage.setItem('koto_background_option', option);
+    
+    if (option === 'default') {
+      setBackgroundImage('/koto-background-image-default.webp');
+      localStorage.setItem('koto_background_image', '/koto-background-image-default.webp');
+    } else if (option === 'none') {
+      setBackgroundImage('none');
+      localStorage.setItem('koto_background_image', 'none');
+    }
+    // For 'custom', keep the current backgroundImage
   };
   const handleCoverImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -2130,11 +2197,17 @@ return;
         {/* Content Area */}
         <main className="flex-1 overflow-auto px-0">
           {/* Hero Section */}
-          <div className="relative h-64 overflow-hidden" style={{
-          backgroundImage: `url('${backgroundImage}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}>
+          <div className={`relative h-64 overflow-hidden ${
+            backgroundImage === 'none' 
+              ? 'border-b border-slate-200 dark:border-slate-700' 
+              : ''
+          }`} style={{
+            ...(backgroundImage !== 'none' && {
+              backgroundImage: `url('${backgroundImage}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            })
+          }}>
             
             {/* Unified Header Row moved inside content container below */}
 
@@ -2148,13 +2221,13 @@ return;
                 <div className="w-full flex items-stretch justify-between mb-6 h-14">
                   {/* Tabs */}
                   <div className="flex items-center">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-1 inline-flex h-full" style={{ display: 'flex', alignItems: 'center' }}>
-                    <div className="flex space-x-1" style={{ alignItems: 'center' }}>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-2 inline-flex" style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className="flex space-x-2" style={{ alignItems: 'center' }}>
                       <motion.button 
                         onClick={() => setActiveTab('prompts')} 
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all h-full ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                        className={`flex items-center space-x-2 px-6 py-4 rounded-xl text-sm font-medium transition-all ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                       >
                         <MessageSquare className="w-4 h-4" />
                         <span>Prompts</span>
@@ -2163,7 +2236,7 @@ return;
                         onClick={() => setActiveTab('toolbox')} 
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`flex items-center space-x-2 px-6 py-3 rounded-xl text-sm font-medium transition-all h-full ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                        className={`flex items-center space-x-2 px-6 py-4 rounded-xl text-sm font-medium transition-all ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                       >
                         <Wrench className="w-4 h-4" />
                         <span>Tool Box</span>
@@ -2181,11 +2254,31 @@ return;
                           whileTap={{ scale: 0.95 }} 
                           className="flex items-center space-x-3 pl-2 pr-4 py-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl transition-colors h-full"
                         >
-                          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
-                            <User className="w-5 h-5 text-white" />
+                          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center overflow-hidden">
+                            {userProfile?.avatar_url ? (
+                              <img 
+                                src={userProfile.avatar_url} 
+                                alt="Profile" 
+                                className="w-full h-full object-cover"
+                                onLoad={() => console.log('Avatar loaded successfully:', userProfile.avatar_url)}
+                                onError={(e) => {
+                                  console.error('Avatar failed to load:', userProfile.avatar_url, e);
+                                  console.log('Full userProfile:', userProfile);
+                                }}
+                              />
+                            ) : (
+                              <User className="w-5 h-5 text-white" />
+                            )}
                           </div>
                           <div className="text-left text-white">
-                            <div className="text-sm font-medium">{user ? (user.user_metadata?.name || user.email || 'Account') : 'Login'}</div>
+                            <div className="text-sm font-medium">
+                              {user ? (
+                                userProfile?.display_name || 
+                                user.user_metadata?.name || 
+                                user.email || 
+                                'Account'
+                              ) : 'Login'}
+                            </div>
                             <div className="text-xs text-white/80">{user ? 'Signed in' : 'Sign in to continue'}</div>
                           </div>
                         </motion.button>
@@ -2842,49 +2935,104 @@ return;
                 {/* Background Photo */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
-                    Change Background Photo
+                    Header Background
                   </label>
-                  <div className="space-y-3">
-                    <input type="file" accept="image/*" onChange={handleBackgroundUpload} className="hidden" id="background-upload" />
-                    <label htmlFor="background-upload" className="flex items-center justify-center w-full p-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:border-slate-400 dark:hover:border-slate-500 cursor-pointer transition-colors">
-                      <div className="text-center">
-                        <Upload className="w-6 h-6 mx-auto mb-2 text-slate-400" />
-                        <div className="text-sm text-slate-600 dark:text-slate-400">
-                          Click to upload photo
+                  <div className="space-y-4">
+                    {/* Background Options */}
+                    <div className="space-y-3">
+                      <div className="text-sm text-slate-600 dark:text-slate-400 mb-2">Choose background option:</div>
+                      
+                      {/* Default Background Option */}
+                      <label className="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">
+                        <input 
+                          type="radio" 
+                          name="backgroundOption" 
+                          value="default" 
+                          checked={backgroundOption === 'default'}
+                          onChange={() => handleBackgroundOptionChange('default')}
+                          className="text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <div className="flex-1">
+                          <div className="font-medium text-slate-700 dark:text-slate-300">Default Background</div>
+                          <div className="text-sm text-slate-500 dark:text-slate-400">Use the default Koto background image</div>
                         </div>
+                        <div className="w-12 h-8 rounded border border-slate-200 dark:border-slate-600 overflow-hidden">
+                          <img src="/koto-background-image-default.webp" alt="Default" className="w-full h-full object-cover" />
+                        </div>
+                      </label>
+                      
+                      {/* Custom Background Option */}
+                      <label className="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">
+                        <input 
+                          type="radio" 
+                          name="backgroundOption" 
+                          value="custom" 
+                          checked={backgroundOption === 'custom'}
+                          onChange={() => handleBackgroundOptionChange('custom')}
+                          className="text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <div className="flex-1">
+                          <div className="font-medium text-slate-700 dark:text-slate-300">Custom Background</div>
+                          <div className="text-sm text-slate-500 dark:text-slate-400">Upload your own background image</div>
+                        </div>
+                        {backgroundOption === 'custom' && backgroundImage !== 'none' && backgroundImage !== '/koto-background-image-default.webp' && (
+                          <div className="w-12 h-8 rounded border border-slate-200 dark:border-slate-600 overflow-hidden">
+                            <img src={backgroundImage} alt="Custom" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                      </label>
+                      
+                      {/* No Background Option */}
+                      <label className="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">
+                        <input 
+                          type="radio" 
+                          name="backgroundOption" 
+                          value="none" 
+                          checked={backgroundOption === 'none'}
+                          onChange={() => handleBackgroundOptionChange('none')}
+                          className="text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <div className="flex-1">
+                           <div className="font-medium text-slate-700 dark:text-slate-300">No Background</div>
+                           <div className="text-sm text-slate-500 dark:text-slate-400">Transparent background with bottom border</div>
+                         </div>
+                        <div className="w-12 h-8 rounded border border-slate-200 dark:border-slate-600 bg-transparent border-b-2 border-b-slate-300 dark:border-b-slate-600"></div>
+                      </label>
+                    </div>
+                    
+                    {/* Custom Upload Section */}
+                    {backgroundOption === 'custom' && (
+                      <div className="space-y-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                        <input type="file" accept="image/*" onChange={handleBackgroundUpload} className="hidden" id="background-upload" />
+                        <label htmlFor="background-upload" className="flex items-center justify-center w-full p-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:border-slate-400 dark:hover:border-slate-500 cursor-pointer transition-colors">
+                          <div className="text-center">
+                            <Upload className="w-6 h-6 mx-auto mb-2 text-slate-400" />
+                            <div className="text-sm text-slate-600 dark:text-slate-400">
+                              Click to upload custom photo
+                            </div>
+                            <div className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                              Recommended: 1920x512px, WebP or JPEG
+                            </div>
+                          </div>
+                        </label>
+                        
+                        {backgroundImage !== 'none' && backgroundImage !== '/koto-background-image-default.webp' && (
+                          <div className="relative">
+                            <img src={backgroundImage} alt="Background preview" className="w-full h-20 object-cover rounded-lg" />
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button onClick={() => handleBackgroundOptionChange('default')} className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors">
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Remove custom background</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        )}
                       </div>
-                    </label>
-                    
-                    {backgroundImage && <div className="relative">
-                        <img src={backgroundImage} alt="Background preview" className="w-full h-20 object-cover rounded-lg" />
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button onClick={() => {
-                              setBackgroundImage('/koto-background-image.webp');
-                              localStorage.setItem('koto_background_image', '/koto-background-image.webp');
-                            }} className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors">
-                              <X className="w-3 h-3" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Remove background image</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </div>}
-                    
-                    {/* Save Button */}
-                    <motion.button onClick={() => {
-                  // Save the background image to the header and localStorage
-                  localStorage.setItem('koto_background_image', backgroundImage);
-                  setShowSettingsDialog(false);
-                }} whileHover={{
-                  scale: 1.02
-                }} whileTap={{
-                  scale: 0.98
-                }} className="w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
-                      <Camera className="w-4 h-4" />
-                      <span>Save Background</span>
-                    </motion.button>
+                    )}
                   </div>
                 </div>
               </div>

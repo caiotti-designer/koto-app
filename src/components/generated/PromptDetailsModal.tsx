@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Edit2, Copy, Share2, Trash2, Camera, Tag, Plus, Check, ExternalLink, Download, Heart, Star, Bookmark } from 'lucide-react';
+import { X, Edit2, Copy, Share2, Trash2, Camera, Tag, Plus, Check, ExternalLink, Download, Heart, Star, Bookmark, ChevronDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -40,6 +40,7 @@ export default function PromptDetailsModal({
   const [isEditing, setIsEditing] = useState(false);
   const [editedPrompt, setEditedPrompt] = useState<Prompt | null>(null);
   const [newTagInput, setNewTagInput] = useState('');
+  const [customModel, setCustomModel] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
   React.useEffect(() => {
@@ -63,6 +64,9 @@ export default function PromptDetailsModal({
   }, [isOpen]);
   if (!prompt || !isOpen) return null;
   const handleEdit = () => {
+    setEditedPrompt({
+      ...prompt
+    });
     setIsEditing(true);
   };
   const handleSave = () => {
@@ -207,17 +211,46 @@ export default function PromptDetailsModal({
                     <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       Model
                     </Label>
-                    {isEditing ? <select value={editedPrompt?.model || ''} onChange={e => setEditedPrompt(prev => prev ? {
-                  ...prev,
-                  model: e.target.value
-                } : null)} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white">
-                        <option value="GPT-4">GPT-4</option>
-                        <option value="Claude">Claude</option>
-                        <option value="Midjourney">Midjourney</option>
-                        <option value="DALL-E">DALL-E</option>
-                        <option value="Writing">Writing</option>
-                        <option value="Coding">Coding</option>
-                      </select> : <span className="inline-flex items-center px-3 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium">
+                    {isEditing ? <div className="space-y-2">
+                         <div className="relative">
+                           <select value={!['GPT-4', 'Claude', 'Midjourney', 'DALL-E', 'Writing', 'Coding'].includes(editedPrompt?.model || '') ? 'custom' : editedPrompt?.model || ''} onChange={e => {
+                              if (e.target.value === 'custom') {
+                                setCustomModel(editedPrompt?.model || '');
+                              } else {
+                                setEditedPrompt(prev => prev ? {
+                                  ...prev,
+                                  model: e.target.value
+                                } : null);
+                                setCustomModel('');
+                              }
+                            }} className="w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white appearance-none">
+                             <option value="GPT-4">GPT-4</option>
+                             <option value="Claude">Claude</option>
+                             <option value="Midjourney">Midjourney</option>
+                             <option value="DALL-E">DALL-E</option>
+                             <option value="Writing">Writing</option>
+                             <option value="Coding">Coding</option>
+                             <option value="custom">Custom Model...</option>
+                           </select>
+                           <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                         </div>
+                         {(!['GPT-4', 'Claude', 'Midjourney', 'DALL-E', 'Writing', 'Coding'].includes(editedPrompt?.model || '') || customModel) && (
+                           <Input
+                             type="text"
+                             value={customModel || editedPrompt?.model || ''}
+                             onChange={e => {
+                               const value = e.target.value;
+                               setCustomModel(value);
+                               setEditedPrompt(prev => prev ? {
+                                 ...prev,
+                                 model: value
+                               } : null);
+                             }}
+                             placeholder="Enter custom model name"
+                             className="w-full px-3 py-2 text-sm"
+                           />
+                         )}
+                       </div> : <span className="inline-flex items-center px-3 py-1.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium">
                         {prompt.model}
                       </span>}
                   </div>
