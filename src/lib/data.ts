@@ -1,4 +1,5 @@
 import supabase from './supabaseClient';
+import type { User } from '@supabase/supabase-js';
 
 // Types
 export interface UserProfile {
@@ -85,7 +86,7 @@ export async function signOut() {
   if (error) throw error;
 }
 
-export function onAuthChange(cb: (user: any) => void) {
+export function onAuthChange(cb: (user: User | null) => void) {
   // Get current user immediately
   supabase.auth.getUser().then(({ data, error }) => {
     cb(data.user);

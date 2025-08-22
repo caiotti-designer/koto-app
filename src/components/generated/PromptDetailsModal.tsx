@@ -136,7 +136,7 @@ export default function PromptDetailsModal({
     }
   };
   return <AnimatePresence>
-      {isOpen && <motion.div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{
+      {isOpen && <motion.div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4" initial={{
       opacity: 0
     }} animate={{
       opacity: 1
@@ -326,18 +326,18 @@ export default function PromptDetailsModal({
             </div>
 
             {/* Footer Actions */}
-            <div className="border-t border-slate-200 dark:border-slate-700 p-6">
-              <div className="flex items-center justify-between">
+            <div className="relative border-t border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-800 z-50">
+              <div className="flex items-center justify-between gap-4">
                 {/* Left Actions */}
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-2 flex-wrap">
                   {!isEditing && <>
                       <motion.button onClick={handleCopy} whileHover={{
                   scale: 1.05
                 }} whileTap={{
                   scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
+                }} className="relative z-10 flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg transition-colors text-sm">
                         {copySuccess ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                        <span className="text-sm font-medium">
+                        <span className="font-medium">
                           {copySuccess ? 'Copied!' : 'Copy'}
                         </span>
                       </motion.button>
@@ -346,48 +346,48 @@ export default function PromptDetailsModal({
                   scale: 1.05
                 }} whileTap={{
                   scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
+                }} className="relative z-10 flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg transition-colors text-sm">
                         <Share2 className="w-4 h-4" />
-                        <span className="text-sm font-medium">Share</span>
+                        <span className="font-medium">Share</span>
                       </motion.button>
                     </>}
                 </div>
 
                 {/* Right Actions */}
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-2 flex-wrap">
                   {!isEditing ? <>
                       <motion.button onClick={handleEdit} whileHover={{
                   scale: 1.05
                 }} whileTap={{
                   scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                }} className="relative z-10 flex items-center gap-2 px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors text-sm">
                         <Edit2 className="w-4 h-4" />
-                        <span className="text-sm font-medium">Edit</span>
+                        <span className="font-medium">Edit</span>
                       </motion.button>
                       
                       <motion.button onClick={() => setShowDeleteConfirm(true)} whileHover={{
                   scale: 1.05
                 }} whileTap={{
                   scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors">
+                }} className="relative z-10 flex items-center gap-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm">
                         <Trash2 className="w-4 h-4" />
-                        <span className="text-sm font-medium">Delete</span>
+                        <span className="font-medium">Delete</span>
                       </motion.button>
                      </> : <>
                       <motion.button onClick={handleCancel} whileHover={{
                   scale: 1.05
                 }} whileTap={{
                   scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
-                        <span className="text-sm font-medium">Cancel</span>
+                }} className="relative z-10 flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg transition-colors text-sm">
+                        <span className="font-medium">Cancel</span>
                       </motion.button>
                       
                       <motion.button onClick={handleSave} whileHover={{
                   scale: 1.05
                 }} whileTap={{
                   scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
-                        <span className="text-sm font-medium">Save Changes</span>
+                }} className="relative z-10 flex items-center gap-2 px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors text-sm">
+                        <span className="font-medium">Save Changes</span>
                       </motion.button>
                     </>}
                 </div>

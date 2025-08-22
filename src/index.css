@@ -17,6 +17,32 @@ body {
   font-family: 'Space Grotesk', sans-serif;
 }
 
+/* Ensure toast notifications are visible on mobile */
+[data-sonner-toaster] {
+  z-index: 999999 !important;
+}
+
+[data-sonner-toast] {
+  z-index: 999999 !important;
+  max-width: 90vw !important;
+}
+
+/* Mobile-specific toast positioning */
+@media (max-width: 768px) {
+  [data-sonner-toaster] {
+    top: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: auto !important;
+    max-width: 90vw !important;
+  }
+  
+  [data-sonner-toast] {
+    margin: 0 auto !important;
+    max-width: 90vw !important;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

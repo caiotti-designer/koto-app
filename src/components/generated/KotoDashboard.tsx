@@ -1796,7 +1796,7 @@ return;
                          
                          // Save to localStorage for persistence
                          localStorage.setItem(
-                           activeTab === 'prompts' ? 'koto_prompt_categories' : 'koto_tool_categories',
+                           activeTab === 'prompts' ? 'koto_categories' : 'koto_tool_categories',
                            JSON.stringify(newCategories)
                          );
                          

@@ -1,11 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { Menu, Globe, MessageSquare, Wrench, User as UserIcon, ExternalLink, Plus, FolderPlus, Folder, X, Edit2, Share2, Trash2, Check, ChevronDown, Settings, Sun, Moon, Monitor, Upload, Copy } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, Globe, MessageSquare, Wrench, User, ExternalLink, Plus, FolderPlus, Folder, X, Edit2, Share2, Trash2, Check, ChevronDown, Settings, Sun, Moon, Monitor, Upload } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { Button } from './ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
+import Logo from './Logo';
 import supabase from '../lib/supabaseClient';
+import type { User } from '@supabase/supabase-js';
 import {
   fetchPrompts,
   fetchTools,
@@ -31,6 +34,7 @@ import NewPromptDialog from './generated/NewPromptDialog';
 import NewToolDialog from './generated/NewToolDialog';
 import NewProjectDialog from './generated/NewProjectDialog';
 import ProjectsDrawer from './mobile/ProjectsDrawer';
+import StorageDebugger from './StorageDebugger';
 import { toast } from 'sonner';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -56,7 +60,7 @@ interface Tool {
 
 const MobileDashboard: React.FC = () => {
   const { theme, setTheme, actualTheme } = useTheme();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [prompts, setPrompts] = useState<PromptRow[]>([]);
   const [tools, setTools] = useState<ToolRow[]>([]);
@@ -67,6 +71,7 @@ const MobileDashboard: React.FC = () => {
   
   // Settings dialog state
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  const [showStorageDebugger, setShowStorageDebugger] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('koto_background_image') || '/koto-background-image-default.webp';
@@ -190,11 +195,16 @@ const MobileDashboard: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
-        <div className="text-center max-w-sm w-full">
-          <div className="mb-8">
+      <div className="h-screen w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center transition-colors duration-300 px-4" style={{
+        fontFamily: 'Space Grotesk, sans-serif'
+      }}>
+        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 w-full max-w-md shadow-2xl border border-white/20">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Logo size="lg" className="text-white" />
+            </div>
             <h1 className="text-3xl font-bold text-white mb-2">Welcome to Koto</h1>
-            <p className="text-slate-400">Sign in to access your prompts and tools</p>
+            <p className="text-white/80">Sign in to access your personal workspace</p>
           </div>
           
           <div className="space-y-4">
@@ -209,12 +219,12 @@ const MobileDashboard: React.FC = () => {
               }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center gap-3 bg-gray-900 hover:bg-gray-800 text-white px-6 py-4 rounded-xl transition-colors border border-gray-700"
+              className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-medium transition-colors"
             >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clipRule="evenodd" />
               </svg>
-              Sign in with GitHub
+              <span>Continue with GitHub</span>
             </motion.button>
             
             <motion.button
@@ -228,7 +238,7 @@ const MobileDashboard: React.FC = () => {
               }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-900 px-6 py-4 rounded-xl transition-colors border border-gray-200"
+              className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-white hover:bg-gray-50 text-gray-900 rounded-xl font-medium transition-colors"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -236,13 +246,15 @@ const MobileDashboard: React.FC = () => {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Sign in with Google
+              <span>Continue with Google</span>
             </motion.button>
           </div>
           
-          <p className="text-xs text-slate-500 mt-6">
-            By signing in, you agree to our terms of service and privacy policy.
-          </p>
+          <div className="mt-6 text-center">
+            <p className="text-white/60 text-sm">
+              Create your account to save prompts, organize tools, and share your workspace
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -291,7 +303,7 @@ const MobileDashboard: React.FC = () => {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                        <User className="w-4 h-4 text-white" />
+                        <UserIcon className="w-4 h-4 text-white" />
                       </div>
                     )}
                   </div>
@@ -484,11 +496,52 @@ const MobileDashboard: React.FC = () => {
               const shareToken = await sharePrompt(prompt.id);
               if (shareToken) {
                 const shareUrl = `${window.location.origin}/shared/prompt?token=${shareToken}`;
-                await navigator.clipboard.writeText(shareUrl);
-                toast.success('Share link copied to clipboard!', {
-                  description: 'Anyone with this link can view your prompt',
-                  duration: 3000,
-                });
+                
+                // Try native Web Share API first (mobile-friendly)
+                if (navigator.share && /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                  try {
+                    await navigator.share({
+                      title: prompt.title,
+                      text: `Check out this prompt: ${prompt.title}`,
+                      url: shareUrl,
+                    });
+                    return;
+                  } catch (shareError) {
+                    // Fall back to clipboard if native share fails
+                    console.log('Native share failed, falling back to clipboard');
+                  }
+                }
+                
+                // Fallback to clipboard API
+                try {
+                  await navigator.clipboard.writeText(shareUrl);
+                  toast.success('Share link copied to clipboard!', {
+                    description: 'Anyone with this link can view your prompt',
+                    duration: 3000,
+                  });
+                } catch (clipboardError) {
+                  // Final fallback: create a temporary text area for older browsers
+                  const textArea = document.createElement('textarea');
+                  textArea.value = shareUrl;
+                  textArea.style.position = 'fixed';
+                  textArea.style.left = '-999999px';
+                  textArea.style.top = '-999999px';
+                  document.body.appendChild(textArea);
+                  textArea.focus();
+                  textArea.select();
+                  try {
+                    document.execCommand('copy');
+                    toast.success('Share link copied to clipboard!', {
+                      description: 'Anyone with this link can view your prompt',
+                      duration: 3000,
+                    });
+                  } catch (execError) {
+                    // Show the URL in a prompt as last resort
+                    window.prompt(`Copy this link to share: ${shareUrl}`);
+                  } finally {
+                    document.body.removeChild(textArea);
+                  }
+                }
               }
             } catch (error) {
               console.error('Failed to share prompt', error);
@@ -542,11 +595,52 @@ const MobileDashboard: React.FC = () => {
               const shareToken = await shareTool(tool.id);
               if (shareToken) {
                 const shareUrl = `${window.location.origin}/shared/tool?token=${shareToken}`;
-                await navigator.clipboard.writeText(shareUrl);
-                toast.success('Share link copied to clipboard!', {
-                  description: 'Anyone with this link can view your tool',
-                  duration: 3000,
-                });
+                
+                // Try native Web Share API first (mobile-friendly)
+                if (navigator.share && /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                  try {
+                    await navigator.share({
+                      title: tool.name,
+                      text: `Check out this tool: ${tool.name}`,
+                      url: shareUrl,
+                    });
+                    return;
+                  } catch (shareError) {
+                    // Fall back to clipboard if native share fails
+                    console.log('Native share failed, falling back to clipboard');
+                  }
+                }
+                
+                // Fallback to clipboard API
+                try {
+                  await navigator.clipboard.writeText(shareUrl);
+                  toast.success('Share link copied to clipboard!', {
+                    description: 'Anyone with this link can view your tool',
+                    duration: 3000,
+                  });
+                } catch (clipboardError) {
+                  // Final fallback: create a temporary text area for older browsers
+                  const textArea = document.createElement('textarea');
+                  textArea.value = shareUrl;
+                  textArea.style.position = 'fixed';
+                  textArea.style.left = '-999999px';
+                  textArea.style.top = '-999999px';
+                  document.body.appendChild(textArea);
+                  textArea.focus();
+                  textArea.select();
+                  try {
+                    document.execCommand('copy');
+                    toast.success('Share link copied to clipboard!', {
+                      description: 'Anyone with this link can view your tool',
+                      duration: 3000,
+                    });
+                  } catch (execError) {
+                    // Show the URL in a prompt as last resort
+                    prompt(`Copy this link to share: ${shareUrl}`);
+                  } finally {
+                    document.body.removeChild(textArea);
+                  }
+                }
               }
             } catch (error) {
               console.error('Failed to share tool', error);
@@ -609,7 +703,7 @@ const MobileDashboard: React.FC = () => {
                       className="w-full flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700 transition-colors text-left"
                       whileHover={{ x: 4 }}
                     >
-                      <User className="w-5 h-5" />
+                      <UserIcon className="w-5 h-5" />
                       <span>Profile Settings</span>
                     </motion.button>
                     
@@ -864,6 +958,11 @@ const MobileDashboard: React.FC = () => {
           }}
         />
 
+        {/* Storage Debugger */}
+        {showStorageDebugger && (
+          <StorageDebugger />
+        )}
+
         {/* Settings Dialog */}
         <AnimatePresence>
           {showSettingsDialog && (
@@ -1035,6 +1134,21 @@ const MobileDashboard: React.FC = () => {
                     </div>
 
 
+                  </div>
+
+                  {/* Debug Storage Button */}
+                  <div className="mb-6">
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Debug Tools</h3>
+                    <button
+                      onClick={() => {
+                        setShowStorageDebugger(true);
+                        setShowSettingsDialog(false);
+                      }}
+                      className="w-full px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Settings className="w-4 h-4" />
+                      Debug Storage
+                    </button>
                   </div>
 
                   {/* Close Button */}
@@ -1251,6 +1365,7 @@ interface ToolDetailsModalProps {
 const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClose, onEdit, onDelete, onShare }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTool, setEditedTool] = useState<Tool | null>(null);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
     if (tool) {
@@ -1276,6 +1391,16 @@ const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClo
   const handleCancel = () => {
     setEditedTool({ ...tool });
     setIsEditing(false);
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(tool.url);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy URL: ', err);
+    }
   };
 
   const handleShare = () => {
@@ -1305,21 +1430,44 @@ const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClo
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="relative p-6 border-b border-slate-200 dark:border-slate-700">
-              <h2 className="text-xl font-semibold text-slate-900 dark:text-white pr-12">{tool.name}</h2>
-              <motion.button
-                onClick={onClose}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="absolute top-4 right-4 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-white border border-slate-200 dark:border-slate-600"
-                aria-label="Close"
-              >
-                <X className="w-5 h-5" />
-              </motion.button>
+            <div className="relative bg-gradient-to-br from-indigo-500 to-purple-600 p-8">
+              <div className="flex items-center space-x-4">
+                {tool.favicon && <img src={tool.favicon} alt={`${tool.name} favicon`} className="w-12 h-12 rounded-xl bg-white p-2" onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }} />}
+                <div className="flex-1">
+                  {isEditing ? (
+                    <input 
+                      type="text" 
+                      value={editedTool?.name || ''} 
+                      onChange={(e) => setEditedTool(prev => prev ? {
+                        ...prev,
+                        name: e.target.value
+                      } : null)} 
+                      className="text-2xl font-bold bg-white/20 backdrop-blur-sm text-white placeholder-white/70 border-0 rounded-lg px-3 py-2 w-full" 
+                    />
+                  ) : (
+                    <h1 className="text-2xl font-bold text-white">{tool.name}</h1>
+                  )}
+                  <p className="text-white/80 text-sm mt-1">{tool.category}</p>
+                </div>
+              </div>
+
+              {/* Header Actions - Only Close Button */}
+              <div className="absolute top-4 right-4">
+                <motion.button
+                  onClick={onClose}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </motion.button>
+              </div>
             </div>
 
             {/* Content */}
-            <div className="p-6 overflow-y-auto flex-1 space-y-5">
+            <div className="p-8 overflow-y-auto max-h-[calc(90vh-16rem)] space-y-6">
               {/* URL */}
               <div>
                 <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">URL</Label>
@@ -1377,24 +1525,70 @@ const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClo
             </div>
 
             {/* Footer Actions */}
-            <div className="p-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-              <div className="flex items-center gap-2">
+            <div className="border-t border-slate-200 dark:border-slate-700 px-6 py-4 bg-white dark:bg-slate-800" style={{marginTop: '16px'}}>
+              <div className="flex items-center justify-end space-x-3 flex-wrap gap-2">
                 {!isEditing ? (
                   <>
-                    <Button variant="ghost" onClick={handleEdit} className="gap-2"><Edit2 className="w-4 h-4" /> Edit</Button>
-                    <Button variant="ghost" onClick={handleShare} className="gap-2"><Share2 className="w-4 h-4" /> Share</Button>
-                    <Button variant="ghost" onClick={handleDelete} className="gap-2 text-red-500 hover:text-red-400"><Trash2 className="w-4 h-4" /> Delete</Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button onClick={handleCopy} variant="outline" size="sm" className="h-9 px-4">
+                          {copySuccess ? <Check className="w-4 h-4 mr-1" /> : <Copy className="w-4 h-4 mr-1" />}
+                          {copySuccess ? 'Copied!' : 'Copy URL'}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Copy tool URL to clipboard</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button onClick={handleShare} variant="outline" size="sm" className="h-9 px-4">
+                          <Share2 className="w-4 h-4 mr-1" />
+                          Share
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Share tool with others</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    
+                    <motion.button onClick={handleEdit} whileHover={{
+                scale: 1.05
+              }} whileTap={{
+                scale: 0.95
+              }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                      <Edit2 className="w-4 h-4" />
+                      <span className="text-sm font-medium">Edit</span>
+                    </motion.button>
+                    
+                    <motion.button onClick={handleDelete} whileHover={{
+                scale: 1.05
+              }} whileTap={{
+                scale: 0.95
+              }} className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors">
+                      <Trash2 className="w-4 h-4" />
+                      <span className="text-sm font-medium">Delete</span>
+                    </motion.button>
                   </>
                 ) : (
                   <>
-                    <Button onClick={handleSave} className="gap-2"><Check className="w-4 h-4" /> Save</Button>
-                    <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
+                    <motion.button onClick={handleCancel} whileHover={{
+                scale: 1.05
+              }} whileTap={{
+                scale: 0.95
+              }} className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
+                      <span className="text-sm font-medium">Cancel</span>
+                    </motion.button>
+                    
+                    <motion.button onClick={handleSave} whileHover={{
+                scale: 1.05
+              }} whileTap={{
+                scale: 0.95
+              }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                      <span className="text-sm font-medium">Save Changes</span>
+                    </motion.button>
                   </>
-                )}
-              </div>
-              <div>
-                {!isEditing && (
-                  <a href={tool.url} target="_blank" rel="noreferrer" className="text-sm text-indigo-500 hover:underline">Open</a>
                 )}
               </div>
             </div>

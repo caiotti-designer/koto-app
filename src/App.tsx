@@ -19,7 +19,7 @@ function App() {
         <div className="h-full w-full flex flex-col items-center justify-center">
           {generatedComponent}
         </div>
-        <Toaster position="top-right" richColors />
+        <Toaster position="top-center" richColors />
       </>
     );
   } else {
@@ -29,7 +29,7 @@ function App() {
     
         </div>
         {generatedComponent}
-        <Toaster position="top-right" richColors />
+        <Toaster position="top-center" richColors />
       </>
     );
   }
