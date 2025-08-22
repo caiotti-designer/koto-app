@@ -22,6 +22,7 @@ import {
   onAuthChange,
   type UserProfile
 } from '../lib/data';
+import { toast } from 'sonner';
 
 const ProfileSettings: React.FC = () => {
   const navigate = useNavigate();
@@ -93,16 +94,17 @@ const ProfileSettings: React.FC = () => {
       console.log('Updated profile result:', updatedProfile);
       if (updatedProfile) {
         setProfile(updatedProfile);
+        toast.success('Profile saved successfully');
         console.log('Profile saved successfully, navigating to dashboard');
         // Show success feedback and navigate back
          navigate('/');
       } else {
         console.error('updateUserProfile returned null');
-        alert('Failed to save profile. Please try again.');
+        toast.error('Failed to save profile. Please try again.');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Failed to save profile. Please check the console for details.');
+      toast.error('Failed to save profile. Please check the console for details.');
     } finally {
       setSaving(false);
     }
@@ -130,13 +132,13 @@ const ProfileSettings: React.FC = () => {
     if (file) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+        toast.error('Please select an image file');
         return;
       }
       
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert('File size must be less than 5MB');
+        toast.error('File size must be less than 5MB');
         return;
       }
       
@@ -170,13 +172,14 @@ const ProfileSettings: React.FC = () => {
           
           // Update the avatar_url with the uploaded file URL
           handleInputChange('avatar_url', avatarUrl);
+          toast.success('Avatar updated');
           
           // Clear the file state since it's now uploaded
           setAvatarFile(null);
           
         } catch (error) {
           console.error('Error auto-uploading avatar:', error);
-          alert('Failed to upload avatar. Please try again.');
+          toast.error('Failed to upload avatar. Please try again.');
         } finally {
           setUploadingAvatar(false);
         }
@@ -203,6 +206,7 @@ const ProfileSettings: React.FC = () => {
       
       // Update the avatar_url with the uploaded file URL
       handleInputChange('avatar_url', avatarUrl);
+      toast.success('Avatar updated');
       
       // Clear the file state
       setAvatarFile(null);
@@ -210,7 +214,7 @@ const ProfileSettings: React.FC = () => {
       
     } catch (error) {
       console.error('Error uploading avatar:', error);
-      alert('Failed to upload avatar. Please try again.');
+      toast.error('Failed to upload avatar. Please try again.');
     } finally {
       setUploadingAvatar(false);
     }
@@ -227,6 +231,7 @@ const ProfileSettings: React.FC = () => {
     setAvatarFile(null);
     setAvatarPreview('');
     handleInputChange('avatar_url', '');
+    toast.success('Avatar removed');
   };
 
   if (loading) {
@@ -238,10 +243,10 @@ const ProfileSettings: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20">
+    <div className="max-w-7xl mx-auto p-4 sm:p-6">
+      <div className="bg-white/10 backdrop-blur-lg rounded-none sm:rounded-3xl border-0 sm:border border-white/20 min-h-[100svh] flex flex-col">
         {/* Header */}
-        <div className="p-8 border-b border-white/10">
+        <div className="sticky top-0 z-10 px-4 py-4 sm:p-8 border-b border-white/10 bg-slate-900/30 backdrop-blur">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center">
@@ -261,8 +266,8 @@ const ProfileSettings: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-8">
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div className="px-4 py-4 sm:p-8 pb-28 sm:pb-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-8">
             {/* Profile Information */}
             <div className="xl:col-span-2 space-y-8">
               <div>
@@ -273,11 +278,11 @@ const ProfileSettings: React.FC = () => {
             
                 <div className="space-y-4">
                   {/* Avatar Section */}
-                  <div className="bg-white/5 rounded-2xl p-6">
+                  <div className="bg-white/5 rounded-2xl p-4 sm:p-6">
                     <label className="block text-sm font-medium text-white/80 mb-4">
                       Profile Picture
                     </label>
-                    <div className="flex items-start space-x-6">
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
                       <div className="flex-shrink-0">
                         {(avatarPreview || formData.avatar_url) ? (
                           <img 
@@ -293,7 +298,7 @@ const ProfileSettings: React.FC = () => {
                       </div>
                       
                       <div className="flex-1 space-y-4">
-                        <div className="flex items-center space-x-3">
+                        <div className="flex flex-wrap items-center gap-3">
                           <label className={`cursor-pointer ${uploadingAvatar ? 'opacity-50 pointer-events-none' : ''}`}>
                             <input
                               type="file"
@@ -302,7 +307,7 @@ const ProfileSettings: React.FC = () => {
                               className="hidden"
                               disabled={uploadingAvatar}
                             />
-                            <div className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-white text-sm font-medium transition-colors">
+                            <div className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-white text-sm font-medium transition-colors min-h-[44px]">
                               {uploadingAvatar ? (
                                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                               ) : (
@@ -315,7 +320,7 @@ const ProfileSettings: React.FC = () => {
                           {(avatarPreview || formData.avatar_url) && (
                             <button
                               onClick={handleRemoveAvatar}
-                              className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 rounded-xl text-sm font-medium transition-colors"
+                              className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 rounded-xl text-sm font-medium transition-colors min-h-[44px]"
                             >
                               Remove
                             </button>
@@ -332,7 +337,7 @@ const ProfileSettings: React.FC = () => {
                   {/* Username and Display Name - Side by Side */}
                   <div className="flex flex-wrap gap-4">
                     {/* Username */}
-                    <div className="flex-1 min-w-0 bg-white/5 rounded-2xl p-6">
+                    <div className="flex-1 min-w-0 bg-white/5 rounded-2xl p-4 sm:p-6">
                       <label className="block text-sm font-medium text-white/80 mb-3">
                         Username
                       </label>
@@ -349,7 +354,7 @@ const ProfileSettings: React.FC = () => {
                     </div>
 
                     {/* Display Name */}
-                    <div className="flex-1 min-w-0 bg-white/5 rounded-2xl p-6">
+                    <div className="flex-1 min-w-0 bg-white/5 rounded-2xl p-4 sm:p-6">
                       <label className="block text-sm font-medium text-white/80 mb-3">
                         Display Name
                       </label>
@@ -364,7 +369,7 @@ const ProfileSettings: React.FC = () => {
                   </div>
 
                   {/* Bio */}
-                  <div className="bg-white/5 rounded-2xl p-6">
+                  <div className="bg-white/5 rounded-2xl p-4 sm:p-6">
                     <label className="block text-sm font-medium text-white/80 mb-3">
                       Bio
                     </label>
@@ -382,14 +387,14 @@ const ProfileSettings: React.FC = () => {
 
             {/* Privacy & Sharing Sidebar */}
             <div className="xl:col-span-1">
-              <div className="sticky top-8">
+              <div className="xl:sticky xl:top-8">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
                   <Globe className="w-5 h-5 mr-2" />
                   Privacy & Sharing
                 </h2>
                 
                 {/* Public Profile Toggle */}
-                <div className="bg-white/5 rounded-2xl p-6">
+                <div className="bg-white/5 rounded-2xl p-4 sm:p-6">
                   <div className="space-y-6">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-3">
@@ -487,8 +492,8 @@ const ProfileSettings: React.FC = () => {
           </div>
         </div>
 
-        {/* Save Button */}
-        <div className="p-8">
+        {/* Save Button (desktop/tablet) */}
+        <div className="hidden sm:block p-8">
           <div className="flex justify-end pt-6 border-t border-white/10">
             <motion.button
               onClick={handleSave}
@@ -501,6 +506,20 @@ const ProfileSettings: React.FC = () => {
               <span>{saving ? 'Saving...' : 'Save Changes'}</span>
             </motion.button>
           </div>
+        </div>
+
+        {/* Mobile action bar */}
+        <div className="sm:hidden fixed inset-x-0 bottom-0 z-20 px-4 pb-[env(safe-area-inset-bottom)] pt-3 border-t border-white/10 bg-slate-900/60 backdrop-blur">
+          <motion.button
+            onClick={handleSave}
+            disabled={saving}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full flex items-center justify-center space-x-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl font-medium transition-colors"
+          >
+            <Save className={`w-4 h-4 ${saving ? 'animate-pulse' : ''}`} />
+            <span>{saving ? 'Saving...' : 'Save Changes'}</span>
+          </motion.button>
         </div>
       </div>
     </div>

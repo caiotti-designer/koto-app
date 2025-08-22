@@ -9,11 +9,23 @@ import { ThemeProvider } from './contexts/ThemeContext.tsx';
 import AuthCallback from './auth/callback.tsx';
 import SharedView from './components/SharedView.tsx';
 import ProfileSettings from './components/ProfileSettings.tsx';
+import MobileDashboard from './components/MobileDashboard.tsx';
+import { useIsMobile } from './hooks/use-mobile.ts';
+
+// Responsive root: choose mobile or desktop based on screen width
+function RootResponsive() {
+  const isMobile = useIsMobile();
+  return isMobile ? <MobileDashboard /> : <App />;
+}
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <RootResponsive />, // Responsive: mobile on small screens, desktop otherwise
+  },
+  {
+    path: '/app',
+    element: <App />, // Direct access to desktop UI
   },
   {
     path: '/auth/callback',
@@ -34,6 +46,10 @@ const router = createBrowserRouter([
   {
     path: '/settings/profile',
     element: <ProfileSettings />,
+  },
+  {
+    path: '/mobile',
+    element: <MobileDashboard />, // Optional: force mobile view
   },
 ]);
 

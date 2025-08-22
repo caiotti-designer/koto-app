@@ -65,9 +65,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   }, {
     id: 'darkmode',
     label: darkMode ? 'Light Mode' : 'Dark Mode',
-    icon: darkMode ? () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    icon: darkMode ? () => <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-      </svg> : () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      </svg> : () => <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
       </svg>,
     onClick: onToggleDarkMode
@@ -103,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             size="icon" 
             onClick={mobileMenuOpen ? onCloseMobileMenu : onToggleCollapse}
           >
-            {mobileMenuOpen ? <ChevronLeft className="w-5 h-5 text-gray-600" /> : collapsed ? <ChevronRight className="w-5 h-5 text-gray-600" /> : <ChevronLeft className="w-5 h-5 text-gray-600" />}
+            {mobileMenuOpen ? <ChevronLeft className="w-4.5 h-4.5 text-gray-600" /> : collapsed ? <ChevronRight className="w-4.5 h-4.5 text-gray-600" /> : <ChevronLeft className="w-4.5 h-4.5 text-gray-600" />}
           </Button>
         </div>
       </div>
@@ -115,9 +115,9 @@ const Sidebar: React.FC<SidebarProps> = ({
             key={item.id} 
             variant={activeTab === item.tab ? "default" : "ghost"} 
             onClick={() => onTabChange(item.tab)} 
-            className={`w-full justify-start space-x-3 h-auto py-3 ${activeTab === item.tab ? 'bg-indigo-50 text-indigo-600 border border-indigo-200' : 'text-gray-700'}`}
+            className={`w-full justify-start space-x-2 h-auto py-3 ${activeTab === item.tab ? 'bg-indigo-50 text-indigo-600 border border-indigo-200' : 'text-gray-700'}`}
           >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
+              <item.icon className="w-4.5 h-4.5 flex-shrink-0" />
               <AnimatePresence mode="wait">
                 {(!collapsed || mobileMenuOpen) && <motion.span initial={{
               opacity: 0,
@@ -162,9 +162,9 @@ const Sidebar: React.FC<SidebarProps> = ({
           {bottomItems.map(item => <Button 
             key={item.id} 
             variant="ghost" 
-            className="w-full justify-start space-x-3 h-auto py-3 text-gray-700"
+            className="w-full justify-start space-x-2 h-auto py-3 text-gray-700"
           >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
+              <item.icon className="w-4.5 h-4.5 flex-shrink-0" />
               <AnimatePresence mode="wait">
                 {(!collapsed || mobileMenuOpen) && <motion.span initial={{
               opacity: 0,

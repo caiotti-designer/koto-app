@@ -1601,37 +1601,39 @@ return;
                         </TooltipContent>
                       </Tooltip>
                       
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button onClick={handleEdit} variant="default" size="sm" className="h-9 px-4">
-                            <Edit2 className="w-4 h-4 mr-1" />
-                            Edit
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Edit tool details</p>
-                        </TooltipContent>
-                      </Tooltip>
+                      <motion.button onClick={handleEdit} whileHover={{
+                  scale: 1.05
+                }} whileTap={{
+                  scale: 0.95
+                }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                        <Edit2 className="w-4 h-4" />
+                        <span className="text-sm font-medium">Edit</span>
+                      </motion.button>
                       
-                      <Tooltip>
-                         <TooltipTrigger asChild>
-                           <Button onClick={() => setShowDeleteConfirm(true)} variant="destructive" size="sm" className="h-9 px-4">
-                             <Trash2 className="w-4 h-4 mr-1" />
-                             Delete
-                           </Button>
-                         </TooltipTrigger>
-                         <TooltipContent>
-                           <p>Delete this tool</p>
-                         </TooltipContent>
-                       </Tooltip>
+                      <motion.button onClick={() => setShowDeleteConfirm(true)} whileHover={{
+                  scale: 1.05
+                }} whileTap={{
+                  scale: 0.95
+                }} className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors">
+                        <Trash2 className="w-4 h-4" />
+                        <span className="text-sm font-medium">Delete</span>
+                      </motion.button>
                      </> : <>
-                      <Button onClick={handleCancel} variant="ghost" size="sm" className="h-9 px-4">
-                        Cancel
-                      </Button>
+                      <motion.button onClick={handleCancel} whileHover={{
+                  scale: 1.05
+                }} whileTap={{
+                  scale: 0.95
+                }} className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
+                        <span className="text-sm font-medium">Cancel</span>
+                      </motion.button>
                       
-                      <Button onClick={handleSave} variant="default" size="sm" className="h-9 px-4">
-                        Save Changes
-                      </Button>
+                      <motion.button onClick={handleSave} whileHover={{
+                  scale: 1.05
+                }} whileTap={{
+                  scale: 0.95
+                }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                        <span className="text-sm font-medium">Save Changes</span>
+                      </motion.button>
                     </>}
                 </div>
               </div>
@@ -1666,20 +1668,22 @@ return;
                           Are you sure you want to delete "{tool.name}"? This action cannot be undone.
                         </p>
                         <div className="flex space-x-3">
-                          <Button 
-                            variant="ghost" 
+                          <motion.button 
                             onClick={() => setShowDeleteConfirm(false)} 
-                            className="flex-1"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="flex-1 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg transition-colors"
                           >
                             Cancel
-                          </Button>
-                          <Button 
-                            variant="destructive" 
+                          </motion.button>
+                          <motion.button 
                             onClick={handleDelete} 
-                            className="flex-1"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                           >
                             Delete
-                          </Button>
+                          </motion.button>
                         </div>
                       </div>
                     </motion.div>
@@ -1739,7 +1743,7 @@ return;
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                     Choose Icon
                   </label>
-                  <div className="grid grid-cols-6 gap-2">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
                      {[Code, Database, Globe, Palette, Settings, Star, Heart, Zap, Shield, Camera].map((IconComponent, index) => (
                        <button
                          key={index}
@@ -1915,7 +1919,7 @@ return;
                     size="icon" 
                     onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                   >
-                    <ChevronLeft className={`w-5 h-5 text-slate-600 dark:text-slate-400 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
+                    <ChevronLeft className={`w-4.5 h-4.5 text-slate-600 dark:text-slate-400 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="right">
@@ -1962,9 +1966,9 @@ return;
                   <Button 
                     variant={((activeTab === 'prompts' && activeCategory === 'all') || (activeTab === 'toolbox' && activeCategory === 'all-tools')) ? "default" : "ghost"} 
                     onClick={() => setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools')} 
-                    className={`w-full justify-start space-x-3 h-auto py-2.5 max-w-[247px] ${((activeTab === 'prompts' && activeCategory === 'all') || (activeTab === 'toolbox' && activeCategory === 'all-tools')) ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                    className={`w-full justify-start space-x-2 h-auto py-2.5 max-w-[247px] ${((activeTab === 'prompts' && activeCategory === 'all') || (activeTab === 'toolbox' && activeCategory === 'all-tools')) ? 'bg-slate-800 dark:bg-slate-700 text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                   >
-                    <Globe className="w-5 h-5 flex-shrink-0" />
+                    <Globe className="w-4.5 h-4.5 flex-shrink-0" />
                     <AnimatePresence mode="wait">
                       {!sidebarCollapsed && <motion.div initial={{
                       opacity: 0,
@@ -1992,7 +1996,7 @@ return;
                 return <div key={category.id}>
                       <div className="flex items-center group">
                         <button onClick={() => setActiveCategory(category.id)} onDoubleClick={() => handleDoubleClick(category.id, category.name)} onDragOver={(e: React.DragEvent) => handleDragOver(e, category.id)} onDragLeave={handleDragLeave} onDrop={(e: React.DragEvent) => handleDrop(e, category.id)} className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative max-w-[247px] ${isActive ? 'bg-slate-800 dark:bg-slate-700 text-white' : dragOverTarget === category.id && isDragging ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 ring-2 ring-green-300 dark:ring-green-600 ring-opacity-50 shadow-lg transform scale-105' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'}`}>
-                          <Icon className="w-5 h-5 flex-shrink-0" />
+                          <Icon className="w-4.5 h-4.5 flex-shrink-0" />
                           <AnimatePresence mode="wait">
                             {!sidebarCollapsed && <motion.div initial={{
                           opacity: 0,
@@ -2154,7 +2158,7 @@ return;
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button onClick={() => setShowSettingsDialog(true)} className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
-                    <Settings className="w-5 h-5 flex-shrink-0" />
+                    <Settings className="w-4.5 h-4.5 flex-shrink-0" />
                     {!sidebarCollapsed && <span className="font-medium text-sm">Settings</span>}
                   </button>
                 </TooltipTrigger>
@@ -2168,7 +2172,7 @@ return;
                     const nextTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
                     setTheme(nextTheme);
                   }} className="w-full flex items-center space-x-3 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
-                    {theme === 'light' ? <Sun className="w-5 h-5 flex-shrink-0" /> : theme === 'dark' ? <Moon className="w-5 h-5 flex-shrink-0" /> : <Monitor className="w-5 h-5 flex-shrink-0" />}
+                    {theme === 'light' ? <Sun className="w-4.5 h-4.5 flex-shrink-0" /> : theme === 'dark' ? <Moon className="w-4.5 h-4.5 flex-shrink-0" /> : <Monitor className="w-4.5 h-4.5 flex-shrink-0" />}
                     {!sidebarCollapsed && <span className="font-medium text-sm">{theme === 'light' ? 'Light' : theme === 'dark' ? 'Dark' : 'System'}</span>}
                   </button>
                 </TooltipTrigger>
@@ -2179,7 +2183,7 @@ return;
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors">
-                    <HelpCircle className="w-5 h-5 flex-shrink-0" />
+                    <HelpCircle className="w-4.5 h-4.5 flex-shrink-0" />
                     {!sidebarCollapsed && <span className="font-medium text-sm">Help</span>}
                   </button>
                 </TooltipTrigger>
@@ -2191,6 +2195,132 @@ return;
           </div>
         </div>
       </motion.aside>
+
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            
+            {/* Mobile Sidebar */}
+            <motion.aside
+              className="fixed top-0 left-0 h-full w-80 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 z-50 md:hidden"
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            >
+              <div className="h-full flex flex-col">
+                {/* Mobile Header */}
+                <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                        <Logo size="custom-40" className="text-indigo-500" />
+                      </div>
+                      <h1 className="text-xl font-bold text-slate-900 dark:text-white">Koto</h1>
+                    </div>
+                    
+                    <motion.button
+                      onClick={() => setMobileMenuOpen(false)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="p-3 min-w-[44px] min-h-[44px] hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center justify-center"
+                      aria-label="Close menu"
+                    >
+                      <X className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                    </motion.button>
+                  </div>
+                </div>
+
+                {/* Mobile Search */}
+                <div className="p-4 border-b border-slate-200 dark:border-slate-700">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <Input
+                      placeholder="Search..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10 bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600"
+                    />
+                  </div>
+                </div>
+
+                {/* Mobile Categories */}
+                <div className="flex-1 overflow-y-auto p-4">
+                  <div className="space-y-2">
+                    {/* All Items */}
+                    <motion.button
+                      onClick={() => {
+                        setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools');
+                        setMobileMenuOpen(false);
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`w-full flex items-center space-x-3 px-3 py-3 min-h-[44px] rounded-lg text-left transition-colors ${
+                        activeCategory === (activeTab === 'prompts' ? 'all' : 'all-tools')
+                          ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
+                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'
+                      }`}
+                    >
+                      <Package className="w-4.5 h-4.5 flex-shrink-0" />
+                      <span className="font-medium text-sm">
+                        {activeTab === 'prompts' ? 'All Prompts' : 'All Tools'}
+                      </span>
+                    </motion.button>
+
+                    {/* Categories */}
+                    {(activeTab === 'prompts' ? categories : toolCategories).map((category) => (
+                      <motion.button
+                        key={category.id}
+                        onClick={() => {
+                          setActiveCategory(category.id);
+                          setMobileMenuOpen(false);
+                        }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`w-full flex items-center space-x-3 px-3 py-3 min-h-[44px] rounded-lg text-left transition-colors ${
+                          activeCategory === category.id
+                            ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
+                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        <category.icon className="w-4.5 h-4.5 flex-shrink-0" />
+                        <span className="font-medium text-sm">{category.name}</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mobile Bottom Navigation */}
+                <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+                  <div className="space-y-1">
+                    <motion.button
+                      onClick={() => {
+                        setShowSettingsDialog(true);
+                        setMobileMenuOpen(false);
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full flex items-center space-x-3 px-3 py-3 min-h-[44px] rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
+                    >
+                      <Settings className="w-4.5 h-4.5 flex-shrink-0" />
+                      <span className="font-medium text-sm">Settings</span>
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 px-0">
@@ -2219,27 +2349,40 @@ return;
             }}>
                 {/* Header Row inside container: Logo, Tabs (left) and Login (right) */}
                 <div className="w-full flex items-stretch justify-between mb-6 h-14">
+                  {/* Mobile Menu Button - Only visible on mobile */}
+                  <div className="md:hidden flex items-center">
+                    <motion.button
+                      onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white p-3 min-w-[44px] min-h-[44px] rounded-xl transition-colors mr-4 flex items-center justify-center"
+                      aria-label="Toggle menu"
+                    >
+                      <Menu className="w-5 h-5" />
+                    </motion.button>
+                  </div>
+                  
                   {/* Tabs */}
-                  <div className="flex items-center">
+                  <div className="flex items-center flex-1 justify-center md:justify-start">
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-2 inline-flex" style={{ display: 'flex', alignItems: 'center' }}>
-                    <div className="flex space-x-2" style={{ alignItems: 'center' }}>
+                    <div className="flex space-x-1 md:space-x-2" style={{ alignItems: 'center' }}>
                       <motion.button 
                         onClick={() => setActiveTab('prompts')} 
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`flex items-center space-x-2 px-6 py-4 rounded-xl text-sm font-medium transition-all ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                        className={`flex items-center space-x-1 md:space-x-2 px-3 md:px-6 py-3 md:py-4 min-h-[44px] rounded-xl text-sm font-medium transition-all ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                       >
                         <MessageSquare className="w-4 h-4" />
-                        <span>Prompts</span>
+                        <span className="hidden sm:inline">Prompts</span>
                       </motion.button>
                       <motion.button 
                         onClick={() => setActiveTab('toolbox')} 
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`flex items-center space-x-2 px-6 py-4 rounded-xl text-sm font-medium transition-all ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
+                        className={`flex items-center space-x-1 md:space-x-2 px-3 md:px-6 py-3 md:py-4 min-h-[44px] rounded-xl text-sm font-medium transition-all ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                       >
                         <Wrench className="w-4 h-4" />
-                        <span>Tool Box</span>
+                        <span className="hidden sm:inline">Tool Box</span>
                       </motion.button>
                     </div>
                   </div>
@@ -2252,7 +2395,7 @@ return;
                         <motion.button 
                           whileHover={{ scale: 1.05 }} 
                           whileTap={{ scale: 0.95 }} 
-                          className="flex items-center space-x-3 pl-2 pr-4 py-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl transition-colors h-full"
+                          className="flex items-center space-x-0 md:space-x-3 pl-2 pr-2 md:pr-4 py-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl transition-colors h-full"
                         >
                           <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center overflow-hidden">
                             {userProfile?.avatar_url ? (
@@ -2270,7 +2413,7 @@ return;
                               <User className="w-5 h-5 text-white" />
                             )}
                           </div>
-                          <div className="text-left text-white">
+                          <div className="text-left text-white hidden md:block">
                             <div className="text-sm font-medium">
                               {user ? (
                                 userProfile?.display_name || 
@@ -2334,16 +2477,16 @@ return;
                 width: "100%",
                 maxWidth: "100%"
               }}>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6" style={{
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 md:p-6" style={{
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "start",
-                  paddingBottom: "24px",
-                  paddingTop: "24px",
+                  paddingBottom: "16px",
+                  paddingTop: "16px",
                   marginBottom: "0px",
                   rowGap: "8px",
-                  paddingLeft: "32px",
-                  paddingRight: "32px"
+                  paddingLeft: "16px",
+                  paddingRight: "16px"
                 }}>
                     <div className="flex items-center space-x-3 group">
                       {(() => {
@@ -2374,7 +2517,7 @@ return;
                       // Fallback to Palette icon
                       return <Palette className="w-6 h-6" />;
                     })()}
-                      <h1 className="text-2xl font-bold">
+                      <h1 className="text-xl md:text-2xl font-bold">
                         {activeTab === 'prompts'
                           ? (activeCategory === 'all' ? 'All Prompts' : getCurrentCategoryName())
                           : (activeCategory === 'all-tools' ? 'All Tools' : getCurrentCategoryName())}
@@ -2443,23 +2586,23 @@ return;
                     </p>
                   </div>
 
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2 md:space-x-4">
                     <motion.button onClick={() => activeTab === 'prompts' ? handleAddPrompt() : handleAddTool()} whileHover={{
                     scale: 1.05
                   }} whileTap={{
                     scale: 0.95
-                  }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium flex items-center space-x-2 shadow-lg transition-colors">
+                  }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 md:px-6 py-3 rounded-xl font-medium flex items-center space-x-2 shadow-lg transition-colors">
                       <Plus className="w-4 h-4" />
-                      <span>{activeTab === 'prompts' ? 'Add Prompt' : 'Add Tool'}</span>
+                      <span className="hidden md:inline">{activeTab === 'prompts' ? 'Add Prompt' : 'Add Tool'}</span>
                     </motion.button>
                     
                     <motion.button onClick={() => setShowAddProjectDialog(true)} whileHover={{
                     scale: 1.05
                   }} whileTap={{
                     scale: 0.95
-                  }} className="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-medium flex items-center space-x-2 backdrop-blur-sm transition-colors">
+                  }} className="bg-white/20 hover:bg-white/30 text-white px-3 md:px-6 py-3 rounded-xl font-medium flex items-center space-x-2 backdrop-blur-sm transition-colors">
                       <Plus className="w-4 h-4" />
-                      <span>{activeTab === 'toolbox' ? 'Add Stack' : 'Add Project'}</span>
+                      <span className="hidden md:inline">{activeTab === 'toolbox' ? 'Add Stack' : 'Add Project'}</span>
                     </motion.button>
                   </div>
                 </div>
@@ -2475,7 +2618,7 @@ return;
             )}
             <div className="w-[96%] mx-auto">
               {/* Show prompts/tools if they exist, otherwise show empty state */}
-              {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full justify-items-stretch auto-rows-fr transition-all duration-300 ${isDragging ? 'scale-[0.98]' : 'scale-100'}`}>
+              {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 w-full justify-items-stretch auto-rows-fr transition-all duration-300 ${isDragging ? 'scale-[0.98]' : 'scale-100'}`}>
                   {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className={`justify-self-start w-full h-full transition-all duration-200 ${draggedItem?.item?.id === prompt.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'prompt', prompt)} onDragEnd={handleDragEnd}>
                           <PromptCard title={prompt.title} description={prompt.content} tags={prompt.tags} model={prompt.model} coverImage={prompt.coverImage} onClick={() => handlePromptClick(prompt)} />
                         </div>) : filteredTools.map(tool => <div key={tool.id} className={`justify-self-start w-full h-full transition-all duration-200 ${draggedItem?.item?.id === tool.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'tool', tool)} onDragEnd={handleDragEnd}>
@@ -2570,7 +2713,7 @@ return;
                     />
                   </div>
                   
-                  <div className="grid grid-cols-8 gap-2 max-h-64 overflow-y-auto p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800">
+                  <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 max-h-64 overflow-y-auto p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800">
                     {iconOptions
                       .filter(option => 
                         option.name.toLowerCase().includes(iconSearchQuery.toLowerCase())
@@ -3147,7 +3290,7 @@ return;
                     </div>
                     
                     {/* Icon Picker Grid */}
-                    <div className="grid grid-cols-8 gap-2 max-h-64 overflow-y-auto p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800">
+                    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 max-h-64 overflow-y-auto p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800">
                       {iconOptions
                         .filter(option => 
                           option.name.toLowerCase().includes(iconSearchQuery.toLowerCase())
@@ -3238,6 +3381,32 @@ return;
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* Floating Action Buttons - Mobile/Tablet Only */}
+      <div className="fixed bottom-6 right-6 flex flex-col space-y-3 md:hidden z-40">
+        {/* Add Prompt/Tool FAB */}
+        <motion.button
+          onClick={() => activeTab === 'prompts' ? handleAddPrompt() : handleAddTool()}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white w-12 h-12 min-w-[48px] min-h-[48px] rounded-full shadow-lg flex items-center justify-center transition-colors"
+          aria-label={activeTab === 'prompts' ? 'Add new prompt' : 'Add new tool'}
+        >
+          <Plus className="w-6 h-6" />
+        </motion.button>
+        
+        {/* Add Project FAB */}
+        <motion.button
+          onClick={() => setShowAddProjectDialog(true)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white w-12 h-12 min-w-[48px] min-h-[48px] rounded-full shadow-lg flex items-center justify-center transition-colors border border-white/20"
+          aria-label="Add new project"
+        >
+          <FolderPlus className="w-5 h-5" />
+        </motion.button>
+      </div>
+      
       </div>
     </TooltipProvider>
   );

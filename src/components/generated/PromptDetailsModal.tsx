@@ -8,6 +8,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import { Badge } from '../ui/badge';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 export interface Prompt {
   id: string;
   title: string;
@@ -205,9 +206,10 @@ export default function PromptDetailsModal({
                     </h1>}
                 </div>
 
-                {/* Model & Category */}
-                <div className="flex items-center space-x-4">
-                  <div className="flex-1">
+                {/* Model, Category & Tags - Inline Layout */}
+                <div className="flex flex-wrap gap-4">
+                  {/* Model */}
+                  <div className="flex-shrink-0 min-w-fit">
                     <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       Model
                     </Label>
@@ -255,7 +257,8 @@ export default function PromptDetailsModal({
                       </span>}
                   </div>
                   
-                  <div className="flex-1">
+                  {/* Category */}
+                  <div className="flex-shrink-0 min-w-fit">
                     <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       Category
                     </Label>
@@ -263,42 +266,42 @@ export default function PromptDetailsModal({
                       {prompt.category}
                     </span>
                   </div>
-                </div>
 
-                {/* Tags */}
-                <div>
-                  <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
-                    Tags
-                  </Label>
-                  
-                  {isEditing && <div className="flex space-x-2 mb-3">
-                      <Input type="text" value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleAddTag()} placeholder="Add new tag" className="flex-1 px-3 py-2 text-sm" />
-                      <Button onClick={handleAddTag} className="px-3 py-2">
-                        <Plus className="w-4 h-4" />
-                      </Button>
-                    </div>}
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {(isEditing ? editedPrompt?.tags : prompt.tags)?.map((tag, index) => <Badge key={tag} variant="outline" className={`rounded-full transition-colors ${index % 3 === 0 ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800' : index % 3 === 1 ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800' : 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border-pink-200 dark:border-pink-800'}`}>
-                        <Tag className="w-3 h-3 mr-1" />
-                        {tag}
-                        {isEditing && <button onClick={() => handleRemoveTag(tag)} className="ml-2 hover:text-red-500 transition-colors">
-                            <X className="w-3 h-3" />
-                          </button>}
-                      </Badge>)}
+                  {/* Tags */}
+                  <div className="flex-1 min-w-[250px]">
+                    <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                      Tags
+                    </Label>
+                    
+                    {isEditing && <div className="flex space-x-2 mb-3">
+                        <Input type="text" value={newTagInput} onChange={e => setNewTagInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleAddTag()} placeholder="Add new tag" className="flex-1 px-3 py-2 text-sm" />
+                        <Button onClick={handleAddTag} className="px-3 py-2">
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>}
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {(isEditing ? editedPrompt?.tags : prompt.tags)?.map((tag, index) => <Badge key={tag} variant="outline" className={`rounded-full transition-colors ${index % 3 === 0 ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800' : index % 3 === 1 ? 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800' : 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 border-pink-200 dark:border-pink-800'}`}>
+                          <Tag className="w-3 h-3 mr-1" />
+                          {tag}
+                          {isEditing && <button onClick={() => handleRemoveTag(tag)} className="ml-2 hover:text-red-500 transition-colors">
+                              <X className="w-3 h-3" />
+                            </button>}
+                        </Badge>)}
+                    </div>
                   </div>
                 </div>
 
-                {/* Content */}
-                <div>
-                  <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                {/* Content - Taller with more space */}
+                <div className="mt-8">
+                  <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
                     Prompt Content
                   </Label>
                   {isEditing ? <Textarea value={editedPrompt?.content || ''} onChange={e => setEditedPrompt(prev => prev ? {
                 ...prev,
                 content: e.target.value
-              } : null)} rows={8} className="w-full px-4 py-3 resize-none" /> : <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 border border-slate-200 dark:border-slate-600">
-                      <pre className="whitespace-pre-wrap text-slate-700 dark:text-slate-300 text-sm leading-relaxed font-mono">
+              } : null)} rows={12} className="w-full px-6 py-4 resize-none text-base leading-relaxed" /> : <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-6 border border-slate-200 dark:border-slate-600 min-h-[300px]">
+                      <pre className="whitespace-pre-wrap text-slate-700 dark:text-slate-300 text-base leading-relaxed font-mono">
                         {prompt.content}
                       </pre>
                     </div>}
@@ -357,7 +360,7 @@ export default function PromptDetailsModal({
                   scale: 1.05
                 }} whileTap={{
                   scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors">
+                }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
                         <Edit2 className="w-4 h-4" />
                         <span className="text-sm font-medium">Edit</span>
                       </motion.button>
@@ -370,21 +373,21 @@ export default function PromptDetailsModal({
                         <Trash2 className="w-4 h-4" />
                         <span className="text-sm font-medium">Delete</span>
                       </motion.button>
-                    </> : <>
+                     </> : <>
                       <motion.button onClick={handleCancel} whileHover={{
                   scale: 1.05
                 }} whileTap={{
                   scale: 0.95
-                }} className="px-6 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
-                        Cancel
+                }} className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
+                        <span className="text-sm font-medium">Cancel</span>
                       </motion.button>
                       
                       <motion.button onClick={handleSave} whileHover={{
                   scale: 1.05
                 }} whileTap={{
                   scale: 0.95
-                }} className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors">
-                        Save Changes
+                }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                        <span className="text-sm font-medium">Save Changes</span>
                       </motion.button>
                     </>}
                 </div>
@@ -422,12 +425,22 @@ export default function PromptDetailsModal({
                       Are you sure you want to delete "{prompt.title}"? This action cannot be undone.
                     </p>
                     <div className="flex space-x-3">
-                      <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
+                      <motion.button 
+                        onClick={() => setShowDeleteConfirm(false)} 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex-1 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg transition-colors"
+                      >
                         Cancel
-                      </button>
-                      <button onClick={handleDelete} className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
+                      </motion.button>
+                      <motion.button 
+                        onClick={handleDelete} 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                      >
                         Delete
-                      </button>
+                      </motion.button>
                     </div>
                   </div>
                 </motion.div>

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Save, Tag, ChevronDown } from 'lucide-react';
+import { X, Upload, Save, Tag, ChevronDown, Plus } from 'lucide-react';
 import { Badge } from '../ui/badge';
+import { useTheme } from '../../contexts/ThemeContext';
 interface Prompt {
   title: string;
   content: string;
@@ -20,6 +21,7 @@ const NewPromptDialog: React.FC<NewPromptDialogProps> = ({
   onClose,
   onSave
 }) => {
+  const { actualTheme } = useTheme();
   const [formData, setFormData] = useState<Prompt>({
     title: '',
     content: '',
@@ -59,9 +61,9 @@ const NewPromptDialog: React.FC<NewPromptDialogProps> = ({
       setTagInput('');
     }
   }, [open]);
-  const handleAddTag = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && tagInput.trim()) {
-      e.preventDefault();
+  const handleAddTag = (e?: React.KeyboardEvent) => {
+    if ((e?.key === 'Enter' || !e) && tagInput.trim()) {
+      e?.preventDefault();
       if (!formData.tags.includes(tagInput.trim())) {
         setFormData(prev => ({
           ...prev,
@@ -126,27 +128,27 @@ const NewPromptDialog: React.FC<NewPromptDialogProps> = ({
         opacity: 0,
         scale: 0.95,
         y: 20
-      }} className="relative bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+      }} className="relative bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">Create New Prompt</h2>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <X className="w-5 h-5 text-gray-500" />
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700 flex-shrink-0">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Create New Prompt</h2>
+              <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                <X className="w-5 h-5 text-gray-500 dark:text-slate-400" />
               </button>
             </div>
 
             {/* Content */}
-            <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+            <div className="p-6 overflow-y-auto flex-1 min-h-0">
               <div className="space-y-6">
                 {/* Cover Image */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                     Cover Image
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition-colors cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                  <div className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-6 text-center hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                     {formData.coverImage ? <img src={formData.coverImage} alt="Cover preview" className="w-full h-32 object-cover rounded-lg" /> : <div>
-                        <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                        <p className="text-gray-500">Click to upload cover image</p>
+                        <Upload className="w-8 h-8 text-gray-400 dark:text-slate-500 mx-auto mb-2" />
+                        <p className="text-gray-500 dark:text-slate-400">Click to upload cover image</p>
                       </div>}
                   </div>
                   <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelect} className="hidden" />
@@ -154,65 +156,65 @@ const NewPromptDialog: React.FC<NewPromptDialogProps> = ({
 
                 {/* Title */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                     Title *
                   </label>
                   <input type="text" value={formData.title} onChange={e => setFormData(prev => ({
                 ...prev,
                 title: e.target.value
-              }))} placeholder="Enter prompt title..." className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" />
+              }))} placeholder="Enter prompt title..." className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" />
                 </div>
 
                 {/* Content */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                     Prompt Content *
                   </label>
                   <textarea ref={textareaRef} value={formData.content} onChange={e => setFormData(prev => ({
                 ...prev,
                 content: e.target.value
-              }))} placeholder="Write your prompt here..." className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none min-h-[120px]" rows={4} />
+              }))} placeholder="Write your prompt here..." className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none min-h-[120px]" rows={4} />
                 </div>
 
                 {/* Model and Category */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="relative">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                       Model
                     </label>
-                    <button onClick={() => setShowModelDropdown(!showModelDropdown)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors flex items-center justify-between">
+                    <button onClick={() => setShowModelDropdown(!showModelDropdown)} className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors flex items-center justify-between">
                       <span>{formData.model}</span>
-                      <ChevronDown className="w-4 h-4 text-gray-500" />
+                      <ChevronDown className="w-4 h-4 text-gray-500 dark:text-slate-400" />
                     </button>
-                    {showModelDropdown && <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                    {showModelDropdown && <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg z-20 max-h-48 overflow-y-auto">
                         {models.map(model => <button key={model} onClick={() => {
                     setFormData(prev => ({
                       ...prev,
                       model
                     }));
                     setShowModelDropdown(false);
-                  }} className="w-full px-3 py-2 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg">
+                  }} className="w-full px-3 py-2 text-left text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-600 first:rounded-t-lg last:rounded-b-lg transition-colors">
                             {model}
                           </button>)}
                       </div>}
                   </div>
 
                   <div className="relative">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                       Category
                     </label>
-                    <button onClick={() => setShowCategoryDropdown(!showCategoryDropdown)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors flex items-center justify-between">
+                    <button onClick={() => setShowCategoryDropdown(!showCategoryDropdown)} className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors flex items-center justify-between">
                       <span>{formData.category}</span>
-                      <ChevronDown className="w-4 h-4 text-gray-500" />
+                      <ChevronDown className="w-4 h-4 text-gray-500 dark:text-slate-400" />
                     </button>
-                    {showCategoryDropdown && <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                    {showCategoryDropdown && <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg z-20 max-h-48 overflow-y-auto">
                         {categories.map(category => <button key={category} onClick={() => {
                     setFormData(prev => ({
                       ...prev,
                       category
                     }));
                     setShowCategoryDropdown(false);
-                  }} className="w-full px-3 py-2 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg">
+                  }} className="w-full px-3 py-2 text-left text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-600 first:rounded-t-lg last:rounded-b-lg transition-colors">
                             {category}
                           </button>)}
                       </div>}
@@ -221,16 +223,21 @@ const NewPromptDialog: React.FC<NewPromptDialogProps> = ({
 
                 {/* Tags */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                     Tags
                   </label>
                   <div className="space-y-2">
-                    <input type="text" value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={handleAddTag} placeholder="Type a tag and press Enter..." className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" />
+                    <div className="flex space-x-2">
+                      <input type="text" value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={handleAddTag} placeholder="Type a tag and press Enter..." className="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" />
+                      <button onClick={() => handleAddTag()} className="px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors flex items-center justify-center">
+                        <Plus className="w-4 h-4" />
+                      </button>
+                    </div>
                     {formData.tags.length > 0 && <div className="flex flex-wrap gap-2">
-                        {formData.tags.map((tag, index) => <Badge key={index} variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 rounded-full">
+                        {formData.tags.map((tag, index) => <Badge key={index} variant="outline" className="bg-indigo-50 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200 border-indigo-200 dark:border-indigo-700 rounded-full">
                             <Tag className="w-3 h-3 mr-1" />
                             {tag}
-                            <button onClick={() => handleRemoveTag(tag)} className="ml-2 text-indigo-500 hover:text-indigo-700">
+                            <button onClick={() => handleRemoveTag(tag)} className="ml-2 text-indigo-500 dark:text-indigo-300 hover:text-indigo-700 dark:hover:text-indigo-100">
                               <X className="w-3 h-3" />
                             </button>
                           </Badge>)}
@@ -241,8 +248,8 @@ const NewPromptDialog: React.FC<NewPromptDialogProps> = ({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-end space-x-3 p-6 border-t border-gray-200">
-              <button onClick={onClose} className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+            <div className="flex items-center justify-end space-x-3 p-6 border-t border-gray-200 dark:border-slate-700 flex-shrink-0">
+              <button onClick={onClose} className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
                 Cancel
               </button>
               <motion.button onClick={handleSave} disabled={!isValid || isSaving} className={`px-6 py-2 rounded-lg font-medium flex items-center space-x-2 transition-colors ${isValid && !isSaving ? 'bg-indigo-500 hover:bg-indigo-600 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`} whileTap={{
