@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Menu, Globe, MessageSquare, Wrench, User as UserIcon, ExternalLink, Plus, FolderPlus, Folder, X, Edit2, Share2, Trash2, Check, ChevronDown, Settings, Sun, Moon, Monitor, Upload, Copy } from 'lucide-react';
+import { Menu, Globe, MessageSquare, Wrench, User as UserIcon, ExternalLink, Plus, FolderPlus, Folder, X, Edit2, Share2, Trash2, Check, ChevronDown, Settings, Sun, Moon, Monitor, Upload, Copy, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { Button } from './ui/button';
@@ -56,6 +56,7 @@ interface Tool {
   description?: string;
   favicon?: string;
   subcategory?: string;
+  isPublic?: boolean;
 }
 
 const MobileDashboard: React.FC = () => {
@@ -100,6 +101,15 @@ const MobileDashboard: React.FC = () => {
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
   // Projects drawer state
   const [showProjectsDrawer, setShowProjectsDrawer] = useState(false);
+  
+  // Categories state for project selection
+  const [categories, setCategories] = useState<Array<{ id: string; name: string; icon: any }>>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('koto_categories');
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
 
   useEffect(() => {
     const subscription = onAuthChange(async (user) => {
@@ -144,6 +154,7 @@ const MobileDashboard: React.FC = () => {
     subcategory: row.subcategory,
     coverImage: row.cover_image,
     createdAt: new Date(row.created_at),
+    isPublic: row.is_public || false,
   });
 
   const mapToolRowToTool = (row: ToolRow): Tool => ({
@@ -154,6 +165,7 @@ const MobileDashboard: React.FC = () => {
     description: row.description,
     favicon: row.favicon,
     subcategory: row.subcategory,
+    isPublic: row.is_public || false,
   });
 
   // Background handling functions
@@ -498,13 +510,14 @@ const MobileDashboard: React.FC = () => {
                 const shareUrl = `${window.location.origin}/shared/prompt?token=${shareToken}`;
                 
                 // Try native Web Share API first (mobile-friendly)
-                if (navigator.share && /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                if (navigator.share) {
                   try {
                     await navigator.share({
                       title: prompt.title,
                       text: `Check out this prompt: ${prompt.title}`,
                       url: shareUrl,
                     });
+                    // Native share succeeded, no need for toast
                     return;
                   } catch (shareError) {
                     // Fall back to clipboard if native share fails
@@ -570,8 +583,9 @@ const MobileDashboard: React.FC = () => {
                 category: edited.category,
                 subcategory: edited.subcategory,
                 favicon: edited.favicon,
+                is_public: edited.isPublic,
               });
-              setTools(prev => prev.map(t => t.id === edited.id ? { ...t, ...updated } : t));
+              setTools(prev => prev.map(t => t.id === edited.id ? { ...t, ...updated, isPublic: updated.is_public } : t));
               toast.success('Tool updated');
             } catch (e) {
               console.error('Failed to update tool', e);
@@ -827,6 +841,7 @@ const MobileDashboard: React.FC = () => {
         <NewPromptDialog
           open={showNewPromptDialog}
           onClose={() => setShowNewPromptDialog(false)}
+          categories={categories}
           onSave={async (data) => {
             if (!user?.id) {
               toast.error('Please sign in to continue', {
@@ -854,7 +869,7 @@ const MobileDashboard: React.FC = () => {
                   content: data.content,
                   tags: data.tags,
                   model: data.model,
-                  category: data.category,
+                  category: data.selectedProject || 'General',
                   cover_image: coverUrl,
                 },
                 user.id
@@ -876,6 +891,11 @@ const MobileDashboard: React.FC = () => {
         <NewToolDialog
           open={showNewToolDialog}
           onClose={() => setShowNewToolDialog(false)}
+          availableStacks={categories.filter(cat => cat.id !== 'all')}
+          onAddStack={() => {
+            setShowNewToolDialog(false);
+            setShowNewProjectDialog(true);
+          }}
           onSave={async (toolData) => {
             if (!user?.id) {
               toast.error('Please sign in to continue', {
@@ -1497,6 +1517,68 @@ const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClo
                   <p className="text-slate-700 dark:text-slate-300">{tool.description || 'No description'}</p>
                 )}
               </div>
+
+              {/* Public/Private Toggle */}
+              {isEditing && (
+                <div>
+                  <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                    Visibility
+                  </Label>
+                  <div className="flex flex-col space-y-2">
+                    <motion.button
+                      type="button"
+                      onClick={() => setEditedTool(prev => prev ? { ...prev, isPublic: false } : null)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`flex items-center space-x-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                        !editedTool?.isPublic
+                          ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
+                          : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                      }`}
+                    >
+                      <Lock className={`w-5 h-5 ${
+                        !editedTool?.isPublic ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400'
+                      }`} />
+                      <div className="text-left">
+                        <div className={`font-medium ${
+                          !editedTool?.isPublic ? 'text-indigo-900 dark:text-indigo-100' : 'text-slate-700 dark:text-slate-300'
+                        }`}>
+                          Private
+                        </div>
+                        <div className="text-sm text-slate-500 dark:text-slate-400">
+                          Only visible to you
+                        </div>
+                      </div>
+                    </motion.button>
+                    
+                    <motion.button
+                      type="button"
+                      onClick={() => setEditedTool(prev => prev ? { ...prev, isPublic: true } : null)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`flex items-center space-x-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                        editedTool?.isPublic
+                          ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
+                          : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                      }`}
+                    >
+                      <Globe className={`w-5 h-5 ${
+                        editedTool?.isPublic ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400'
+                      }`} />
+                      <div className="text-left">
+                        <div className={`font-medium ${
+                          editedTool?.isPublic ? 'text-indigo-900 dark:text-indigo-100' : 'text-slate-700 dark:text-slate-300'
+                        }`}>
+                          Public
+                        </div>
+                        <div className="text-sm text-slate-500 dark:text-slate-400">
+                          Visible on your profile
+                        </div>
+                      </div>
+                    </motion.button>
+                  </div>
+                </div>
+              )}
 
               {/* Category */}
               <div className="flex flex-col gap-2">

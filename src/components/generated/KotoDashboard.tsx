@@ -59,6 +59,7 @@ interface Prompt {
   subcategory?: string; // Add subcategory field
   coverImage?: string;
   createdAt: Date;
+  isPublic?: boolean; // Add public/private field
 }
 interface Tool {
   id: string;
@@ -68,6 +69,7 @@ interface Tool {
   description?: string;
   favicon?: string;
   subcategory?: string;
+  isPublic?: boolean; // Add public/private field
 }
 interface Category {
   id: string;
@@ -336,6 +338,7 @@ const KotoDashboard: React.FC = () => {
   const [newPromptTagInput, setNewPromptTagInput] = useState('');
   const [newPromptCoverImage, setNewPromptCoverImage] = useState('');
   const [newPromptCoverFile, setNewPromptCoverFile] = useState<File | null>(null);
+  const [newPromptSelectedProject, setNewPromptSelectedProject] = useState('');
 
   // New tool form state
   const [newToolName, setNewToolName] = useState('');
@@ -593,6 +596,7 @@ const KotoDashboard: React.FC = () => {
           subcategory: row.subcategory || undefined,
           coverImage: row.cover_image || undefined,
           createdAt: new Date(row.created_at),
+          isPublic: row.is_public || false,
         });
         const mapTool = (row: ToolRow): Tool => ({
           id: row.id,
@@ -602,6 +606,7 @@ const KotoDashboard: React.FC = () => {
           favicon: row.favicon || undefined,
           category: row.category || 'General',
           subcategory: row.subcategory || undefined,
+          isPublic: row.is_public || false,
         });
         setPrompts(promptRows.map(mapPrompt));
         setTools(toolRows.map(mapTool));
@@ -845,7 +850,11 @@ toast.error('Please sign in to continue', {
     // Determine the correct category and subcategory for the new prompt
     let promptCategory = 'General';
     let promptSubcategory: string | undefined = undefined;
-    if (activeCategory !== 'all') {
+    
+    // If a project is selected, use that as the category
+    if (newPromptSelectedProject) {
+      promptCategory = newPromptSelectedProject;
+    } else if (activeCategory !== 'all') {
       // Check if it's a subcategory
       const subcategory = subcategories.find(sub => sub.id === activeCategory);
       if (subcategory) {
@@ -903,6 +912,7 @@ toast.error('Please sign in to continue', {
     setNewPromptTags([]);
     setNewPromptCoverImage('');
     setNewPromptCoverFile(null);
+    setNewPromptSelectedProject('');
     setShowNewPromptDialog(false);
   };
   const handleCreateTool = async () => {
@@ -934,6 +944,7 @@ return;
           favicon: created.favicon || undefined,
           category: created.category || 'General',
           subcategory: created.subcategory || undefined,
+          isPublic: created.is_public || false,
         };
         setTools(prev => [mapped, ...prev]);
       }
@@ -1330,6 +1341,7 @@ return;
         category: prompt.category,
         subcategory: prompt.subcategory ?? null,
         cover_image: prompt.coverImage ?? null,
+        is_public: prompt.isPublic ?? false,
       };
       const { updatePrompt } = await import('../../lib/data');
       const updated = await updatePrompt(prompt.id, patch);
@@ -1343,6 +1355,7 @@ return;
         subcategory: updated.subcategory || undefined,
         coverImage: updated.cover_image || undefined,
         createdAt: new Date(updated.created_at),
+        isPublic: updated.is_public || false,
       };
       // Update prompts list
       setPrompts(prev => prev.map(p => (p.id === prompt.id ? mapped : p)));
@@ -1424,6 +1437,7 @@ return;
           favicon: editedTool.favicon ?? undefined,
           category: editedTool.category,
           subcategory: editedTool.subcategory ?? undefined,
+          is_public: editedTool.isPublic ?? false,
         });
         setTools(prev => prev.map(t => t.id === tool.id ? {
           id: updated.id,
@@ -1433,6 +1447,7 @@ return;
           favicon: updated.favicon ?? undefined,
           category: updated.category || 'General',
           subcategory: updated.subcategory || undefined,
+          isPublic: updated.is_public ?? false,
         } : t));
       } catch (e) {
         console.error('Failed to update tool', e);
@@ -1570,6 +1585,68 @@ return;
                         {tool.description || 'No description available.'}
                       </p>}
                   </div>
+
+                  {/* Public/Private Toggle */}
+                  {isEditing && (
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                        Visibility
+                      </label>
+                      <div className="flex items-center space-x-4">
+                        <motion.button
+                          type="button"
+                          onClick={() => setEditedTool(prev => prev ? { ...prev, isPublic: false } : null)}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={`flex items-center space-x-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                            !editedTool?.isPublic
+                              ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
+                              : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                          }`}
+                        >
+                          <Lock className={`w-5 h-5 ${
+                            !editedTool?.isPublic ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400'
+                          }`} />
+                          <div className="text-left">
+                            <div className={`font-medium ${
+                              !editedTool?.isPublic ? 'text-indigo-900 dark:text-indigo-100' : 'text-slate-700 dark:text-slate-300'
+                            }`}>
+                              Private
+                            </div>
+                            <div className="text-sm text-slate-500 dark:text-slate-400">
+                              Only visible to you
+                            </div>
+                          </div>
+                        </motion.button>
+                        
+                        <motion.button
+                          type="button"
+                          onClick={() => setEditedTool(prev => prev ? { ...prev, isPublic: true } : null)}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={`flex items-center space-x-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                            editedTool?.isPublic
+                              ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
+                              : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                          }`}
+                        >
+                          <Globe className={`w-5 h-5 ${
+                            editedTool?.isPublic ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400'
+                          }`} />
+                          <div className="text-left">
+                            <div className={`font-medium ${
+                              editedTool?.isPublic ? 'text-indigo-900 dark:text-indigo-100' : 'text-slate-700 dark:text-slate-300'
+                            }`}>
+                              Public
+                            </div>
+                            <div className="text-sm text-slate-500 dark:text-slate-400">
+                              Visible on your profile
+                            </div>
+                          </div>
+                        </motion.button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -2739,6 +2816,52 @@ return;
                   </div>
                 </div>
 
+                {/* Subcategories/Subprojects */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Sub{activeTab === 'toolbox' ? 'stacks' : 'projects'}
+                  </label>
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Input
+                      type="text"
+                      value={newSubcategoryInput}
+                      onChange={(e) => setNewSubcategoryInput(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleAddSubcategory()}
+                      placeholder={`Add sub${activeTab === 'toolbox' ? 'stacks' : 'projects'}...`}
+                      className="flex-1 bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
+                    />
+                    <Button
+                      type="button"
+                      onClick={handleAddSubcategory}
+                      variant="outline"
+                      size="icon"
+                      className="flex-shrink-0 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  {newProjectSubcategories.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {newProjectSubcategories.map((subcat) => (
+                        <Badge
+                          key={subcat}
+                          variant="secondary"
+                          className="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600"
+                        >
+                          {subcat}
+                          <button
+                            type="button"
+                            onClick={() => removeSubcategory(subcat)}
+                            className="ml-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex justify-end space-x-3 pt-4">
                   <Button 
                     variant="ghost" 
@@ -2842,6 +2965,28 @@ return;
                       placeholder="Enter custom model name (e.g., GPT-5, Custom-LLM)"
                       className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                     />
+                  </div>
+                )}
+
+                {/* Project Selection - Only show if projects exist */}
+                {updatedCategories.length > 0 && (
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                      Add to Project (optional)
+                    </label>
+                    <select 
+                      value={newPromptSelectedProject} 
+                      onChange={e => setNewPromptSelectedProject(e.target.value)} 
+                      className="w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white appearance-none"
+                    >
+                      <option value="">Select a project...</option>
+                      {updatedCategories.map(category => (
+                        <option key={category.id} value={category.name}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 mt-3 w-4 h-4 text-slate-500 pointer-events-none" />
                   </div>
                 )}
 

@@ -168,8 +168,7 @@ const NewProjectDialog: React.FC<NewProjectDialogProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [selectedIcon, setSelectedIcon] = useState(iconOptions[0]);
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState('');
+
   const [subcategories, setSubcategories] = useState<string[]>([]);
   const [subcategoryInput, setSubcategoryInput] = useState('');
   const [iconSearchQuery, setIconSearchQuery] = useState('');
@@ -181,7 +180,7 @@ const NewProjectDialog: React.FC<NewProjectDialogProps> = ({
         name: name.trim(),
         icon: selectedIcon.icon,
         iconName: selectedIcon.name,
-        tags,
+        tags: [],
         subcategories
       });
       handleClose();
@@ -191,24 +190,14 @@ const NewProjectDialog: React.FC<NewProjectDialogProps> = ({
   const handleClose = () => {
     setName('');
     setSelectedIcon(iconOptions[0]);
-    setTags([]);
-    setTagInput('');
+
     setSubcategories([]);
     setSubcategoryInput('');
     setIconSearchQuery('');
     onClose();
   };
 
-  const handleAddTag = (e?: React.KeyboardEvent) => {
-    if (e && e.key !== 'Enter') return;
-    if (!tagInput.trim() || tags.includes(tagInput.trim())) return;
-    setTags(prev => [...prev, tagInput.trim()]);
-    setTagInput('');
-  };
 
-  const handleRemoveTag = (tagToRemove: string) => {
-    setTags(prev => prev.filter(tag => tag !== tagToRemove));
-  };
 
   const handleAddSubcategory = (e?: React.KeyboardEvent) => {
     if (e && e.key !== 'Enter') return;
@@ -293,70 +282,29 @@ const NewProjectDialog: React.FC<NewProjectDialogProps> = ({
                 </div>
                 
                 {/* Icon Grid */}
-                <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800">
-                  {filteredIcons.map((option) => (
-                    <button
-                      key={option.name}
-                      type="button"
-                      onClick={() => setSelectedIcon(option)}
-                      className={`p-3 rounded-lg border-2 transition-all hover:scale-105 ${
-                        selectedIcon.name === option.name
-                          ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30'
-                          : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
-                      }`}
-                      title={option.name}
-                    >
-                      <option.icon className="w-6 h-6 text-slate-600 dark:text-slate-400" />
-                    </button>
-                  ))}
+                <div className="grid grid-cols-6 gap-2 max-h-64 overflow-y-auto p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800">
+                  {filteredIcons.map((option) => {
+                    const IconComponent = option.icon;
+                    return (
+                      <button
+                        key={option.name}
+                        type="button"
+                        onClick={() => setSelectedIcon(option)}
+                        className={`p-2 rounded-lg border-2 transition-all hover:scale-105 aspect-square flex items-center justify-center ${
+                          selectedIcon.name === option.name
+                            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30'
+                            : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+                        }`}
+                        title={option.name}
+                      >
+                        <IconComponent className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Tags */}
-              <div>
-                <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Tags
-                </Label>
-                <div className="flex items-center space-x-2 mb-2">
-                  <Input
-                    type="text"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyDown={handleAddTag}
-                    placeholder="Add tags..."
-                    className="flex-1 bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => handleAddTag()}
-                    variant="outline"
-                    size="icon"
-                    className="flex-shrink-0 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-                {tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {tags.map((tag) => (
-                      <Badge
-                        key={tag}
-                        variant="secondary"
-                        className="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600"
-                      >
-                        {tag}
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveTag(tag)}
-                          className="ml-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
+
 
               {/* Subcategories */}
               <div>

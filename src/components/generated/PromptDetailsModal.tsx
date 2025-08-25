@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Edit2, Copy, Share2, Trash2, Camera, Tag, Plus, Check, ExternalLink, Download, Heart, Star, Bookmark, ChevronDown } from 'lucide-react';
+import { X, Edit2, Copy, Share2, Trash2, Camera, Tag, Plus, Check, ExternalLink, Download, Heart, Star, Bookmark, ChevronDown, Globe, Lock } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -19,6 +19,7 @@ export interface Prompt {
   subcategory?: string; // Add subcategory field
   coverImage?: string;
   createdAt: Date;
+  isPublic?: boolean; // Add public/private field
 }
 export interface PromptDetailsModalProps {
   prompt: Prompt | null;
@@ -291,6 +292,47 @@ export default function PromptDetailsModal({
                     </div>
                   </div>
                 </div>
+
+                {/* Public/Private Toggle */}
+                {isEditing && (
+                  <div className="mt-6">
+                    <Label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                      Visibility
+                    </Label>
+                    <div className="flex items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={() => setEditedPrompt(prev => prev ? { ...prev, isPublic: false } : null)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+                          !editedPrompt?.isPublic
+                            ? 'bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300'
+                            : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-750'
+                        }`}
+                      >
+                        <Lock className="w-4 h-4" />
+                        <span className="font-medium">Private</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditedPrompt(prev => prev ? { ...prev, isPublic: true } : null)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+                          editedPrompt?.isPublic
+                            ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300'
+                            : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-750'
+                        }`}
+                      >
+                        <Globe className="w-4 h-4" />
+                        <span className="font-medium">Public</span>
+                      </button>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                      {editedPrompt?.isPublic 
+                        ? 'This prompt will be visible on your public profile and can be shared with others.'
+                        : 'This prompt will only be visible to you and won\'t appear on your public profile.'
+                      }
+                    </p>
+                  </div>
+                )}
 
                 {/* Content - Taller with more space */}
                 <div className="mt-8">

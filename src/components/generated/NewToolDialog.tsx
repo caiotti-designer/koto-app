@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Link, Loader2, Globe, Sparkles } from 'lucide-react';
+import { X, Link, Loader2, Globe, Sparkles, Plus, ChevronDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -18,11 +18,15 @@ interface NewToolDialogProps {
     logo: string;
     description?: string;
   }) => void;
+  onAddStack?: () => void;
+  availableStacks?: Array<{ id: string; name: string; }>;
 }
 const NewToolDialog: React.FC<NewToolDialogProps> = ({
   open,
   onClose,
-  onSave
+  onSave,
+  onAddStack,
+  availableStacks = []
 }) => {
   const { theme } = useTheme();
   const [url, setUrl] = useState('');
@@ -31,6 +35,7 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
   const [logo, setLogo] = useState('');
   const [description, setDescription] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showStackDropdown, setShowStackDropdown] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [emojiSearchQuery, setEmojiSearchQuery] = useState('');
   const [selectedEmojiCategory, setSelectedEmojiCategory] = useState('smileys');
@@ -189,7 +194,7 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
       }} onClick={handleClose} />
 
           {/* Dialog */}
-          <motion.div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden" initial={{
+          <motion.div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col" initial={{
         opacity: 0,
         scale: 0.95,
         y: 20
@@ -222,7 +227,8 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto">
+              <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {/* URL Input */}
               <div>
                 <Label htmlFor="url" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
@@ -251,17 +257,35 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
                 <Input type="text" id="name" value={name} onChange={e => setName(e.target.value)} placeholder="e.g., Figma" className="block w-full px-3 py-3 bg-white dark:bg-slate-700 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-400" required />
               </div>
 
-              {/* Category Select */}
+              {/* Description Input */}
               <div>
-                <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
-                  Category *
-                </label>
-                <select id="category" value={category} onChange={e => setCategory(e.target.value)} className="block w-full px-3 py-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" required>
-                  <option value="">Select a category</option>
-                  {categories.map(cat => <option key={cat} value={cat}>
-                      {cat}
-                    </option>)}
-                </select>
+                <Label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                  Description
+                </Label>
+                <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Brief description of what this tool does..." rows={3} className="block w-full px-3 py-3 resize-none bg-white dark:bg-slate-700 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-400" />
+              </div>
+
+              {/* Stack Selection */}
+              <div>
+                <Label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                  Stacks
+                </Label>
+                <div className="space-y-3">
+                  <div className="relative">
+                    <select value={category} onChange={e => setCategory(e.target.value)} className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-white appearance-none">
+                      <option value="">Select a stack</option>
+                      {availableStacks.map(stack => <option key={stack.id} value={stack.name}>
+                          {stack.name}
+                        </option>)}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                  </div>
+                  
+                  {onAddStack && <button type="button" onClick={onAddStack} className="w-full flex items-center justify-center space-x-2 px-3 py-2 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg hover:border-gray-400 dark:hover:border-slate-500 text-gray-600 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200 transition-colors">
+                      <Plus className="w-4 h-4" />
+                      <span className="text-sm font-medium">Add new stack</span>
+                    </button>}
+                </div>
               </div>
 
               {/* Logo Input */}
@@ -378,6 +402,8 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
                 <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Brief description of what this tool does..." rows={3} className="block w-full px-3 py-3 resize-none bg-white dark:bg-slate-700 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-400" />
               </div>
 
+
+
               {/* Actions */}
               <div className="flex items-center justify-end space-x-3 pt-4">
                 <Button type="button" onClick={handleClose} variant="ghost" className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700">
@@ -394,6 +420,7 @@ const NewToolDialog: React.FC<NewToolDialogProps> = ({
                 </motion.div>
               </div>
             </form>
+            </div>
           </motion.div>
         </div>}
     </AnimatePresence>;
