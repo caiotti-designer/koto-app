@@ -44,6 +44,25 @@ export interface ToolRow {
   // updated_at: string; // Commented out as this column may not exist in current database
 }
 
+export interface CategoryRow {
+  id: string;
+  name: string;
+  icon: string;
+  type: 'prompt' | 'tool';
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SubcategoryRow {
+  id: string;
+  name: string;
+  category_id: string;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
 // Auth
 export async function signInWithGitHub() {
   const redirectUrl = window.location.origin + '/auth/callback';
@@ -261,6 +280,148 @@ export async function deleteTool(id: string): Promise<void> {
   }
 }
 
+// Categories CRUD
+export async function fetchCategories(userId: string, type?: 'prompt' | 'tool'): Promise<CategoryRow[]> {
+  if (!userId) {
+    return [];
+  }
+
+  let query = supabase
+    .from('categories')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: true });
+
+  if (type) {
+    query = query.eq('type', type);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+export async function createCategory(category: Omit<CategoryRow, 'id' | 'created_at' | 'updated_at'>, userId: string): Promise<CategoryRow | null> {
+  const { data, error } = await supabase
+    .from('categories')
+    .insert([{
+      ...category,
+      user_id: userId
+    }])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating category:', error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function updateCategory(id: string, patch: Partial<CategoryRow>): Promise<CategoryRow> {
+  const cleanPatch = { ...patch } as any;
+  if ('updated_at' in cleanPatch) delete cleanPatch.updated_at;
+  
+  const { data, error } = await supabase
+    .from('categories')
+    .update(cleanPatch)
+    .eq('id', id)
+    .select('*')
+    .single();
+    
+  if (error) throw error;
+  return data as CategoryRow;
+}
+
+export async function deleteCategory(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('categories')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting category:', error);
+    throw error;
+  }
+}
+
+// Subcategories CRUD
+export async function fetchSubcategories(userId: string, categoryId?: string): Promise<SubcategoryRow[]> {
+  if (!userId) {
+    return [];
+  }
+
+  let query = supabase
+    .from('subcategories')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: true });
+
+  if (categoryId) {
+    query = query.eq('category_id', categoryId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('Error fetching subcategories:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+export async function createSubcategory(subcategory: Omit<SubcategoryRow, 'id' | 'created_at' | 'updated_at'>, userId: string): Promise<SubcategoryRow | null> {
+  const { data, error } = await supabase
+    .from('subcategories')
+    .insert([{
+      ...subcategory,
+      user_id: userId
+    }])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating subcategory:', error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function updateSubcategory(id: string, patch: Partial<SubcategoryRow>): Promise<SubcategoryRow> {
+  const cleanPatch = { ...patch } as any;
+  if ('updated_at' in cleanPatch) delete cleanPatch.updated_at;
+  
+  const { data, error } = await supabase
+    .from('subcategories')
+    .update(cleanPatch)
+    .eq('id', id)
+    .select('*')
+    .single();
+    
+  if (error) throw error;
+  return data as SubcategoryRow;
+}
+
+export async function deleteSubcategory(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('subcategories')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting subcategory:', error);
+    throw error;
+  }
+}
+
 // User Profile CRUD
 export async function fetchUserProfile(userId: string): Promise<UserProfile | null> {
   const { data, error } = await supabase
@@ -426,4 +587,75 @@ export async function fetchPublicProfile(username: string): Promise<{ profile: U
     prompts: prompts || [],
     tools: tools || []
   };
+}
+
+// Real-time subscriptions
+export function subscribeToCategories(userId: string, callback: (payload: any) => void) {
+  return supabase
+    .channel('categories')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'categories',
+        filter: `user_id=eq.${userId}`
+      },
+      callback
+    )
+    .subscribe();
+}
+
+export function subscribeToSubcategories(userId: string, callback: (payload: any) => void) {
+  return supabase
+    .channel('subcategories')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'subcategories',
+        filter: `user_id=eq.${userId}`
+      },
+      callback
+    )
+    .subscribe();
+}
+
+export function subscribeToPrompts(userId: string, callback: (payload: any) => void) {
+  return supabase
+    .channel('prompts')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'prompts',
+        filter: `user_id=eq.${userId}`
+      },
+      callback
+    )
+    .subscribe();
+}
+
+export function subscribeToTools(userId: string, callback: (payload: any) => void) {
+  return supabase
+    .channel('tools')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'tools',
+        filter: `user_id=eq.${userId}`
+      },
+      callback
+    )
+    .subscribe();
+}
+
+export function unsubscribeFromChannel(channel: any) {
+  if (channel) {
+    supabase.removeChannel(channel);
+  }
 }

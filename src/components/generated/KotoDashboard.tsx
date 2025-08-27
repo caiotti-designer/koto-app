@@ -41,6 +41,17 @@ import {
   signInWithGoogle,
   signOut as supaSignOut,
   fetchUserProfile,
+  fetchCategories,
+  fetchSubcategories,
+  createCategory,
+  createSubcategory,
+  updateCategory,
+  updateSubcategory,
+  deleteCategory,
+  deleteSubcategory,
+  subscribeToCategories,
+  subscribeToSubcategories,
+  unsubscribeFromChannel,
 } from '../../lib/data';
 import type { PromptRow, ToolRow } from '../../lib/data';
 interface Subcategory {
@@ -372,72 +383,23 @@ const KotoDashboard: React.FC = () => {
   // Reset all data to defaults for new user
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [tools, setTools] = useState<Tool[]>([]);
-  const [categories, setCategories] = useState<Category[]>(() => {
-    // Load categories from localStorage if available
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('koto_categories');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          // Restore icon references from iconOptions
-          return parsed.map((cat: any) => ({
-            ...cat,
-            icon: iconOptions.find(opt => opt.name === cat.iconName)?.icon || Globe
-          }));
-        } catch (e) {
-          console.warn('Failed to parse saved categories:', e);
-        }
-      }
-    }
-    return [{
-      id: 'all',
-      name: 'All',
-      count: 0,
-      icon: Globe,
-      expanded: false
-    }];
-  });
+  const [categories, setCategories] = useState<Category[]>([{
+    id: 'all',
+    name: 'All',
+    count: 0,
+    icon: Globe,
+    expanded: false
+  }]);
 
   // Missing state variables
-  const [subcategories, setSubcategories] = useState<Subcategory[]>(() => {
-    // Load subcategories from localStorage if available
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('koto_subcategories');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.warn('Failed to parse saved subcategories:', e);
-        }
-      }
-    }
-    return [];
-  });
-  const [toolCategories, setToolCategories] = useState<Category[]>(() => {
-    // Load tool categories from localStorage if available
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('koto_tool_categories');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          // Restore icon references from iconOptions
-          return parsed.map((cat: any) => ({
-            ...cat,
-            icon: iconOptions.find(opt => opt.name === cat.iconName)?.icon || Globe
-          }));
-        } catch (e) {
-          console.warn('Failed to parse saved tool categories:', e);
-        }
-      }
-    }
-    return [{
-      id: 'all-tools',
-      name: 'All Tools',
-      count: 0,
-      icon: Globe,
-      expanded: false
-    }];
-  });
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const [toolCategories, setToolCategories] = useState<Category[]>([{
+    id: 'all-tools',
+    name: 'All Tools',
+    count: 0,
+    icon: Globe,
+    expanded: false
+  }]);
 
   // Update category counts dynamically
   const updatedCategories = categories.map(category => {
@@ -572,6 +534,86 @@ const KotoDashboard: React.FC = () => {
     return () => window.removeEventListener('focus', handleFocus);
   }, [user?.id]);
 
+  // Load categories and subcategories from database when user is authenticated
+  useEffect(() => {
+    const loadCategories = async () => {
+      if (!user?.id) {
+        setCategories([{
+          id: 'all',
+          name: 'All',
+          count: 0,
+          icon: Globe,
+          expanded: false
+        }]);
+        setToolCategories([{
+          id: 'all-tools',
+          name: 'All Tools',
+          count: 0,
+          icon: Globe,
+          expanded: false
+        }]);
+        setSubcategories([]);
+        return;
+      }
+
+      try {
+        const [categoryRows, subcategoryRows] = await Promise.all([
+          fetchCategories(user.id),
+          fetchSubcategories(user.id)
+        ]);
+
+        // Map categories from database
+        const mappedCategories = categoryRows.map(row => ({
+          id: row.id,
+          name: row.name,
+          count: 0, // Will be calculated dynamically
+          icon: iconOptions.find(opt => opt.name === row.icon)?.icon || Globe,
+          expanded: false
+        }));
+
+        // Map subcategories from database
+        const mappedSubcategories = subcategoryRows.map(row => ({
+          id: row.id,
+          name: row.name,
+          parentId: row.category_id,
+          count: 0 // Will be calculated dynamically
+        }));
+
+        // Separate prompt and tool categories
+        const promptCategories = mappedCategories.filter(cat => cat.id.includes('prompt') || !cat.id.includes('tool'));
+        const toolCategoriesFromDb = mappedCategories.filter(cat => cat.id.includes('tool'));
+
+        setCategories([
+          {
+            id: 'all',
+            name: 'All',
+            count: 0,
+            icon: Globe,
+            expanded: false
+          },
+          ...promptCategories
+        ]);
+
+        setToolCategories([
+          {
+            id: 'all-tools',
+            name: 'All Tools',
+            count: 0,
+            icon: Globe,
+            expanded: false
+          },
+          ...toolCategoriesFromDb
+        ]);
+
+        setSubcategories(mappedSubcategories);
+      } catch (error) {
+        console.error('Failed to load categories from database:', error);
+      }
+    };
+
+    loadCategories();
+  }, [user]);
+
   // Load data from Supabase when user is authenticated
   useEffect(() => {
     const load = async () => {
@@ -616,6 +658,90 @@ const KotoDashboard: React.FC = () => {
     };
     load();
   }, [user]);
+
+  // Real-time subscriptions for categories and subcategories
+  useEffect(() => {
+    if (!user?.id) return;
+
+    // Subscribe to categories changes
+    const categoriesChannel = subscribeToCategories((payload) => {
+      console.log('Categories change received:', payload);
+      
+      if (payload.eventType === 'INSERT') {
+        const newCategory: Category = {
+          id: payload.new.id,
+          name: payload.new.name,
+          count: 0,
+          icon: iconOptions.find(opt => opt.name === payload.new.icon)?.icon || Globe,
+          expanded: false,
+        };
+        
+        if (payload.new.type === 'prompt') {
+          setCategories(prev => [...prev, newCategory]);
+        } else {
+          setToolCategories(prev => [...prev, newCategory]);
+        }
+      } else if (payload.eventType === 'UPDATE') {
+        const updatedCategory: Category = {
+          id: payload.new.id,
+          name: payload.new.name,
+          count: 0,
+          icon: iconOptions.find(opt => opt.name === payload.new.icon)?.icon || Globe,
+          expanded: false,
+        };
+        
+        if (payload.new.type === 'prompt') {
+          setCategories(prev => prev.map(cat => 
+            cat.id === payload.new.id ? updatedCategory : cat
+          ));
+        } else {
+          setToolCategories(prev => prev.map(cat => 
+            cat.id === payload.new.id ? updatedCategory : cat
+          ));
+        }
+      } else if (payload.eventType === 'DELETE') {
+        setCategories(prev => prev.filter(cat => cat.id !== payload.old.id));
+        setToolCategories(prev => prev.filter(cat => cat.id !== payload.old.id));
+      }
+    });
+
+    // Subscribe to subcategories changes
+    const subcategoriesChannel = subscribeToSubcategories((payload) => {
+      console.log('Subcategories change received:', payload);
+      
+      if (payload.eventType === 'INSERT') {
+        const newSubcategory = {
+          id: payload.new.id,
+          name: payload.new.name,
+          parentId: payload.new.category_id,
+          count: 0,
+        };
+        setSubcategories(prev => [...prev, newSubcategory]);
+      } else if (payload.eventType === 'UPDATE') {
+        const updatedSubcategory = {
+          id: payload.new.id,
+          name: payload.new.name,
+          parentId: payload.new.category_id,
+          count: 0,
+        };
+        setSubcategories(prev => prev.map(sub => 
+          sub.id === payload.new.id ? updatedSubcategory : sub
+        ));
+      } else if (payload.eventType === 'DELETE') {
+        setSubcategories(prev => prev.filter(sub => sub.id !== payload.old.id));
+      }
+    });
+
+    // Cleanup subscriptions on unmount
+    return () => {
+      if (categoriesChannel) {
+        unsubscribeFromChannel(categoriesChannel);
+      }
+      if (subcategoriesChannel) {
+        unsubscribeFromChannel(subcategoriesChannel);
+      }
+    };
+  }, [user?.id]);
 
   // Drag and drop handlers
   const [dragOverTarget, setDragOverTarget] = useState<string | null>(null);
@@ -727,75 +853,83 @@ const KotoDashboard: React.FC = () => {
     }
     setDraggedItem(null);
   };
-  const handleAddProject = () => {
-    if (!newProjectName.trim()) return;
-    const newProject: Project = {
-      id: `project-${Date.now()}`,
-      name: newProjectName,
-      icon: selectedIcon.icon,
-      tags: newProjectTags,
-      subcategories: newProjectSubcategories,
-      createdAt: new Date()
-    };
+  const handleAddProject = async () => {
+    if (!newProjectName.trim() || !user?.id) return;
+    
+    try {
+      const newProject: Project = {
+        id: `project-${Date.now()}`,
+        name: newProjectName,
+        icon: selectedIcon.icon,
+        tags: newProjectTags,
+        subcategories: newProjectSubcategories,
+        createdAt: new Date()
+      };
 
-    // Add to categories
-    const newCategory: Category = {
-      id: newProjectName.toLowerCase().replace(/\s+/g, '-'),
-      name: newProjectName,
-      count: 0,
-      icon: selectedIcon.icon,
-      expanded: false,
-    };
-    if (activeTab === 'prompts') {
-      setCategories(prev => {
-        const updated = [...prev, newCategory];
-        // Save to localStorage with icon name for serialization
-        const serializable = updated.map(cat => ({
-          ...cat,
-          iconName: iconOptions.find(opt => opt.icon === cat.icon)?.name || 'Globe'
-        }));
-        localStorage.setItem('koto_categories', JSON.stringify(serializable));
-        return updated;
-      });
-    } else {
-      setToolCategories(prev => {
-        const updated = [...prev, newCategory];
-        // Save to localStorage with icon name for serialization
-        const serializable = updated.map(cat => ({
-          ...cat,
-          iconName: iconOptions.find(opt => opt.icon === cat.icon)?.name || 'Globe'
-        }));
-        localStorage.setItem('koto_tool_categories', JSON.stringify(serializable));
-        return updated;
-      });
-    }
+      // Create category in database
+      const categoryType = activeTab === 'prompts' ? 'prompt' : 'tool';
+      const iconName = iconOptions.find(opt => opt.icon === selectedIcon.icon)?.name || 'Globe';
+      
+      const createdCategory = await createCategory({
+        name: newProjectName,
+        icon: iconName,
+        type: categoryType
+      }, user.id);
 
-    // Add subcategories (only for prompts)
-    if (activeTab === 'prompts') {
-      const newSubcats = newProjectSubcategories.map(subcat => ({
-        id: `${newCategory.id}-${subcat.toLowerCase().replace(/\s+/g, '-')}`,
-        name: subcat,
-        parentId: newCategory.id,
-        count: 0,
-      }));
-      setSubcategories(prev => {
-        const updated = [...prev, ...newSubcats];
-        localStorage.setItem('koto_subcategories', JSON.stringify(updated));
-        return updated;
-      });
-    }
+      if (createdCategory) {
+        const newCategory: Category = {
+          id: createdCategory.id,
+          name: createdCategory.name,
+          count: 0,
+          icon: selectedIcon.icon,
+          expanded: false,
+        };
 
-    // Set the new project as active category
-    setActiveCategory(newCategory.id);
+        // Update local state
+        if (activeTab === 'prompts') {
+          setCategories(prev => [...prev, newCategory]);
+        } else {
+          setToolCategories(prev => [...prev, newCategory]);
+        }
 
-    // If returning to tool dialog, set the new category and reopen tool dialog
-    if (returnToToolDialog) {
-      setNewToolCategory(newCategory.name);
-      setReturnToToolDialog(false);
-      setShowAddProjectDialog(false);
-      setShowNewToolDialog(true);
-    } else {
-      setShowAddProjectDialog(false);
+        // Create subcategories in database
+        if (activeTab === 'prompts' && newProjectSubcategories.length > 0) {
+          const subcategoryPromises = newProjectSubcategories.map(subcat => 
+            createSubcategory({
+              name: subcat,
+              category_id: createdCategory.id
+            }, user.id)
+          );
+          
+          const createdSubcategories = await Promise.all(subcategoryPromises);
+          const newSubcats = createdSubcategories.filter(Boolean).map(sub => ({
+            id: sub!.id,
+            name: sub!.name,
+            parentId: sub!.category_id,
+            count: 0,
+          }));
+          
+          setSubcategories(prev => [...prev, ...newSubcats]);
+        }
+
+        // Set the new project as active category
+        setActiveCategory(createdCategory.id);
+
+        // If returning to tool dialog, set the new category and reopen tool dialog
+        if (returnToToolDialog) {
+          setNewToolCategory(newCategory.name);
+          setReturnToToolDialog(false);
+          setShowAddProjectDialog(false);
+          setShowNewToolDialog(true);
+        } else {
+          setShowAddProjectDialog(false);
+        }
+
+        toast.success('Project created successfully!');
+      }
+    } catch (error) {
+      console.error('Failed to create project:', error);
+      toast.error('Failed to create project');
     }
 
     // Reset form
