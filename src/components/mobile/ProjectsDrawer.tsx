@@ -35,6 +35,8 @@ interface ProjectsDrawerProps {
   selectedCategory: string;
   onCategorySelect: (category: string) => void;
   onNewProject: () => void;
+  categories: Category[];
+  subcategories?: any[];
 }
 
 const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
@@ -43,30 +45,27 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
   activeTab,
   selectedCategory,
   onCategorySelect,
-  onNewProject
+  onNewProject,
+  categories: propCategories,
+  subcategories = []
 }) => {
-  const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
 
-  // Load projects/stacks from localStorage
-  useEffect(() => {
-    const storageKey = activeTab === 'prompts' ? 'koto_categories' : 'koto_tool_categories';
-    const stored = localStorage.getItem(storageKey);
-    if (stored) {
-      try {
-        const data = JSON.parse(stored);
-        // Filter out the 'all' category as it's handled separately
-        const filteredData = data.filter((cat: Category) => cat.id !== 'all' && cat.id !== 'all-tools');
-        setCategories(filteredData || []);
-      } catch (error) {
-        console.error('Error loading projects/stacks:', error);
-        setCategories([]);
-      }
+  // Filter categories based on type
+  const categories = propCategories.filter(cat => {
+    if (activeTab === 'prompts') {
+      return cat.type === 'prompt';
     } else {
-      setCategories([]);
+      return cat.type === 'tool';
     }
-  }, [activeTab]);
+  }).map(cat => ({
+    id: cat.id,
+    name: cat.name,
+    count: cat.prompt_count || cat.tool_count || 0,
+    iconName: cat.icon_name,
+    expanded: false
+  }));
 
   // Filter categories based on search query
   useEffect(() => {
@@ -83,55 +82,30 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
   // Calculate total count
   const totalCount = categories.reduce((acc, category) => acc + (category.count || 0), 0);
 
-  // Toggle category expansion
+  // Toggle category expansion (local state only for UI)
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  
   const toggleCategory = (categoryId: string) => {
-    setCategories(prev => prev.map(cat => 
-      cat.id === categoryId 
-        ? { ...cat, expanded: !cat.expanded }
-        : cat
-    ));
-    
-    // Update localStorage
-    const storageKey = activeTab === 'prompts' ? 'koto_categories' : 'koto_tool_categories';
-    const stored = localStorage.getItem(storageKey);
-    if (stored) {
-      try {
-        const allData = JSON.parse(stored);
-        const updatedData = allData.map((cat: Category) => 
-          cat.id === categoryId 
-            ? { ...cat, expanded: !cat.expanded }
-            : cat
-        );
-        localStorage.setItem(storageKey, JSON.stringify(updatedData));
-      } catch (error) {
-        console.error('Error updating category expansion:', error);
+    setExpandedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(categoryId)) {
+        newSet.delete(categoryId);
+      } else {
+        newSet.add(categoryId);
       }
-    }
+      return newSet;
+    });
   };
 
-  // Handle category actions
+  // Handle category actions (these would need to be passed as props for database operations)
   const handleDeleteCategory = (categoryId: string) => {
-    setCategories(prev => prev.filter(cat => cat.id !== categoryId));
-    // Update localStorage
-    const storageKey = activeTab === 'prompts' ? 'koto_categories' : 'koto_tool_categories';
-    const updatedCategories = categories.filter(cat => cat.id !== categoryId);
-    localStorage.setItem(storageKey, JSON.stringify(updatedCategories));
+    // This should be handled by parent component with database operations
+    console.log('Delete category:', categoryId);
   };
 
   const handleRenameCategory = (categoryId: string, newName: string) => {
-    setCategories(prev => prev.map(cat => 
-      cat.id === categoryId 
-        ? { ...cat, name: newName }
-        : cat
-    ));
-    // Update localStorage
-    const storageKey = activeTab === 'prompts' ? 'koto_categories' : 'koto_tool_categories';
-    const updatedCategories = categories.map(cat => 
-      cat.id === categoryId 
-        ? { ...cat, name: newName }
-        : cat
-    );
-    localStorage.setItem(storageKey, JSON.stringify(updatedCategories));
+    // This should be handled by parent component with database operations
+    console.log('Rename category:', categoryId, newName);
   };
 
   if (!isOpen) return null;
@@ -214,7 +188,7 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
                     onClick={() => toggleCategory(category.id)}
                   >
                     <div className="flex items-center space-x-2">
-                      {category.expanded ? (
+                      {expandedCategories.has(category.id) ? (
                         <ChevronDown className="h-4 w-4" />
                       ) : (
                         <ChevronRight className="h-4 w-4" />
@@ -258,7 +232,7 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
                 </div>
 
                 {/* Subcategories placeholder - can be expanded later */}
-                {category.expanded && (
+                {expandedCategories.has(category.id) && (
                   <div className="ml-6 space-y-1">
                     <div className="text-xs text-gray-500 dark:text-gray-400 py-2">
                       No items in this {activeTab === 'prompts' ? 'project' : 'stack'}

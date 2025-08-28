@@ -24,8 +24,15 @@ import {
   createTool,
   uploadCover,
   signOut,
+  fetchCategories,
+  fetchSubcategories,
+  createCategory,
+  createSubcategory,
+  subscribeToCategories,
+  subscribeToSubcategories,
+  unsubscribeFromChannel,
 } from '../lib/data';
-import type { PromptRow, ToolRow } from '../lib/data';
+import type { PromptRow, ToolRow, CategoryRow, SubcategoryRow } from '../lib/data';
 import { Badge } from './ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from './ui/card';
 import { useNavigate } from 'react-router-dom';
@@ -102,14 +109,9 @@ const MobileDashboard: React.FC = () => {
   // Projects drawer state
   const [showProjectsDrawer, setShowProjectsDrawer] = useState(false);
   
-  // Categories state for project selection
-  const [categories, setCategories] = useState<Array<{ id: string; name: string; icon: any }>>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('koto_categories');
-      return saved ? JSON.parse(saved) : [];
-    }
-    return [];
-  });
+  // Categories and subcategories state
+  const [categories, setCategories] = useState<CategoryRow[]>([]);
+  const [subcategories, setSubcategories] = useState<SubcategoryRow[]>([]);
 
   useEffect(() => {
     const subscription = onAuthChange(async (user) => {
@@ -119,13 +121,17 @@ const MobileDashboard: React.FC = () => {
           const profile = await fetchUserProfile(user.id);
           setUserProfile(profile);
           
-          const [promptsData, toolsData] = await Promise.all([
+          const [promptsData, toolsData, categoriesData, subcategoriesData] = await Promise.all([
             fetchPrompts(user.id),
-            fetchTools(user.id)
+            fetchTools(user.id),
+            fetchCategories(user.id),
+            fetchSubcategories(user.id)
           ]);
           
           setPrompts(promptsData);
           setTools(toolsData);
+          setCategories(categoriesData);
+          setSubcategories(subcategoriesData);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -142,6 +148,36 @@ const MobileDashboard: React.FC = () => {
       }
     };
   }, []);
+
+  // Real-time subscriptions for categories and subcategories
+  useEffect(() => {
+    if (!user) return;
+
+    const categoriesChannel = subscribeToCategories(user.id, (payload) => {
+      if (payload.eventType === 'INSERT') {
+        setCategories(prev => [...prev, payload.new]);
+      } else if (payload.eventType === 'UPDATE') {
+        setCategories(prev => prev.map(cat => cat.id === payload.new.id ? payload.new : cat));
+      } else if (payload.eventType === 'DELETE') {
+        setCategories(prev => prev.filter(cat => cat.id !== payload.old.id));
+      }
+    });
+
+    const subcategoriesChannel = subscribeToSubcategories(user.id, (payload) => {
+      if (payload.eventType === 'INSERT') {
+        setSubcategories(prev => [...prev, payload.new]);
+      } else if (payload.eventType === 'UPDATE') {
+        setSubcategories(prev => prev.map(sub => sub.id === payload.new.id ? payload.new : sub));
+      } else if (payload.eventType === 'DELETE') {
+        setSubcategories(prev => prev.filter(sub => sub.id !== payload.old.id));
+      }
+    });
+
+    return () => {
+      unsubscribeFromChannel(categoriesChannel);
+      unsubscribeFromChannel(subcategoriesChannel);
+    };
+  }, [user]);
 
   // Mapping helpers for modals
   const mapPromptRowToPrompt = (row: PromptRow): PromptModal => ({
@@ -929,38 +965,45 @@ const MobileDashboard: React.FC = () => {
         <NewProjectDialog
           open={showNewProjectDialog}
           onClose={() => setShowNewProjectDialog(false)}
-          onSave={(projectData) => {
-            // Create new category (project/stack)
-            const newCategory = {
-              id: projectData.name.toLowerCase().replace(/\s+/g, '-'),
-              name: projectData.name,
-              count: 0,
-              icon: projectData.icon,
-              iconName: projectData.iconName || 'Globe',
-              expanded: false,
-            };
-
-            // Save to localStorage based on current tab
-            const storageKey = activeTab === 'prompts' ? 'koto_categories' : 'koto_tool_categories';
-            const existingData = JSON.parse(localStorage.getItem(storageKey) || '[]');
-            const updatedData = [...existingData, newCategory];
-            localStorage.setItem(storageKey, JSON.stringify(updatedData));
-
-            // Add subcategories if it's a project (prompts tab)
-            if (activeTab === 'prompts' && projectData.subcategories && projectData.subcategories.length > 0) {
-              const newSubcats = projectData.subcategories.map((subcat: string) => ({
-                id: `${newCategory.id}-${subcat.toLowerCase().replace(/\s+/g, '-')}`,
-                name: subcat,
-                parentId: newCategory.id,
-                count: 0,
-              }));
-              const existingSubcats = JSON.parse(localStorage.getItem('koto_subcategories') || '[]');
-              const updatedSubcats = [...existingSubcats, ...newSubcats];
-              localStorage.setItem('koto_subcategories', JSON.stringify(updatedSubcats));
+          onSave={async (projectData) => {
+            if (!user?.id) {
+              toast.error('Please sign in to continue');
+              setShowNewProjectDialog(false);
+              return;
             }
-            
-            toast.success(`${activeTab === 'prompts' ? 'Project' : 'Stack'} added successfully!`);
-            setShowNewProjectDialog(false);
+
+            try {
+              // Create new category (project/stack)
+              const categoryData = {
+                name: projectData.name,
+                type: activeTab === 'prompts' ? 'prompt' as const : 'tool' as const,
+                icon_name: projectData.iconName || 'Globe',
+                user_id: user.id
+              };
+
+              const createdCategory = await createCategory(categoryData, user.id);
+              if (!createdCategory) {
+                throw new Error('Failed to create category');
+              }
+
+              // Add subcategories if it's a project (prompts tab)
+              if (activeTab === 'prompts' && projectData.subcategories && projectData.subcategories.length > 0) {
+                for (const subcatName of projectData.subcategories) {
+                  await createSubcategory({
+                    name: subcatName,
+                    category_id: createdCategory.id,
+                    user_id: user.id
+                  }, user.id);
+                }
+              }
+              
+              toast.success(`${activeTab === 'prompts' ? 'Project' : 'Stack'} added successfully!`);
+            } catch (error) {
+              console.error('Error creating project:', error);
+              toast.error('Failed to create project. Please try again.');
+            } finally {
+              setShowNewProjectDialog(false);
+            }
           }}
           type={activeTab === 'prompts' ? 'project' : 'stack'}
         />
@@ -976,6 +1019,8 @@ const MobileDashboard: React.FC = () => {
             setShowProjectsDrawer(false);
             setShowNewProjectDialog(true);
           }}
+          categories={categories}
+          subcategories={subcategories}
         />
 
         {/* Storage Debugger */}
