@@ -664,7 +664,7 @@ const KotoDashboard: React.FC = () => {
     if (!user?.id) return;
 
     // Subscribe to categories changes
-    const categoriesChannel = subscribeToCategories((payload) => {
+    const categoriesChannel = subscribeToCategories(user.id, (payload) => {
       console.log('Categories change received:', payload);
       
       if (payload.eventType === 'INSERT') {
@@ -706,7 +706,7 @@ const KotoDashboard: React.FC = () => {
     });
 
     // Subscribe to subcategories changes
-    const subcategoriesChannel = subscribeToSubcategories((payload) => {
+    const subcategoriesChannel = subscribeToSubcategories(user.id, (payload) => {
       console.log('Subcategories change received:', payload);
       
       if (payload.eventType === 'INSERT') {
@@ -873,7 +873,8 @@ const KotoDashboard: React.FC = () => {
       const createdCategory = await createCategory({
         name: newProjectName,
         icon: iconName,
-        type: categoryType
+        type: categoryType,
+        user_id: user.id
       }, user.id);
 
       if (createdCategory) {
@@ -897,7 +898,8 @@ const KotoDashboard: React.FC = () => {
           const subcategoryPromises = newProjectSubcategories.map(subcat => 
             createSubcategory({
               name: subcat,
-              category_id: createdCategory.id
+              category_id: createdCategory.id,
+              user_id: user.id
             }, user.id)
           );
           
