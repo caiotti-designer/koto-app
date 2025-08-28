@@ -977,7 +977,7 @@ const MobileDashboard: React.FC = () => {
               const categoryData = {
                 name: projectData.name,
                 type: activeTab === 'prompts' ? 'prompt' as const : 'tool' as const,
-                icon_name: projectData.iconName || 'Globe',
+                icon: projectData.iconName || 'Globe',
                 user_id: user.id
               };
 

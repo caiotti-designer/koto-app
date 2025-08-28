@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import Logo from '../Logo';
+import type { CategoryRow, SubcategoryRow } from '../../lib/data';
 
 interface Project {
   id: string;
@@ -19,15 +20,6 @@ interface Project {
   subcategories: string[];
 }
 
-interface Category {
-  id: string;
-  name: string;
-  count: number;
-  icon?: any;
-  iconName?: string;
-  expanded?: boolean;
-}
-
 interface ProjectsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -35,8 +27,8 @@ interface ProjectsDrawerProps {
   selectedCategory: string;
   onCategorySelect: (category: string) => void;
   onNewProject: () => void;
-  categories: Category[];
-  subcategories?: any[];
+  categories: CategoryRow[];
+  subcategories?: SubcategoryRow[];
 }
 
 const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
@@ -50,7 +42,7 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
   subcategories = []
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
+  const [filteredCategories, setFilteredCategories] = useState<CategoryRow[]>([]);
 
   // Filter categories based on type
   const categories = propCategories.filter(cat => {
@@ -59,13 +51,7 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
     } else {
       return cat.type === 'tool';
     }
-  }).map(cat => ({
-    id: cat.id,
-    name: cat.name,
-    count: cat.prompt_count || cat.tool_count || 0,
-    iconName: cat.icon_name,
-    expanded: false
-  }));
+  });
 
   // Filter categories based on search query
   useEffect(() => {
@@ -80,7 +66,7 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
   }, [categories, searchQuery]);
 
   // Calculate total count
-  const totalCount = categories.reduce((acc, category) => acc + (category.count || 0), 0);
+  const totalCount = categories.length;
 
   // Toggle category expansion (local state only for UI)
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
@@ -196,8 +182,8 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
                       <Folder className="h-4 w-4" />
                       <span className="text-sm">{category.name}</span>
                       <Badge variant="secondary" className="ml-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300">
-                        {category.count || 0}
-                      </Badge>
+                         0
+                        </Badge>
                     </div>
                   </Button>
                   
