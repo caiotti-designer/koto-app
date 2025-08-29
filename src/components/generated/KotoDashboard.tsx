@@ -2899,8 +2899,8 @@ return;
             )}
             <div className="w-[96%] mx-auto">
               {/* Show prompts/tools if they exist, otherwise show empty state */}
-              {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 w-full justify-items-stretch auto-rows-fr transition-all duration-300 ${isDragging ? 'scale-[0.98]' : 'scale-100'}`}>
-                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className={`justify-self-start w-full h-full transition-all duration-200 ${draggedItem?.item?.id === prompt.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`}>
+              {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className={`columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 w-full transition-all duration-300 ${isDragging ? 'scale-[0.98]' : 'scale-100'}`}>
+                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className={`mb-4 w-full transition-all duration-200 ${draggedItem?.item?.id === prompt.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} style={{ breakInside: 'avoid' }}>
                           <PromptCard 
                             title={prompt.title} 
                             description={prompt.content} 
@@ -2912,7 +2912,7 @@ return;
                             onDragStart={(e: React.DragEvent<HTMLDivElement>) => handleDragStart(e, 'prompt', prompt)}
                             onDragEnd={handleDragEnd}
                           />
-                        </div>) : filteredTools.map(tool => <div key={tool.id} className={`justify-self-start w-full h-full transition-all duration-200 ${draggedItem?.item?.id === tool.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`}>
+                        </div>) : filteredTools.map(tool => <div key={tool.id} className={`mb-4 w-full transition-all duration-200 ${draggedItem?.item?.id === tool.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} style={{ breakInside: 'avoid' }}>
                           <ToolCard 
                             name={tool.name}
                             description={tool.description}

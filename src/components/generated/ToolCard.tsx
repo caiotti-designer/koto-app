@@ -60,7 +60,7 @@ export default function ToolCard({
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       className={`${isDragging ? 'cursor-grabbing' : 'cursor-pointer'} transition-all duration-200 group`}
-      style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+      style={{ fontFamily: 'Space Grotesk, sans-serif', breakInside: 'avoid' }}
     >
     <motion.div 
       onClick={handleClick}
