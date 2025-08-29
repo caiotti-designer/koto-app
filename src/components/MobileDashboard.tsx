@@ -479,13 +479,50 @@ const MobileDashboard: React.FC = () => {
                       <Wrench className="w-5 h-5 text-white" strokeWidth={2} />
                     )}
                     <h2 className="text-white font-bold text-lg leading-tight">
-                      {activeTab === 'prompts' ? 'All Prompts' : 'All Tools'}
+                      {(() => {
+                        const isAll = activeCategory === 'all';
+                        const sub = subcategories.find(s => s.id === activeCategory);
+                        if (activeTab === 'prompts') {
+                          if (isAll) return 'All Prompts';
+                          if (sub) {
+                            const parent = categories.find(c => c.id === sub.category_id);
+                            return parent ? `${parent.name} / ${sub.name}` : sub.name;
+                          }
+                          const cat = categories.find(c => c.id === activeCategory);
+                          return cat ? cat.name : 'All Prompts';
+                        } else {
+                          if (isAll) return 'All Tools';
+                          if (sub) {
+                            const parent = categories.find(c => c.id === sub.category_id);
+                            return parent ? `${parent.name} / ${sub.name}` : sub.name;
+                          }
+                          const cat = categories.find(c => c.id === activeCategory);
+                          return cat ? cat.name : 'All Tools';
+                        }
+                      })()}
                     </h2>
                   </div>
                   
                   {/* Prompt Count */}
                   <p className="text-white/90 text-xs leading-relaxed">
-                    {activeTab === 'prompts' ? `${prompts.length} prompts available` : `${tools.length} tools available`}
+                    {(() => {
+                      const isAll = activeCategory === 'all';
+                      if (activeTab === 'prompts') {
+                        if (isAll) return `${prompts.length} prompts available`;
+                        const sub = subcategories.find(s => s.id === activeCategory);
+                        if (sub) return `${prompts.filter(p => p.subcategory === sub.id).length} prompts available`;
+                        const direct = prompts.filter(p => p.category === activeCategory && !p.subcategory).length;
+                        const subCount = subcategories.filter(s => s.category_id === activeCategory).reduce((acc, s) => acc + prompts.filter(p => p.subcategory === s.id).length, 0);
+                        return `${direct + subCount} prompts available`;
+                      } else {
+                        if (isAll) return `${tools.length} tools available`;
+                        const sub = subcategories.find(s => s.id === activeCategory);
+                        if (sub) return `${tools.filter(t => t.subcategory === sub.id).length} tools available`;
+                        const direct = tools.filter(t => t.category === activeCategory && !t.subcategory).length;
+                        const subCount = subcategories.filter(s => s.category_id === activeCategory).reduce((acc, s) => acc + tools.filter(t => t.subcategory === s.id).length, 0);
+                        return `${direct + subCount} tools available`;
+                      }
+                    })()}
                   </p>
                 </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { X, Plus, ChevronDown, ChevronRight, MoreVertical, Folder, FolderPlus, Pencil, Trash2, Search } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -56,27 +56,22 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
   onDeleteSubcategory,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredCategories, setFilteredCategories] = useState<CategoryRow[]>([]);
+  // Derived lists via memoization to avoid effects causing render loops
 
   // Filter categories based on type
-  const categories = propCategories.filter(cat => {
+  const categories = useMemo(() => propCategories.filter(cat => {
     if (activeTab === 'prompts') {
       return cat.type === 'prompt';
     } else {
       return cat.type === 'tool';
     }
-  });
+  }), [propCategories, activeTab]);
 
   // Filter categories based on search query
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredCategories(categories);
-    } else {
-      const filtered = categories.filter(category =>
-        category.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setFilteredCategories(filtered);
-    }
+  const filteredCategories = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return categories;
+    return categories.filter(category => category.name.toLowerCase().includes(q));
   }, [categories, searchQuery]);
 
   // Calculate counts
