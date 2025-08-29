@@ -1361,6 +1361,40 @@ return;
 
 
   };
+
+  // Delete a category (project/stack) and its subcategories in the database, then update local state
+  const handleDeleteCategoryAndSubs = async (categoryId: string) => {
+    if (!user?.id) {
+      toast.error('Please sign in to delete');
+      return;
+    }
+
+    try {
+      // Delete subcategories first to satisfy potential FK constraints
+      const subsToDelete = subcategories.filter(sub => sub.parentId === categoryId);
+      if (subsToDelete.length > 0) {
+        await Promise.all(subsToDelete.map(sub => deleteSubcategory(sub.id)));
+      }
+
+      // Delete the category
+      await deleteCategory(categoryId);
+
+      // Update local state
+      setSubcategories(prev => prev.filter(sub => sub.parentId !== categoryId));
+      setCategories(prev => prev.filter(cat => cat.id !== categoryId));
+      setToolCategories(prev => prev.filter(cat => cat.id !== categoryId));
+
+      // If it was the active category, reset to list view for current tab
+      if (activeCategory === categoryId) {
+        setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools');
+      }
+
+      toast.success('Category deleted');
+    } catch (error) {
+      console.error('Failed to delete category:', error);
+      toast.error('Failed to delete category');
+    }
+  };
   const getCurrentCategoryName = () => {
     if (activeCategory === 'all') {
       return activeTab === 'prompts' ? 'AI Prompts' : 'A.I Tools';
@@ -2325,16 +2359,7 @@ return;
                                       <DropdownMenuItem 
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          // Handle delete category
-                                          if (activeTab === 'prompts') {
-                                            setCategories(prev => prev.filter(cat => cat.id !== category.id));
-                                          } else {
-                                            setToolCategories(prev => prev.filter(cat => cat.id !== category.id));
-                                          }
-                                          // Reset to 'all' if deleting active category
-                                          if (activeCategory === category.id) {
-                                            setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools');
-                                          }
+                                          handleDeleteCategoryAndSubs(category.id);
                                         }}
                                         className="text-red-600 dark:text-red-400"
                                       >
