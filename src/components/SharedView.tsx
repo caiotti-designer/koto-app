@@ -97,6 +97,21 @@ const SharedView: React.FC<SharedViewProps> = ({ type }) => {
     }
   };
 
+  const safeHostname = (u?: string) => {
+    try {
+      const v = (u || '').trim();
+      if (!v) return '';
+      const href = v.startsWith('http://') || v.startsWith('https://') ? v : `https://${v}`;
+      return new URL(href).hostname;
+    } catch {
+      try {
+        return (u || '').replace(/^https?:\/\//, '').split('/')[0];
+      } catch {
+        return '';
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
@@ -361,7 +376,7 @@ const SharedView: React.FC<SharedViewProps> = ({ type }) => {
                                   {tool.category}
                                 </span>
                                 <span className="bg-white/10 px-3 py-1 rounded-full text-sm text-white/60">
-                                  {new URL(tool.url).hostname}
+                                  {safeHostname(tool.url)}
                                 </span>
                               </div>
                             </div>
