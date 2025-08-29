@@ -11,6 +11,9 @@ export interface PromptCardProps {
   model?: string;
   coverImage?: string;
   onClick?: () => void;
+  isDragging?: boolean;
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void;
 }
 export default function PromptCard({
   title = "Woman and Tiger",
@@ -18,22 +21,46 @@ export default function PromptCard({
   tags = ["sref", "fashion", "photography", "Midjourney"],
   model = "Writing",
   coverImage,
-  onClick
+  onClick,
+  isDragging = false,
+  onDragStart,
+  onDragEnd
 }: PromptCardProps) {
   const truncateText = (text: string, maxLength: number = 50) => {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   };
-  return <motion.div onClick={onClick} whileHover={{
-    scale: 1.02,
-    y: -4
-  }} whileTap={{
-    scale: 0.98
-  }} transition={{
-    duration: 0.2,
-    ease: "easeOut"
-  }} className="cursor-pointer transition-all duration-200 group" style={{
-    fontFamily: 'Space Grotesk, sans-serif'
-  }}>
+  const handleClick = (e: React.MouseEvent) => {
+    // Prevent click during drag operations
+    if (isDragging) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    onClick?.();
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Prevent motion.div from interfering with drag
+    if (e.button === 0) { // Left mouse button
+      e.stopPropagation();
+    }
+  };
+
+  return (
+    <div
+      draggable
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      className={`${isDragging ? 'cursor-grabbing' : 'cursor-pointer'} transition-all duration-200 group`}
+      style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+    >
+    <motion.div 
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      whileHover={!isDragging ? { scale: 1.02, y: -4 } : {}} 
+      whileTap={!isDragging ? { scale: 0.98 } : {}} 
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
     <Card className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 dark:border-slate-700 h-full flex flex-col p-0">
       {/* Cover Image - Only show if provided */}
       {coverImage && <div className="relative w-full h-48 overflow-hidden rounded-t-2xl">
@@ -70,5 +97,7 @@ export default function PromptCard({
         </div>
       </CardFooter>
     </Card>
-  </motion.div>;
+    </motion.div>
+    </div>
+  );
 }

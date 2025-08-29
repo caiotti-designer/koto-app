@@ -86,12 +86,10 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
   // Handle category actions (these would need to be passed as props for database operations)
   const handleDeleteCategory = (categoryId: string) => {
     // This should be handled by parent component with database operations
-    console.log('Delete category:', categoryId);
   };
 
   const handleRenameCategory = (categoryId: string, newName: string) => {
     // This should be handled by parent component with database operations
-    console.log('Rename category:', categoryId, newName);
   };
 
   if (!isOpen) return null;

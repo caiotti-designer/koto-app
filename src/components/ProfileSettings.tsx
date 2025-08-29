@@ -85,17 +85,12 @@ const ProfileSettings: React.FC = () => {
       return;
     }
     
-    console.log('Saving profile with data:', formData);
-    console.log('User ID:', user.id);
-    
     setSaving(true);
     try {
       const updatedProfile = await updateUserProfile(user.id, formData);
-      console.log('Updated profile result:', updatedProfile);
       if (updatedProfile) {
         setProfile(updatedProfile);
         toast.success('Profile saved successfully');
-        console.log('Profile saved successfully, navigating to dashboard');
         // Show success feedback and navigate back
          navigate('/');
       } else {
@@ -155,8 +150,6 @@ const ProfileSettings: React.FC = () => {
       if (user?.id) {
         setUploadingAvatar(true);
         try {
-          console.log('Auto-uploading avatar immediately after selection...');
-          
           // Remove old avatar if exists
           if (formData.avatar_url) {
             try {
@@ -168,7 +161,6 @@ const ProfileSettings: React.FC = () => {
           
           // Upload new avatar to Supabase storage
           const avatarUrl = await uploadAvatar(file, user.id);
-          console.log('Avatar auto-uploaded successfully:', avatarUrl);
           
           // Update the avatar_url with the uploaded file URL
           handleInputChange('avatar_url', avatarUrl);

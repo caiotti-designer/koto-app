@@ -41,7 +41,7 @@ import NewPromptDialog from './generated/NewPromptDialog';
 import NewToolDialog from './generated/NewToolDialog';
 import NewProjectDialog from './generated/NewProjectDialog';
 import ProjectsDrawer from './mobile/ProjectsDrawer';
-import StorageDebugger from './StorageDebugger';
+
 import { toast } from 'sonner';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -72,14 +72,27 @@ const MobileDashboard: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [prompts, setPrompts] = useState<PromptRow[]>([]);
   const [tools, setTools] = useState<ToolRow[]>([]);
-  const [activeTab, setActiveTab] = useState<'prompts' | 'toolbox'>('prompts');
+  const [activeTab, setActiveTab] = useState<'prompts' | 'toolbox'>(() => {
+    try {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem('koto_mobile_active_tab') : null;
+      return saved === 'toolbox' ? 'toolbox' : 'prompts';
+    } catch { return 'prompts'; }
+  });
+  const [activeCategory, setActiveCategory] = useState<string>(() => {
+    try {
+      const savedTab = typeof window !== 'undefined' ? localStorage.getItem('koto_mobile_active_tab') : null;
+      const key = savedTab === 'toolbox' ? 'koto_mobile_active_category_tools' : 'koto_mobile_active_category_prompts';
+      const saved = typeof window !== 'undefined' ? localStorage.getItem(key) : null;
+      return saved || 'all';
+    } catch { return 'all'; }
+  });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   
   // Settings dialog state
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
-  const [showStorageDebugger, setShowStorageDebugger] = useState(false);
+
   const [backgroundImage, setBackgroundImage] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('koto_background_image') || '/koto-background-image-default.webp';
@@ -149,6 +162,25 @@ const MobileDashboard: React.FC = () => {
     };
   }, []);
 
+  // Persist active tab/category
+  useEffect(() => {
+    try { localStorage.setItem('koto_mobile_active_tab', activeTab); } catch {}
+  }, [activeTab]);
+  useEffect(() => {
+    try {
+      const key = activeTab === 'toolbox' ? 'koto_mobile_active_category_tools' : 'koto_mobile_active_category_prompts';
+      localStorage.setItem(key, activeCategory);
+    } catch {}
+  }, [activeTab, activeCategory]);
+  useEffect(() => {
+    // restore per-tab category on tab switch
+    try {
+      const key = activeTab === 'toolbox' ? 'koto_mobile_active_category_tools' : 'koto_mobile_active_category_prompts';
+      const saved = localStorage.getItem(key);
+      setActiveCategory(saved || 'all');
+    } catch { setActiveCategory('all'); }
+  }, [activeTab]);
+
   // Real-time subscriptions for categories and subcategories
   useEffect(() => {
     if (!user) return;
@@ -187,7 +219,7 @@ const MobileDashboard: React.FC = () => {
     tags: row.tags || [],
     model: row.model,
     category: row.category,
-    subcategory: row.subcategory,
+    subcategory: row.subcategory || undefined,
     coverImage: row.cover_image,
     createdAt: new Date(row.created_at),
     isPublic: row.is_public || false,
@@ -200,7 +232,7 @@ const MobileDashboard: React.FC = () => {
     url: row.url,
     description: row.description,
     favicon: row.favicon,
-    subcategory: row.subcategory,
+    subcategory: row.subcategory || undefined,
     isPublic: row.is_public || false,
   });
 
@@ -437,8 +469,8 @@ const MobileDashboard: React.FC = () => {
         <div className="absolute top-[274px] left-0 w-full px-4">
           <div className="w-full mx-auto flex flex-col gap-2">
             {activeTab === 'prompts' ? (
-              prompts.length > 0 ? (
-                prompts.slice(0, 6).map((prompt) => (
+              (activeCategory === 'all' ? prompts : prompts.filter(p => p.subcategory ? (subcategories.find(s => s.id === p.subcategory)?.category_id === activeCategory) : (p.category === activeCategory))).length > 0 ? (
+                (activeCategory === 'all' ? prompts : prompts.filter(p => p.subcategory ? (subcategories.find(s => s.id === p.subcategory)?.category_id === activeCategory) : (p.category === activeCategory))).slice(0, 6).map((prompt) => (
                   <MobilePromptCard
                     key={prompt.id}
                     title={prompt.title}
@@ -467,8 +499,8 @@ const MobileDashboard: React.FC = () => {
                 </div>
               )
             ) : (
-              tools.length > 0 ? (
-                tools.slice(0, 6).map((tool) => (
+              (activeCategory === 'all' ? tools : tools.filter(t => t.subcategory ? (subcategories.find(s => s.id === t.subcategory)?.category_id === activeCategory) : (t.category === activeCategory))).length > 0 ? (
+                (activeCategory === 'all' ? tools : tools.filter(t => t.subcategory ? (subcategories.find(s => s.id === t.subcategory)?.category_id === activeCategory) : (t.category === activeCategory))).slice(0, 6).map((tool) => (
                   <MobileToolCard
                     key={tool.id}
                     name={tool.name}
@@ -557,7 +589,6 @@ const MobileDashboard: React.FC = () => {
                     return;
                   } catch (shareError) {
                     // Fall back to clipboard if native share fails
-                    console.log('Native share failed, falling back to clipboard');
                   }
                 }
                 
@@ -657,7 +688,6 @@ const MobileDashboard: React.FC = () => {
                     return;
                   } catch (shareError) {
                     // Fall back to clipboard if native share fails
-                    console.log('Native share failed, falling back to clipboard');
                   }
                 }
                 
@@ -745,7 +775,6 @@ const MobileDashboard: React.FC = () => {
                   <nav className="space-y-2">
                     <motion.button
                       onClick={() => {
-                        console.log('Profile clicked');
                         setMobileMenuOpen(false);
                         setMobileMenuOpen(false);
                         navigate('/settings/profile');
@@ -899,13 +928,17 @@ const MobileDashboard: React.FC = () => {
                 }
               }
     
+              // Map selectedProject name to category id
+              const selectedCategoryId = data.selectedProject
+                ? (categories.find(c => c.name === data.selectedProject && c.type === 'prompt')?.id || '')
+                : '';
               const created = await createPrompt(
                 {
                   title: data.title,
                   content: data.content,
                   tags: data.tags,
                   model: data.model,
-                  category: data.selectedProject || 'General',
+                  category: selectedCategoryId || 'uncategorized',
                   cover_image: coverUrl,
                 },
                 user.id
@@ -1010,8 +1043,15 @@ const MobileDashboard: React.FC = () => {
 
         {/* Projects/Stacks Drawer */}
         <ProjectsDrawer
-          selectedCategory=""
-          onCategorySelect={() => {}}
+          selectedCategory={activeCategory}
+          onCategorySelect={(id) => {
+            setActiveCategory(id);
+            try {
+              const key = activeTab === 'toolbox' ? 'koto_mobile_active_category_tools' : 'koto_mobile_active_category_prompts';
+              localStorage.setItem(key, id);
+            } catch {}
+            setShowProjectsDrawer(false);
+          }}
           isOpen={showProjectsDrawer}
           onClose={() => setShowProjectsDrawer(false)}
           activeTab={activeTab === 'toolbox' ? 'tools' : activeTab}
@@ -1023,10 +1063,7 @@ const MobileDashboard: React.FC = () => {
           subcategories={subcategories}
         />
 
-        {/* Storage Debugger */}
-        {showStorageDebugger && (
-          <StorageDebugger />
-        )}
+
 
         {/* Settings Dialog */}
         <AnimatePresence>
@@ -1201,20 +1238,7 @@ const MobileDashboard: React.FC = () => {
 
                   </div>
 
-                  {/* Debug Storage Button */}
-                  <div className="mb-6">
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Debug Tools</h3>
-                    <button
-                      onClick={() => {
-                        setShowStorageDebugger(true);
-                        setShowSettingsDialog(false);
-                      }}
-                      className="w-full px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <Settings className="w-4 h-4" />
-                      Debug Storage
-                    </button>
-                  </div>
+
 
                   {/* Close Button */}
                   <div className="flex justify-end">
