@@ -229,12 +229,13 @@ const MobileDashboard: React.FC = () => {
   useEffect(() => {
     try { localStorage.setItem('koto_mobile_active_tab', activeTab); } catch {}
   }, [activeTab]);
+  // Persist the category for the current tab when the category actually changes
   useEffect(() => {
     try {
       const key = activeTab === 'toolbox' ? 'koto_mobile_active_category_tools' : 'koto_mobile_active_category_prompts';
       localStorage.setItem(key, activeCategory);
     } catch {}
-  }, [activeTab, activeCategory]);
+  }, [activeCategory]);
   useEffect(() => {
     // restore per-tab category on tab switch
     try {
@@ -532,7 +533,14 @@ const MobileDashboard: React.FC = () => {
                 >
                   {/* Prompt Button - Active */}
                   <motion.button
-                    onClick={() => setActiveTab('prompts')}
+                      onClick={() => {
+                        setActiveTab('prompts');
+                        setActiveCategory('all');
+                        try {
+                          localStorage.setItem('koto_mobile_active_tab', 'prompts');
+                          localStorage.setItem('koto_mobile_active_category_prompts', 'all');
+                        } catch {}
+                      }}
                     className={`w-10 h-10 rounded-[10px] flex items-center justify-center transition-all ${
                       activeTab === 'prompts' 
                         ? 'bg-indigo-600 text-white shadow-lg' 
@@ -547,7 +555,14 @@ const MobileDashboard: React.FC = () => {
 
                   {/* Toolbox Button */}
                   <motion.button
-                    onClick={() => setActiveTab('toolbox')}
+                      onClick={() => {
+                        setActiveTab('toolbox');
+                        setActiveCategory('all');
+                        try {
+                          localStorage.setItem('koto_mobile_active_tab', 'toolbox');
+                          localStorage.setItem('koto_mobile_active_category_tools', 'all');
+                        } catch {}
+                      }}
                     className={`w-10 h-10 rounded-[10px] flex items-center justify-center transition-all ${
                       activeTab === 'toolbox' 
                         ? 'bg-indigo-600 text-white shadow-lg' 
