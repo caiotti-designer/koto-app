@@ -41,6 +41,7 @@ import NewPromptDialog from './generated/NewPromptDialog';
 import NewToolDialog from './generated/NewToolDialog';
 import NewProjectDialog from './generated/NewProjectDialog';
 import ProjectsDrawer from './mobile/ProjectsDrawer';
+import { updateCategory, updateSubcategory, deleteCategory, deleteSubcategory, createSubcategory as dbCreateSubcategory } from '../lib/data';
 
 import { toast } from 'sonner';
 import { Input } from './ui/input';
@@ -125,6 +126,68 @@ const MobileDashboard: React.FC = () => {
   // Categories and subcategories state
   const [categories, setCategories] = useState<CategoryRow[]>([]);
   const [subcategories, setSubcategories] = useState<SubcategoryRow[]>([]);
+
+  // Category/subcategory helpers (sync with desktop behavior)
+  const handleAddSubcategory = async (parentId: string) => {
+    if (!user?.id) return;
+    try {
+      const created = await dbCreateSubcategory({ name: activeTab === 'prompts' ? 'New subproject' : 'New substack', category_id: parentId, user_id: user.id }, user.id);
+      if (created) {
+        setSubcategories(prev => [...prev, created]);
+      }
+    } catch (e) {
+      console.error('Failed to create subcategory', e);
+      toast.error('Failed to create subcategory');
+    }
+  };
+
+  const handleRenameCategory = async (id: string, name: string) => {
+    try {
+      const updated = await updateCategory(id, { name });
+      setCategories(prev => prev.map(c => (c.id === id ? updated : c)));
+    } catch (e) {
+      console.error('Failed to rename category', e);
+      toast.error('Failed to rename');
+    }
+  };
+
+  const handleRenameSubcategory = async (id: string, name: string) => {
+    try {
+      const updated = await updateSubcategory(id, { name });
+      setSubcategories(prev => prev.map(s => (s.id === id ? updated : s)));
+    } catch (e) {
+      console.error('Failed to rename subcategory', e);
+      toast.error('Failed to rename');
+    }
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    if (!user?.id) return;
+    try {
+      const children = subcategories.filter(s => s.category_id === id);
+      if (children.length > 0) {
+        await Promise.all(children.map(s => deleteSubcategory(s.id)));
+      }
+      await deleteCategory(id);
+      setSubcategories(prev => prev.filter(s => s.category_id !== id));
+      setCategories(prev => prev.filter(c => c.id !== id));
+      if (activeCategory === id) setActiveCategory('all');
+    } catch (e) {
+      console.error('Failed to delete category', e);
+      toast.error('Failed to delete');
+    }
+  };
+
+  const handleDeleteSubcategory = async (id: string) => {
+    try {
+      await deleteSubcategory(id);
+      setSubcategories(prev => prev.filter(s => s.id !== id));
+      if (activeCategory === id) setActiveCategory('all');
+    } catch (e) {
+      console.error('Failed to delete subcategory', e);
+      toast.error('Failed to delete');
+    }
+  };
 
   useEffect(() => {
     const subscription = onAuthChange(async (user) => {
@@ -1044,6 +1107,8 @@ const MobileDashboard: React.FC = () => {
         {/* Projects/Stacks Drawer */}
         <ProjectsDrawer
           selectedCategory={activeCategory}
+          prompts={prompts}
+          tools={tools}
           onCategorySelect={(id) => {
             setActiveCategory(id);
             try {
@@ -1061,6 +1126,11 @@ const MobileDashboard: React.FC = () => {
           }}
           categories={categories}
           subcategories={subcategories}
+          onAddSubcategory={handleAddSubcategory}
+          onRenameCategory={handleRenameCategory}
+          onDeleteCategory={handleDeleteCategory}
+          onRenameSubcategory={handleRenameSubcategory}
+          onDeleteSubcategory={handleDeleteSubcategory}
         />
 
 
