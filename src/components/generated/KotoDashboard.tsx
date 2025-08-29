@@ -515,12 +515,14 @@ const KotoDashboard: React.FC = () => {
   }, [activeTab]);
 
   // Persist active category for current tab
+  // Important: do NOT persist on tab change before category is restored,
+  // otherwise we might save the prompts category under tools key.
   useEffect(() => {
     try {
       const key = activeTab === 'toolbox' ? 'koto_active_category_tools' : 'koto_active_category_prompts';
       localStorage.setItem(key, activeCategory);
     } catch {}
-  }, [activeTab, activeCategory]);
+  }, [activeCategory]);
 
   // On tab change, restore saved category for that tab or default
   useEffect(() => {
