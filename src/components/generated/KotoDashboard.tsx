@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Menu, Bell, User, Settings, HelpCircle, Sun, Moon, ExternalLink, Share2, Trash2, Copy, Palette, Code, Code2, Briefcase, PenTool, Target, Users, BarChart3, Zap, Globe, Figma, Cpu, Tag, X, Upload, Camera, Smile, Heart, Star, Coffee, Music, Book, BookOpen, Gamepad2, Laptop, Smartphone, Headphones, Car, Home, Plane, Gift, ShoppingBag, CreditCard, Mail, Phone, MapPin, Calendar, Clock, Eye, EyeOff, ChevronDown, ChevronRight, Edit2, LogOut, Check, Database, Shield, ShieldCheck, ShieldAlert, ShieldX, Server, Cloud, CloudSnow, CloudRain, Terminal, Package, Package2, PackageOpen, Layers, Workflow, GitBranch, Container, Boxes, Box, FileCode, FileCode2, Monitor, Tablet, Watch, Tv, Radio, Headset, Video, Image, FileText, Folder, Archive, Download, Share, Lock, Unlock, Key, UserCheck, UserPlus, UserMinus, Users2, Building, Building2, Factory, Store, Warehouse, Truck, Ship, Rocket, Satellite, Wifi, Bluetooth, Usb, HardDrive, MemoryStick, Disc, PlayCircle, PauseCircle, StopCircle, SkipForward, SkipBack, Volume2, VolumeX, Mic, MicOff, VideoOff, Scissors, Paintbrush, Paintbrush2, Brush, Pen, Pencil, Edit, Edit3, Type, AlignLeft, AlignCenter, AlignRight, Bold, Italic, Underline, Strikethrough, List, ListOrdered, CheckSquare, Square, Circle, Triangle, Hexagon, Octagon, Diamond, Shapes, Grid, Layout, Sidebar, PanelLeft, PanelRight, PanelTop, PanelBottom, Maximize, Minimize, RotateCcw, RotateCw, FlipHorizontal, FlipVertical, Move, MousePointer, Hand, Grab, ZoomIn, ZoomOut, Focus, Scan, QrCode, Barcode, Hash, AtSign, Percent, DollarSign, Euro, PoundSterling, Bitcoin, TrendingUp, TrendingDown, Activity, Flame, Snowflake, CloudLightning, Umbrella, Rainbow, Thermometer, Wind, Compass, Map, Navigation, Route, Flag, Bookmark, Award, Medal, Trophy, Crown, Gem, Sparkles, Wand2, Puzzle, Gamepad, Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, Spade, Club, Cherry, Apple, Grape, Banana, Carrot, Wheat, Leaf, Trees, Flower, Flower2, Bug, Fish, Bird, Cat, Dog, Rabbit, Turtle, Snail, Worm, Microscope, Telescope, Atom, Dna, Pill, Syringe, Stethoscope, Bandage, Cross, Minus, Equal, Divide, Calculator, Binary, Infinity, Pi, Sigma, Variable, Parentheses, Brackets, Braces, Quote, Ampersand, Asterisk, Slash, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ArrowUpLeft, ArrowUpRight, ArrowDownLeft, ArrowDownRight, CornerUpLeft, CornerUpRight, CornerDownLeft, CornerDownRight, ChevronsUp, ChevronsDown, ChevronsLeft, ChevronsRight, MoreHorizontal, MoreVertical, GraduationCap } from 'lucide-react';
+import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Menu, Bell, User, Settings, HelpCircle, Sun, Moon, ExternalLink, Share2, Trash2, Copy, Palette, Code, Code2, Briefcase, PenTool, Target, Users, BarChart3, Zap, Globe, Figma, Cpu, Tag, X, Upload, Camera, Smile, Heart, Star, Coffee, Music, Book, BookOpen, Gamepad2, Laptop, Smartphone, Headphones, Car, Home, Plane, Gift, ShoppingBag, CreditCard, Mail, Phone, MapPin, Calendar, Clock, Eye, EyeOff, ChevronDown, ChevronRight, Edit2, LogOut, Check, Database, Shield, ShieldCheck, ShieldAlert, ShieldX, Server, Cloud, CloudSnow, CloudRain, Terminal, Package, Package2, PackageOpen, Layers, Workflow, GitBranch, Container, Boxes, Box, FileCode, FileCode2, Monitor, Tablet, Watch, Tv, Radio, Headset, Video, Image, FileText, Folder, Archive, Download, Share, Lock, Unlock, Key, UserCheck, UserPlus, UserMinus, Users2, Building, Building2, Factory, Store, Warehouse, Truck, Ship, Rocket, Satellite, Wifi, Bluetooth, Usb, HardDrive, MemoryStick, Disc, PlayCircle, PauseCircle, StopCircle, SkipForward, SkipBack, Volume2, VolumeX, Mic, MicOff, VideoOff, Scissors, Paintbrush, Paintbrush2, Brush, Pen, Pencil, Edit, Edit3, Type, AlignLeft, AlignCenter, AlignRight, Bold, Italic, Underline, Strikethrough, List, ListOrdered, CheckSquare, Square, Circle, Triangle, Hexagon, Octagon, Diamond, Shapes, Grid, Layout, Sidebar, PanelLeft, PanelRight, PanelTop, PanelBottom, Maximize, Minimize, RotateCcw, RotateCw, FlipHorizontal, FlipVertical, Move, MousePointer, Hand, Grab, ZoomIn, ZoomOut, Focus, Scan, QrCode, Barcode, Hash, AtSign, Percent, DollarSign, Euro, PoundSterling, Bitcoin, TrendingUp, TrendingDown, Activity, Flame, Snowflake, CloudLightning, Umbrella, Rainbow, Thermometer, Wind, Compass, Map, Navigation, Route, Flag, Bookmark, Award, Medal, Trophy, Crown, Gem, Sparkles, Wand2, Puzzle, Gamepad, Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, Spade, Club, Cherry, Apple, Grape, Banana, Carrot, Wheat, Leaf, Trees, Flower, Flower2, Bug, Fish, Bird, Cat, Dog, Rabbit, Turtle, Snail, Worm, Microscope, Telescope, Atom, Dna, Pill, Syringe, Stethoscope, Bandage, Cross, Minus, Equal, Divide, Calculator, Binary, Pi, Sigma, Variable, Parentheses, Brackets, Braces, Quote, Ampersand, Asterisk, Slash, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ArrowUpLeft, ArrowUpRight, ArrowDownLeft, ArrowDownRight, CornerUpLeft, CornerUpRight, CornerDownLeft, CornerDownRight, ChevronsUp, ChevronsDown, ChevronsLeft, ChevronsRight, MoreHorizontal, MoreVertical, GraduationCap } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from '../../contexts/ThemeContext';
 import PromptCard from './PromptCard';
@@ -54,6 +55,7 @@ import {
   unsubscribeFromChannel,
 } from '../../lib/data';
 import type { PromptRow, ToolRow } from '../../lib/data';
+import type { UserProfile } from '../../lib/data';
 interface Subcategory {
   id: string;
   name: string;
@@ -292,13 +294,29 @@ const iconOptions = [
   { name: 'Design', icon: Palette },
   { name: 'Analytics', icon: BarChart3 },
   { name: 'Other', icon: Package }
-] as any[];
+];
 const KotoDashboard: React.FC = () => {
   const { theme, setTheme, actualTheme } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'prompts' | 'toolbox'>('prompts');
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState<'prompts' | 'toolbox'>(() => {
+    try {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem('koto_active_tab') : null;
+      if (saved === 'prompts' || saved === 'toolbox') return saved;
+    } catch {}
+    return 'prompts';
+  });
+  const [activeCategory, setActiveCategory] = useState<string>(() => {
+    try {
+      const savedTab = typeof window !== 'undefined' ? localStorage.getItem('koto_active_tab') : null;
+      const key = savedTab === 'toolbox' ? 'koto_active_category_tools' : 'koto_active_category_prompts';
+      const saved = typeof window !== 'undefined' ? localStorage.getItem(key) : null;
+      if (saved) return saved;
+      return savedTab === 'toolbox' ? 'all-tools' : 'all';
+    } catch {
+      return 'all';
+    }
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewPromptDialog, setShowNewPromptDialog] = useState(false);
   const [showNewToolDialog, setShowNewToolDialog] = useState(false);
@@ -309,17 +327,15 @@ const KotoDashboard: React.FC = () => {
   const [showProjectSettingsDialog, setShowProjectSettingsDialog] = useState(false);
   const [iconSearchQuery, setIconSearchQuery] = useState('');
   const [editingProjectName, setEditingProjectName] = useState('');
-  const [editingProjectIcon, setEditingProjectIcon] = useState<any>(null);
+  const [editingProjectIcon, setEditingProjectIcon] = useState<React.ComponentType | null>(null);
   
   // New simple edit modal state
   const [showSimpleEditModal, setShowSimpleEditModal] = useState(false);
   const [simpleEditName, setSimpleEditName] = useState('');
-  const [simpleEditIcon, setSimpleEditIcon] = useState<any>(null);
+  const [simpleEditIcon, setSimpleEditIcon] = useState<string | null>(null);
   
   // Debug useEffect to monitor modal state changes
-  React.useEffect(() => {
-    console.log('DEBUG: showSimpleEditModal state changed to:', showSimpleEditModal);
-  }, [showSimpleEditModal]);
+
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
 
@@ -329,8 +345,8 @@ const KotoDashboard: React.FC = () => {
     type: 'prompt' | 'tool';
     item: Prompt | Tool;
   } | null>(null);
-  const [user, setUser] = useState<any>(null);
-  const [userProfile, setUserProfile] = useState<any>(null);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   // New project form state
   const [newProjectName, setNewProjectName] = useState('');
@@ -401,7 +417,22 @@ const KotoDashboard: React.FC = () => {
     expanded: false
   }]);
 
-  // Update category counts dynamically
+  // Update category counts dynamically (compare by IDs)
+  // Helper to resolve legacy name-based category values to ids
+  const resolvePromptCategoryId = (value: string) => {
+    if (!value) return value;
+    const byId = categories.find(c => c.id === value);
+    if (byId) return byId.id;
+    const byName = categories.find(c => c.name === value);
+    return byName ? byName.id : value;
+  };
+  const resolveToolCategoryId = (value: string) => {
+    if (!value) return value;
+    const byId = toolCategories.find(c => c.id === value);
+    if (byId) return byId.id;
+    const byName = toolCategories.find(c => c.name === value);
+    return byName ? byName.id : value;
+  };
   const updatedCategories = categories.map(category => {
     if (category.id === 'all') {
       return {
@@ -410,8 +441,8 @@ const KotoDashboard: React.FC = () => {
       };
     }
 
-    // Count prompts in this category (including subcategories)
-    const directPrompts = prompts.filter(p => p.category.toLowerCase().replace(/\s+/g, '-') === category.id && !p.subcategory);
+    // Count prompts in this category (including subcategories) by id
+    const directPrompts = prompts.filter(p => resolvePromptCategoryId(p.category) === category.id && !p.subcategory);
     const subcategoryPrompts = prompts.filter(p => {
       const subcategory = subcategories.find(sub => sub.id === p.subcategory);
       return subcategory && subcategory.parentId === category.id;
@@ -429,11 +460,11 @@ const KotoDashboard: React.FC = () => {
       };
     }
 
-    // Count tools in this category and its subcategories
-    const directTools = tools.filter(t => t.category.toLowerCase().replace(/\s+/g, '-') === category.id);
-    const subcategoryTools = subcategories.filter(sub => sub.parentId === category.id).reduce((count, sub) => {
-      return count + tools.filter(t => t.subcategory === sub.id).length;
-    }, 0);
+    // Count tools in this category and its subcategories by id
+    const directTools = tools.filter(t => resolveToolCategoryId(t.category) === category.id && !t.subcategory);
+    const subcategoryTools = subcategories
+      .filter(sub => sub.parentId === category.id)
+      .reduce((count, sub) => count + tools.filter(t => t.subcategory === sub.id).length, 0);
     return {
       ...category,
       count: directTools.length + subcategoryTools
@@ -453,8 +484,8 @@ const KotoDashboard: React.FC = () => {
       return matchesSearch && matchesSubcategory;
     }
 
-    // Regular category matching - show prompts that belong to this category but not to any subcategory
-    const matchesCategory = prompt.category.toLowerCase().replace(/\s+/g, '-') === activeCategory && !prompt.subcategory;
+    // Regular category matching by id - show prompts in this category but not in any subcategory
+    const matchesCategory = resolvePromptCategoryId(prompt.category) === activeCategory && !prompt.subcategory;
     return matchesSearch && matchesCategory;
   });
   const filteredTools = tools.filter(tool => {
@@ -470,20 +501,41 @@ const KotoDashboard: React.FC = () => {
       return matchesSearch && matchesSubcategory;
     }
 
-    // Regular category matching
-    const matchesCategory = tool.category.toLowerCase().replace(/\s+/g, '-') === activeCategory;
+    // Regular category matching by id
+    const matchesCategory = resolveToolCategoryId(tool.category) === activeCategory && !tool.subcategory;
     return matchesSearch && matchesCategory;
   });
   // Theme is now managed by ThemeContext
 
-  // Auto-switch activeCategory when tab changes
+  // Persist active tab across reloads
   useEffect(() => {
-    if (activeTab === 'prompts' && activeCategory === 'all-tools') {
-      setActiveCategory('all');
-    } else if (activeTab === 'toolbox' && activeCategory === 'all') {
-      setActiveCategory('all-tools');
-    }
+    try {
+      localStorage.setItem('koto_active_tab', activeTab);
+    } catch {}
+  }, [activeTab]);
+
+  // Persist active category for current tab
+  useEffect(() => {
+    try {
+      const key = activeTab === 'toolbox' ? 'koto_active_category_tools' : 'koto_active_category_prompts';
+      localStorage.setItem(key, activeCategory);
+    } catch {}
   }, [activeTab, activeCategory]);
+
+  // On tab change, restore saved category for that tab or default
+  useEffect(() => {
+    try {
+      const key = activeTab === 'toolbox' ? 'koto_active_category_tools' : 'koto_active_category_prompts';
+      const saved = localStorage.getItem(key);
+      if (activeTab === 'prompts') {
+        setActiveCategory(saved || 'all');
+      } else {
+        setActiveCategory(saved || 'all-tools');
+      }
+    } catch {
+      setActiveCategory(activeTab === 'toolbox' ? 'all-tools' : 'all');
+    }
+  }, [activeTab]);
 
   // Auth subscription and initial load
   useEffect(() => {
@@ -492,7 +544,14 @@ const KotoDashboard: React.FC = () => {
     });
     return () => {
       // best-effort cleanup for supabase v2 subscription wrapper
-      try { (sub as any)?.data?.subscription?.unsubscribe?.(); } catch {}
+      try { 
+        if (sub && typeof sub === 'object' && 'data' in sub) {
+          const subscription = (sub as { data?: { subscription?: { unsubscribe?: () => void } } }).data?.subscription;
+          subscription?.unsubscribe?.();
+        }
+      } catch (error) {
+        console.warn('Error cleaning up subscription:', error);
+      }
     };
   }, []);
 
@@ -520,9 +579,7 @@ const KotoDashboard: React.FC = () => {
     const handleFocus = async () => {
       if (user?.id) {
         try {
-          console.log('Refreshing user profile for user:', user.id);
           const profileData = await fetchUserProfile(user.id);
-          console.log('Refreshed profile data:', profileData);
           setUserProfile(profileData);
         } catch (error) {
           console.error('Error refreshing user profile:', error);
@@ -579,9 +636,21 @@ const KotoDashboard: React.FC = () => {
           count: 0 // Will be calculated dynamically
         }));
 
-        // Separate prompt and tool categories
-        const promptCategories = mappedCategories.filter(cat => cat.id.includes('prompt') || !cat.id.includes('tool'));
-        const toolCategoriesFromDb = mappedCategories.filter(cat => cat.id.includes('tool'));
+        // Separate prompt and tool categories based on database type field
+        const promptCategories = categoryRows.filter(row => row.type === 'prompt').map(row => ({
+          id: row.id,
+          name: row.name,
+          count: 0,
+          icon: iconOptions.find(opt => opt.name === row.icon)?.icon || Globe,
+          expanded: false
+        }));
+        const toolCategoriesFromDb = categoryRows.filter(row => row.type === 'tool').map(row => ({
+          id: row.id,
+          name: row.name,
+          count: 0,
+          icon: iconOptions.find(opt => opt.name === row.icon)?.icon || Globe,
+          expanded: false
+        }));
 
         setCategories([
           {
@@ -665,8 +734,6 @@ const KotoDashboard: React.FC = () => {
 
     // Subscribe to categories changes
     const categoriesChannel = subscribeToCategories(user.id, (payload) => {
-      console.log('Categories change received:', payload);
-      
       if (payload.eventType === 'INSERT') {
         const newCategory: Category = {
           id: payload.new.id,
@@ -707,8 +774,6 @@ const KotoDashboard: React.FC = () => {
 
     // Subscribe to subcategories changes
     const subcategoriesChannel = subscribeToSubcategories(user.id, (payload) => {
-      console.log('Subcategories change received:', payload);
-      
       if (payload.eventType === 'INSERT') {
         const newSubcategory = {
           id: payload.new.id,
@@ -747,7 +812,7 @@ const KotoDashboard: React.FC = () => {
   const [dragOverTarget, setDragOverTarget] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   
-  const handleDragStart = (e: React.DragEvent, type: 'prompt' | 'tool', item: Prompt | Tool) => {
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, type: 'prompt' | 'tool', item: Prompt | Tool) => {
     setDraggedItem({
       type,
       item
@@ -761,7 +826,7 @@ const KotoDashboard: React.FC = () => {
     target.style.transform = 'rotate(5deg)';
   };
   
-  const handleDragEnd = (e: React.DragEvent) => {
+  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
     // Clear dragged item and any visual feedback when drag ends
     setDraggedItem(null);
     setDragOverTarget(null);
@@ -805,7 +870,7 @@ const KotoDashboard: React.FC = () => {
     }
     
     if (draggedItem.type === 'prompt' && activeTab === 'prompts') {
-      const newCategory = targetCategory ? targetCategory.name : targetSubcategory?.parentId ? updatedCategories.find(cat => cat.id === targetSubcategory.parentId)?.name || draggedItem.item.category : draggedItem.item.category;
+      const newCategory = targetCategory ? targetCategory.id : (targetSubcategory?.parentId ? targetSubcategory.parentId : (draggedItem.item as Prompt).category);
       const newSubcategory = targetSubcategory ? targetSubcategory.id : undefined;
       
       // Update local state
@@ -817,10 +882,7 @@ const KotoDashboard: React.FC = () => {
       
       // Update database
       try {
-        await updatePrompt(draggedItem.item.id, {
-          category: newCategory,
-          subcategory: newSubcategory
-        });
+        await updatePrompt(draggedItem.item.id, { category: newCategory, subcategory: newSubcategory ?? null });
       } catch (error) {
         console.error('Failed to update prompt in database:', error);
         toast.error('Failed to save changes to database');
@@ -828,7 +890,7 @@ const KotoDashboard: React.FC = () => {
         setPrompts(prev => prev.map(p => p.id === (draggedItem.item as Prompt).id ? draggedItem.item as Prompt : p));
       }
     } else if (draggedItem.type === 'tool' && activeTab === 'toolbox') {
-      const newCategory = targetCategory ? targetCategory.name : targetSubcategory?.parentId ? updatedToolCategories.find(cat => cat.id === targetSubcategory.parentId)?.name || draggedItem.item.category : draggedItem.item.category;
+      const newCategory = targetCategory ? targetCategory.id : (targetSubcategory?.parentId ? targetSubcategory.parentId : (draggedItem.item as Tool).category);
       const newSubcategory = targetSubcategory ? targetSubcategory.id : undefined;
       
       // Update local state
@@ -840,10 +902,7 @@ const KotoDashboard: React.FC = () => {
       
       // Update database
       try {
-        await updateTool(draggedItem.item.id, {
-          category: newCategory,
-          subcategory: newSubcategory
-        });
+        await updateTool(draggedItem.item.id, { category: newCategory, subcategory: newSubcategory ?? null });
       } catch (error) {
         console.error('Failed to update tool in database:', error);
         toast.error('Failed to save changes to database');
@@ -919,7 +978,7 @@ const KotoDashboard: React.FC = () => {
 
         // If returning to tool dialog, set the new category and reopen tool dialog
         if (returnToToolDialog) {
-          setNewToolCategory(newCategory.name);
+          setNewToolCategory(newCategory.id);
           setReturnToToolDialog(false);
           setShowAddProjectDialog(false);
           setShowNewToolDialog(true);
@@ -984,25 +1043,29 @@ toast.error('Please sign in to continue', {
     }
 
     // Determine the correct category and subcategory for the new prompt
-    let promptCategory = 'General';
+    let promptCategory: string = '';
     let promptSubcategory: string | undefined = undefined;
     
     // If a project is selected, use that as the category
     if (newPromptSelectedProject) {
+      // value holds category id
       promptCategory = newPromptSelectedProject;
     } else if (activeCategory !== 'all') {
       // Check if it's a subcategory
       const subcategory = subcategories.find(sub => sub.id === activeCategory);
       if (subcategory) {
-        // For subcategories, use the parent category name and store subcategory
-        const parentCategory = updatedCategories.find(cat => cat.id === subcategory.parentId);
-        promptCategory = parentCategory ? parentCategory.name : 'General';
+        // For subcategories, use the parent category id and store subcategory id
+        promptCategory = subcategory.parentId;
         promptSubcategory = subcategory.id;
       } else {
-        // For regular categories, use the category name
-        const category = updatedCategories.find(cat => cat.id === activeCategory);
-        promptCategory = category ? category.name : 'General';
+        // For regular categories, use the category id
+        promptCategory = activeCategory;
       }
+    }
+    // Fallback: if still empty, choose first prompt category (excluding 'all') if available
+    if (!promptCategory) {
+      const first = updatedCategories.find(cat => cat.id !== 'all');
+      promptCategory = first ? first.id : 'uncategorized';
     }
     
     // Upload cover if a file is present
@@ -1068,7 +1131,8 @@ return;
         url: newToolUrl,
         description: newToolDescription || undefined,
         favicon: toolFavicon || undefined,
-        category: (newToolCategory || (activeCategory === 'all-tools' ? 'General' : getCurrentCategoryName())) || 'General',
+        // store category id; prefer selected, else current activeId (if a category), else first tool category
+        category: (newToolCategory || (activeCategory !== 'all-tools' && !subcategories.find(s => s.id === activeCategory) ? activeCategory : (toolCategories.find(c => c.id !== 'all-tools')?.id || 'uncategorized'))),
       }, user.id);
       
       if (created) {
@@ -1195,111 +1259,107 @@ return;
         document.removeEventListener('paste', handleClipboardPaste);
       };
     }
-  }, [showNewPromptDialog]);
+  }, [showNewPromptDialog, handleClipboardPaste]);
   const handleDoubleClick = (itemId: string, currentName: string) => {
     setEditingItem(itemId);
     setEditingName(currentName);
   };
-  const handleRename = (itemId: string, type: 'category' | 'subcategory') => {
+  const handleRename = async (itemId: string, type: 'category' | 'subcategory') => {
     if (!editingName.trim()) return;
+    
     if (type === 'category') {
-      if (activeTab === 'prompts') {
-        setCategories(prev => {
-          const updated = prev.map(cat => cat.id === itemId ? {
+      try {
+        // Update category in database
+        await updateCategory(itemId, { name: editingName.trim() });
+        
+        // Update local state
+        if (activeTab === 'prompts') {
+          setCategories(prev => prev.map(cat => cat.id === itemId ? {
             ...cat,
             name: editingName.trim()
-          } : cat);
-          // Save to localStorage
-          const serializedCategories = updated.map(cat => ({
-            ...cat,
-            icon: cat.icon.name || 'FolderOpen'
-          }));
-          localStorage.setItem('koto_categories', JSON.stringify(serializedCategories));
-          return updated;
-        });
-      } else {
-        setToolCategories(prev => {
-          const updated = prev.map(cat => cat.id === itemId ? {
+          } : cat));
+        } else {
+          setToolCategories(prev => prev.map(cat => cat.id === itemId ? {
             ...cat,
             name: editingName.trim()
-          } : cat);
-          // Save to localStorage
-          const serializedToolCategories = updated.map(cat => ({
-            ...cat,
-            icon: cat.icon.name || 'Wrench'
-          }));
-          localStorage.setItem('koto_tool_categories', JSON.stringify(serializedToolCategories));
-          return updated;
-        });
+          } : cat));
+        }
+        
+        toast.success('Project renamed successfully!');
+      } catch (error) {
+        console.error('Failed to update category:', error);
+        toast.error('Failed to rename project');
       }
     } else {
-      setSubcategories(prev => {
-        const updated = prev.map(sub => sub.id === itemId ? {
+      // Update subcategory in database
+      try {
+        await updateSubcategory(itemId, { name: editingName.trim() });
+        setSubcategories(prev => prev.map(sub => sub.id === itemId ? {
           ...sub,
           name: editingName.trim()
-        } : sub);
-        // Save to localStorage
-        localStorage.setItem('koto_subcategories', JSON.stringify(updated));
-        return updated;
-      });
+        } : sub));
+        toast.success('Stack renamed successfully!');
+      } catch (error) {
+        console.error('Failed to update subcategory:', error);
+        toast.error('Failed to rename stack');
+      }
     }
     setEditingItem(null);
     setEditingName('');
   };
-  const handleAddSubcategoryToProject = (parentId: string) => {
-    // Create a new subcategory with a default name based on active tab
-    const subcatName = activeTab === 'prompts' ? 'New subproject' : 'New substack';
-    // Generate unique ID using timestamp to avoid conflicts
-    const uniqueId = `${parentId}-${subcatName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
-    const newSubcat: Subcategory = {
-      id: uniqueId,
-      name: subcatName,
-      parentId: parentId,
-      count: 0,
-    };
-    setSubcategories(prev => {
-      const updated = [...prev, newSubcat];
-      // Save to localStorage
-      localStorage.setItem('koto_subcategories', JSON.stringify(updated));
-      return updated;
-    });
+  const handleAddSubcategoryToProject = async (parentId: string) => {
+    if (!user?.id) {
+      toast.error('Please sign in to create stacks');
+      return;
+    }
+
+    try {
+      // Create a new subcategory with a default name based on active tab
+      const subcatName = activeTab === 'prompts' ? 'New subproject' : 'New substack';
+      
+      // Create subcategory in database
+      const created = await createSubcategory({
+        name: subcatName,
+        category_id: parentId,
+        user_id: user.id
+      }, user.id);
+
+      if (created) {
+        const newSubcat: Subcategory = {
+          id: created.id,
+          name: created.name,
+          parentId: created.category_id,
+          count: 0,
+        };
+        
+        setSubcategories(prev => [...prev, newSubcat]);
+        
+        // Automatically start editing the newly created subcategory
+        setEditingItem(created.id);
+        setEditingName(created.name);
+        
+        toast.success(`${activeTab === 'prompts' ? 'Subproject' : 'Substack'} created successfully!`);
+      }
+    } catch (error) {
+      console.error('Failed to create subcategory:', error);
+      toast.error(`Failed to create ${activeTab === 'prompts' ? 'subproject' : 'substack'}`);
+      return;
+    }
 
     // Also expand the parent category to show the new subcategory
     if (activeTab === 'prompts') {
-      setCategories(prev => {
-        const updated = prev.map(cat => cat.id === parentId ? {
-          ...cat,
-          expanded: true
-        } : cat);
-        // Save to localStorage
-        const serializedCategories = updated.map(cat => ({
-          ...cat,
-          icon: cat.icon.name || 'FolderOpen'
-        }));
-        localStorage.setItem('koto_categories', JSON.stringify(serializedCategories));
-        return updated;
-      });
+      setCategories(prev => prev.map(cat => cat.id === parentId ? {
+        ...cat,
+        expanded: true
+      } : cat));
     } else {
-      setToolCategories(prev => {
-        const updated = prev.map(cat => cat.id === parentId ? {
-          ...cat,
-          expanded: true
-        } : cat);
-        // Save to localStorage
-        const serializedToolCategories = updated.map(cat => ({
-          ...cat,
-          icon: cat.icon.name || 'Wrench'
-        }));
-        localStorage.setItem('koto_tool_categories', JSON.stringify(serializedToolCategories));
-        return updated;
-      });
+      setToolCategories(prev => prev.map(cat => cat.id === parentId ? {
+        ...cat,
+        expanded: true
+      } : cat));
     }
 
-    // Automatically start editing the newly created subcategory
-    setTimeout(() => {
-      setEditingItem(uniqueId);
-      setEditingName(subcatName);
-    }, 100); // Small delay to ensure the DOM is updated
+
   };
   const getCurrentCategoryName = () => {
     if (activeCategory === 'all') {
@@ -1469,14 +1529,14 @@ return;
   const handleEditPrompt = async (prompt: Prompt) => {
     try {
       // persist
-      const patch: any = {
+      const patch: Partial<PromptRow> = {
         title: prompt.title,
         content: prompt.content,
         model: prompt.model,
         tags: prompt.tags,
         category: prompt.category,
-        subcategory: prompt.subcategory ?? null,
-        cover_image: prompt.coverImage ?? null,
+        subcategory: prompt.subcategory ?? undefined,
+        cover_image: prompt.coverImage ?? undefined,
         is_public: prompt.isPublic ?? false,
       };
       const { updatePrompt } = await import('../../lib/data');
@@ -1512,7 +1572,6 @@ return;
   };
   const handleCopyPrompt = (content: string) => {
     // Copy to clipboard logic is handled in the modal
-    console.log('Copying prompt content:', content);
   };
   const handleSharePrompt = async (prompt: Prompt) => {
     if (!user?.id) return;
@@ -1673,7 +1732,9 @@ return;
                   ...prev,
                   name: e.target.value
                 } : null)} className="text-2xl font-bold bg-white/20 backdrop-blur-sm text-white placeholder-white/70 border-0 rounded-lg px-3 py-2 w-full" /> : <h1 className="text-2xl font-bold text-white">{tool.name}</h1>}
-                    <p className="text-white/80 text-sm mt-1">{tool.category}</p>
+                    <p className="text-white/80 text-sm mt-1">
+                      {updatedToolCategories.find(c => c.id === tool.category)?.name || 'General'}
+                    </p>
                   </div>
                 </div>
 
@@ -1990,11 +2051,11 @@ return;
                        
                        if (categoryIndex !== -1) {
                          // Update the category
-                         const updatedCategory = {
-                           ...categoryList[categoryIndex],
-                           name: editingProjectName,
-                           icon: editingProjectIcon
-                         };
+                        const updatedCategory = {
+                          ...categoryList[categoryIndex],
+                          name: editingProjectName,
+                          icon: editingProjectIcon || categoryList[categoryIndex].icon
+                        };
                          
                          // Update the categories array
                          const newCategories = [...categoryList];
@@ -2616,10 +2677,8 @@ return;
                                 src={userProfile.avatar_url} 
                                 alt="Profile" 
                                 className="w-full h-full object-cover"
-                                onLoad={() => console.log('Avatar loaded successfully:', userProfile.avatar_url)}
                                 onError={(e) => {
                                   console.error('Avatar failed to load:', userProfile.avatar_url, e);
-                                  console.log('Full userProfile:', userProfile);
                                 }}
                               />
                             ) : (
@@ -2743,45 +2802,27 @@ return;
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                console.log('DEBUG: Edit button clicked!');
-                                console.log('DEBUG: activeTab:', activeTab);
-                                console.log('DEBUG: activeCategory:', activeCategory);
-                                
                                 // Initialize simple edit modal state with current values
                                 const categoryName = getCurrentCategoryName();
-                                console.log('DEBUG: Setting name to:', categoryName);
                                 setSimpleEditName(categoryName);
                                 
                                 const categoryList = activeTab === 'prompts' ? updatedCategories : updatedToolCategories;
-                                console.log('DEBUG: Available categories:', categoryList.map(cat => ({ id: cat.id, name: cat.name })));
-                                console.log('DEBUG: Looking for category with ID:', activeCategory);
                                 const category = categoryList.find(cat => cat.id === activeCategory);
-                                console.log('DEBUG: Found category:', category);
                                 
                                 // Always set a fallback icon first (use icon name, not component)
-                                console.log('DEBUG: Setting fallback icon first');
-                                const fallbackIconName = iconOptions.find(opt => opt.icon === iconOptions[0].icon)?.name || '🎨';
+                                const fallbackIconName = iconOptions.find(opt => opt.icon === iconOptions[0].icon)?.name || 'Globe';
                                 setSimpleEditIcon(fallbackIconName);
                                 
                                 if (category && category.icon) {
-                                  console.log('DEBUG: Found category icon, overriding fallback:', category.icon);
                                   // Find the icon name from iconOptions or use emoji fallback
-                                  const iconName = iconOptions.find(opt => opt.icon === category.icon)?.name || '🎨';
+                                  const iconName = iconOptions.find(opt => opt.icon === category.icon)?.name || 'Globe';
                                   setSimpleEditIcon(iconName);
-                                } else {
-                                  console.log('DEBUG: No category icon found, keeping fallback');
                                 }
-                                
-                                console.log('DEBUG: Opening simple edit modal');
-                                console.log('DEBUG: iconOptions[0].icon:', iconOptions[0].icon);
                                 
                                 // Force state update in next tick to avoid batching issues
                                 setTimeout(() => {
-                                  console.log('DEBUG: Setting modal state to true in setTimeout');
                                   setShowSimpleEditModal(true);
                                 }, 0);
-                                
-                                console.log('DEBUG: Modal state set to true (queued)');
                               }}
                               className="opacity-0 group-hover:opacity-100 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all duration-200 cursor-pointer ml-2"
                             >
@@ -2832,18 +2873,31 @@ return;
             <div className="w-[96%] mx-auto">
               {/* Show prompts/tools if they exist, otherwise show empty state */}
               {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 w-full justify-items-stretch auto-rows-fr transition-all duration-300 ${isDragging ? 'scale-[0.98]' : 'scale-100'}`}>
-                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className={`justify-self-start w-full h-full transition-all duration-200 ${draggedItem?.item?.id === prompt.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'prompt', prompt)} onDragEnd={handleDragEnd}>
-                          <PromptCard title={prompt.title} description={prompt.content} tags={prompt.tags} model={prompt.model} coverImage={prompt.coverImage} onClick={() => handlePromptClick(prompt)} />
-                        </div>) : filteredTools.map(tool => <div key={tool.id} className={`justify-self-start w-full h-full transition-all duration-200 ${draggedItem?.item?.id === tool.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} draggable onDragStart={(e: React.DragEvent) => handleDragStart(e, 'tool', tool)} onDragEnd={handleDragEnd}>
+                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className={`justify-self-start w-full h-full transition-all duration-200 ${draggedItem?.item?.id === prompt.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`}>
+                          <PromptCard 
+                            title={prompt.title} 
+                            description={prompt.content} 
+                            tags={prompt.tags} 
+                            model={prompt.model} 
+                            coverImage={prompt.coverImage} 
+                            onClick={() => handlePromptClick(prompt)} 
+                            isDragging={draggedItem?.item?.id === prompt.id}
+                            onDragStart={(e: React.DragEvent<HTMLDivElement>) => handleDragStart(e, 'prompt', prompt)}
+                            onDragEnd={handleDragEnd}
+                          />
+                        </div>) : filteredTools.map(tool => <div key={tool.id} className={`justify-self-start w-full h-full transition-all duration-200 ${draggedItem?.item?.id === tool.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`}>
                           <ToolCard 
                             name={tool.name}
                             description={tool.description}
                             category={tool.category}
-                            stack={updatedToolCategories.find(cat => cat.id === tool.category.toLowerCase().replace(/\s+/g, '-'))?.name}
+                            stack={updatedToolCategories.find(cat => cat.id === tool.category)?.name}
                             substack={tool.subcategory ? subcategories.find(sub => sub.id === tool.subcategory)?.name : undefined}
                             url={tool.url}
+                            isDragging={draggedItem?.item?.id === tool.id}
                             favicon={tool.favicon}
                             onClick={() => handleToolClick(tool)}
+                            onDragStart={(e: React.DragEvent<HTMLDivElement>) => handleDragStart(e, 'tool', tool)}
+                            onDragEnd={handleDragEnd}
                           />
                         </div>)}
                 </div> : (/* Empty State for New User */
@@ -3116,8 +3170,8 @@ return;
                       className="w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white appearance-none"
                     >
                       <option value="">Select a project...</option>
-                      {updatedCategories.map(category => (
-                        <option key={category.id} value={category.name}>
+                      {updatedCategories.filter(c => c.id !== 'all').map(category => (
+                        <option key={category.id} value={category.id}>
                           {category.name}
                         </option>
                       ))}
@@ -3265,7 +3319,7 @@ return;
                     <div className="relative">
                       <select value={newToolCategory} onChange={e => setNewToolCategory(e.target.value)} className="w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white appearance-none">
                         <option value="">Select a stack</option>
-                        {updatedToolCategories.filter(cat => cat.id !== 'all-tools').map(category => <option key={category.id} value={category.name}>
+                        {updatedToolCategories.filter(cat => cat.id !== 'all-tools').map(category => <option key={category.id} value={category.id}>
                             {category.name}
                           </option>)}
                       </select>

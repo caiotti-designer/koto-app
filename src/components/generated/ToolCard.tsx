@@ -15,6 +15,9 @@ export interface ToolCardProps {
   url?: string;
   favicon?: string;
   onClick?: () => void;
+  isDragging?: boolean;
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void;
 }
 
 export default function ToolCard({
@@ -25,30 +28,46 @@ export default function ToolCard({
   substack,
   url = "",
   favicon,
-  onClick
+  onClick,
+  isDragging = false,
+  onDragStart,
+  onDragEnd
 }: ToolCardProps) {
   const truncateText = (text: string, maxLength: number = 50) => {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    // Prevent click during drag operations
+    if (isDragging) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    onClick?.();
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Prevent motion.div from interfering with drag
+    if (e.button === 0) { // Left mouse button
+      e.stopPropagation();
+    }
+  };
+
   return (
+    <div
+      draggable
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      className={`${isDragging ? 'cursor-grabbing' : 'cursor-pointer'} transition-all duration-200 group`}
+      style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+    >
     <motion.div 
-      onClick={onClick} 
-      whileHover={{
-        scale: 1.02,
-        y: -4
-      }} 
-      whileTap={{
-        scale: 0.98
-      }} 
-      transition={{
-        duration: 0.2,
-        ease: "easeOut"
-      }} 
-      className="cursor-pointer transition-all duration-200 group" 
-      style={{
-        fontFamily: 'Space Grotesk, sans-serif'
-      }}
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      whileHover={!isDragging ? { scale: 1.02, y: -4 } : {}} 
+      whileTap={!isDragging ? { scale: 0.98 } : {}} 
+      transition={{ duration: 0.2, ease: "easeOut" }}
     >
       <Card className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl border border-slate-200 dark:border-slate-700 h-full flex flex-col">
         <CardHeader style={{paddingBottom: '2px'}} className="flex items-center justify-center">
@@ -105,5 +124,6 @@ export default function ToolCard({
         </CardFooter>
       </Card>
     </motion.div>
+    </div>
   );
 }

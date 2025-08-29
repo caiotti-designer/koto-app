@@ -65,8 +65,8 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>
 );
 
-// Log any Content Security Policy violations with useful details
-if (typeof document !== 'undefined') {
+// Log any Content Security Policy violations with useful details (dev only)
+if (typeof document !== 'undefined' && import.meta.env.DEV) {
   document.addEventListener('securitypolicyviolation', (e: SecurityPolicyViolationEvent) => {
     const details = {
       violatedDirective: e.violatedDirective,

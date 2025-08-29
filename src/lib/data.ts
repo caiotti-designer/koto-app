@@ -20,7 +20,7 @@ export interface PromptRow {
   model: string;
   tags: string[];
   category: string;
-  subcategory?: string;
+  subcategory?: string | null;
   cover_image?: string;
   user_id: string;
   is_public: boolean;
@@ -35,7 +35,7 @@ export interface ToolRow {
   url: string;
   description?: string;
   category?: string;
-  subcategory?: string;
+  subcategory?: string | null;
   favicon?: string;
   user_id: string;
   is_public: boolean;
@@ -71,7 +71,7 @@ export async function signInWithGitHub() {
     provider: 'github',
     options: {
       redirectTo: redirectUrl,
-      flowType: 'pkce',
+      skipBrowserRedirect: false,
     }
   });
   
@@ -89,7 +89,7 @@ export async function signInWithGoogle() {
     provider: 'google',
     options: {
       redirectTo: redirectUrl,
-      flowType: 'pkce',
+      // Remove flowType as it's not a valid option in the type definition
     }
   });
   
@@ -143,7 +143,6 @@ export async function removeCover(publicUrl: string) {
 // Storage: avatar images
 export async function uploadAvatar(file: File, userId: string) {
   const filePath = `${userId}/avatar_${Date.now()}_${file.name}`;
-  console.log('Uploading avatar to path:', filePath);
   
   const { error } = await supabase.storage.from('avatars').upload(filePath, file, {
     cacheControl: '3600',
@@ -155,7 +154,6 @@ export async function uploadAvatar(file: File, userId: string) {
   }
   
   const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
-  console.log('Generated avatar URL:', data.publicUrl);
   return data.publicUrl;
 }
 
@@ -445,15 +443,11 @@ export async function updateUserProfile(userId: string, updates: Partial<UserPro
     ...updates
   };
 
-  console.log('updateUserProfile called with:', { userId, updates, profileData });
-
   const { data, error } = await supabase
     .from('user_profiles')
     .upsert(profileData, { onConflict: 'id' })
     .select()
     .single();
-
-  console.log('Supabase upsert result:', { data, error });
 
   if (error) {
     console.error('Error updating user profile:', error);
