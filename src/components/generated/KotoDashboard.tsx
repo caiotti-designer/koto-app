@@ -1713,13 +1713,35 @@ return;
             description: 'Anyone with this link can view your tool',
             duration: 3000,
           });
-        }
-      } catch (error) {
+      }
+    } catch (error) {
         console.error('Failed to share tool:', error);
         toast.error('Failed to share tool', {
           description: 'Please try again later',
           duration: 3000,
         });
+      }
+    };
+
+    const handleToggleVisibility = async (nextPublic: boolean) => {
+      if (!tool) return;
+      try {
+        const { updateTool } = await import('../../lib/data');
+        const updated = await updateTool(tool.id, { is_public: nextPublic });
+        setTools(prev => prev.map(t => t.id === tool.id ? {
+          id: updated.id,
+          name: updated.name,
+          url: updated.url,
+          description: updated.description ?? undefined,
+          favicon: updated.favicon ?? undefined,
+          category: updated.category || 'General',
+          subcategory: updated.subcategory || undefined,
+          isPublic: updated.is_public ?? false,
+        } : t));
+        setEditedTool(prev => prev ? { ...prev, isPublic: nextPublic } : prev);
+      } catch (e) {
+        console.error('Failed to toggle tool visibility', e);
+        toast.error('Failed to update visibility');
       }
     };
     const handleDelete = async () => {
@@ -1887,6 +1909,17 @@ return;
               <div className="border-t border-slate-200 dark:border-slate-700 px-6 py-4" style={{marginTop: '16px'}}>
                 <div className="flex items-center justify-end space-x-3">
                   {!isEditing ? <>
+                      {/* Visibility quick toggle */}
+                      <div className="mr-auto">
+                        <div className="inline-flex rounded-lg overflow-hidden border border-slate-300 dark:border-slate-600">
+                          <button onClick={() => handleToggleVisibility(false)} className={`px-3 py-2 text-sm flex items-center gap-1 ${!tool.isPublic ? 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100' : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>
+                            <Lock className="w-4 h-4" /> Private
+                          </button>
+                          <button onClick={() => handleToggleVisibility(true)} className={`px-3 py-2 text-sm flex items-center gap-1 ${tool.isPublic ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300' : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>
+                            <Globe className="w-4 h-4" /> Public
+                          </button>
+                        </div>
+                      </div>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button onClick={handleCopy} variant="outline" size="sm" className="h-9 px-4">

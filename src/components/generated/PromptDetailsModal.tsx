@@ -107,6 +107,14 @@ export default function PromptDetailsModal({
     setShowDeleteConfirm(false);
     onClose();
   };
+
+  const handleToggleVisibility = (nextPublic: boolean) => {
+    if (!prompt) return;
+    const updated: Prompt = { ...prompt, isPublic: nextPublic };
+    onEdit?.(updated);
+    // also update local editedPrompt if currently editing
+    setEditedPrompt(prev => (prev ? { ...prev, isPublic: nextPublic } : prev));
+  };
   const handleAddTag = () => {
     if (!newTagInput.trim() || !editedPrompt) return;
     if (editedPrompt.tags.includes(newTagInput.trim())) return;
@@ -373,6 +381,23 @@ export default function PromptDetailsModal({
                 {/* Left Actions */}
                 <div className="flex items-center gap-2 flex-wrap">
                   {!isEditing && <>
+                      {/* Visibility quick toggle */}
+                      <div className="relative z-10 mr-2">
+                        <div className="inline-flex rounded-lg overflow-hidden border border-slate-300 dark:border-slate-600">
+                          <button
+                            onClick={() => handleToggleVisibility(false)}
+                            className={`px-3 py-2 text-sm flex items-center gap-1 ${!prompt.isPublic ? 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100' : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}
+                          >
+                            <Lock className="w-4 h-4" /> Private
+                          </button>
+                          <button
+                            onClick={() => handleToggleVisibility(true)}
+                            className={`px-3 py-2 text-sm flex items-center gap-1 ${prompt.isPublic ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300' : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}
+                          >
+                            <Globe className="w-4 h-4" /> Public
+                          </button>
+                        </div>
+                      </div>
                       <motion.button onClick={handleCopy} whileHover={{
                   scale: 1.05
                 }} whileTap={{
