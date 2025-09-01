@@ -47,6 +47,9 @@ import { toast } from 'sonner';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
+import { useLongPress } from '../hooks/useLongPress';
+import FloatingActionMenu from './mobile/FloatingActionMenu';
+import CategorySelectionModal from './mobile/CategorySelectionModal';
 
 interface UserProfile {
   id: string;
@@ -186,6 +189,37 @@ const MobileDashboard: React.FC = () => {
     } catch (e) {
       console.error('Failed to delete subcategory', e);
       toast.error('Failed to delete');
+    }
+  };
+
+  // Mobile move functions
+  const handleMovePromptToCategory = async (promptId: string, categoryId: string, subcategoryId?: string) => {
+    if (!user?.id) return;
+    try {
+      const updated = await updatePrompt(promptId, {
+        category: categoryId,
+        subcategory: subcategoryId || null
+      });
+      setPrompts(prev => prev.map(p => p.id === promptId ? { ...p, ...updated } : p));
+      toast.success('Prompt moved successfully');
+    } catch (e) {
+      console.error('Failed to move prompt', e);
+      toast.error('Failed to move prompt');
+    }
+  };
+
+  const handleMoveToolToCategory = async (toolId: string, categoryId: string, subcategoryId?: string) => {
+    if (!user?.id) return;
+    try {
+      const updated = await updateTool(toolId, {
+        category: categoryId,
+        subcategory: subcategoryId || null
+      });
+      setTools(prev => prev.map(t => t.id === toolId ? { ...t, ...updated } : t));
+      toast.success('Tool moved successfully');
+    } catch (e) {
+      console.error('Failed to move tool', e);
+      toast.error('Failed to move tool');
     }
   };
 
@@ -598,6 +632,11 @@ const MobileDashboard: React.FC = () => {
                       setSelectedPrompt(mapped);
                       setShowPromptDetailsDialog(true);
                     }}
+                    onMoveToCategory={(categoryId, subcategoryId) => handleMovePromptToCategory(prompt.id, categoryId, subcategoryId)}
+                    currentCategoryId={prompt.category}
+                    currentSubcategoryId={prompt.subcategory || undefined}
+                    promptId={prompt.id}
+                    userId={user?.id || ''}
                   />
                 ))
               ) : (
@@ -628,6 +667,11 @@ const MobileDashboard: React.FC = () => {
                       setSelectedTool(mapped);
                       setShowToolDetailsDialog(true);
                     }}
+                    onMoveToCategory={(categoryId, subcategoryId) => handleMoveToolToCategory(tool.id, categoryId, subcategoryId)}
+                    currentCategoryId={tool.category}
+                    currentSubcategoryId={tool.subcategory || undefined}
+                    toolId={tool.id}
+                    userId={user?.id || ''}
                   />
                 ))
               ) : (
@@ -1390,6 +1434,12 @@ interface MobilePromptCardProps {
   model?: string;
   coverImage?: string;
   onClick?: () => void;
+  // Mobile long press props
+  onMoveToCategory?: (categoryId: string, subcategoryId?: string) => void;
+  currentCategoryId?: string;
+  currentSubcategoryId?: string;
+  promptId?: string;
+  userId?: string;
 }
 
 const MobilePromptCard: React.FC<MobilePromptCardProps> = ({
@@ -1398,21 +1448,72 @@ const MobilePromptCard: React.FC<MobilePromptCardProps> = ({
   tags = [],
   model = "General",
   coverImage,
-  onClick
+  onClick,
+  onMoveToCategory,
+  currentCategoryId,
+  currentSubcategoryId,
+  promptId,
+  userId
 }) => {
+  const [showActionMenu, setShowActionMenu] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [isSelected, setIsSelected] = useState(false);
+
   const truncateText = (text: string, maxLength: number = 50) => {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   };
 
+  const handleLongPress = () => {
+    setIsSelected(true);
+    setShowActionMenu(true);
+    
+    // Calculate menu position (center of screen for mobile)
+    const x = window.innerWidth / 2 - 100; // Offset for menu width
+    const y = window.innerHeight / 2 - 60; // Offset for menu height
+    setMenuPosition({ x, y });
+  };
+
+  const handleCloseActionMenu = () => {
+    setShowActionMenu(false);
+    setIsSelected(false);
+  };
+
+  const handleMoveToCategory = () => {
+    setShowActionMenu(false);
+    setShowCategoryModal(true);
+  };
+
+  const handleCategorySelect = (categoryId: string, subcategoryId?: string) => {
+    if (onMoveToCategory && promptId) {
+      onMoveToCategory(categoryId, subcategoryId);
+    }
+    setShowCategoryModal(false);
+    setIsSelected(false);
+  };
+
+  const longPressHandlers = useLongPress({
+    onLongPress: handleLongPress,
+    onClick: onClick,
+    threshold: 500
+  });
+
   return (
+    <div className="relative">
     <motion.div
-      onClick={onClick}
+      {...longPressHandlers.handlers}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="cursor-pointer transition-all duration-200 group w-full"
+      className={`cursor-pointer transition-all duration-200 group w-full ${
+        isSelected ? 'ring-2 ring-indigo-500 ring-opacity-75' : ''
+      }`}
       style={{ fontFamily: 'Space Grotesk, sans-serif' }}
     >
-      <Card className="bg-slate-800/90 backdrop-blur-sm border border-slate-700/50 hover:border-slate-600/70 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col p-0">
+      <Card className={`bg-slate-800/90 backdrop-blur-sm border rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full flex-col p-0 ${
+        isSelected 
+          ? 'border-indigo-500/70 bg-indigo-900/20 shadow-indigo-500/25' 
+          : 'border-slate-700/50 hover:border-slate-600/70'
+      }`}>
         {/* Cover Image - Only show if provided */}
         {coverImage && (
           <div className="relative w-full h-32 overflow-hidden">
@@ -1475,6 +1576,29 @@ const MobilePromptCard: React.FC<MobilePromptCardProps> = ({
         </CardFooter>
       </Card>
     </motion.div>
+    
+    {/* Mobile Action Menu */}
+    <FloatingActionMenu
+      isVisible={showActionMenu}
+      onClose={handleCloseActionMenu}
+      onMoveToCategory={handleMoveToCategory}
+      position={menuPosition}
+    />
+    
+    {/* Category Selection Modal */}
+    <CategorySelectionModal
+      isOpen={showCategoryModal}
+      onClose={() => {
+        setShowCategoryModal(false);
+        setIsSelected(false);
+      }}
+      onSelectCategory={handleCategorySelect}
+      itemType="prompt"
+      currentCategoryId={currentCategoryId}
+      currentSubcategoryId={currentSubcategoryId}
+      userId={userId || ''}
+    />
+    </div>
   );
 };
 
@@ -1486,6 +1610,12 @@ interface MobileToolCardProps {
   url?: string;
   favicon?: string;
   onClick?: () => void;
+  // Mobile long press props
+  onMoveToCategory?: (categoryId: string, subcategoryId?: string) => void;
+  currentCategoryId?: string;
+  currentSubcategoryId?: string;
+  toolId?: string;
+  userId?: string;
 }
 
 const MobileToolCard: React.FC<MobileToolCardProps> = ({
@@ -1494,21 +1624,72 @@ const MobileToolCard: React.FC<MobileToolCardProps> = ({
   category = "General",
   url = "",
   favicon,
-  onClick
+  onClick,
+  onMoveToCategory,
+  currentCategoryId,
+  currentSubcategoryId,
+  toolId,
+  userId
 }) => {
+  const [showActionMenu, setShowActionMenu] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [isSelected, setIsSelected] = useState(false);
+
   const truncateText = (text: string, maxLength: number = 50) => {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   };
 
+  const handleLongPress = () => {
+    setIsSelected(true);
+    setShowActionMenu(true);
+    
+    // Calculate menu position (center of screen for mobile)
+    const x = window.innerWidth / 2 - 100; // Offset for menu width
+    const y = window.innerHeight / 2 - 60; // Offset for menu height
+    setMenuPosition({ x, y });
+  };
+
+  const handleCloseActionMenu = () => {
+    setShowActionMenu(false);
+    setIsSelected(false);
+  };
+
+  const handleMoveToCategory = () => {
+    setShowActionMenu(false);
+    setShowCategoryModal(true);
+  };
+
+  const handleCategorySelect = (categoryId: string, subcategoryId?: string) => {
+    if (onMoveToCategory && toolId) {
+      onMoveToCategory(categoryId, subcategoryId);
+    }
+    setShowCategoryModal(false);
+    setIsSelected(false);
+  };
+
+  const longPressHandlers = useLongPress({
+    onLongPress: handleLongPress,
+    onClick: onClick,
+    threshold: 500
+  });
+
   return (
+    <div className="relative">
     <motion.div
-      onClick={onClick}
+      {...longPressHandlers.handlers}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="cursor-pointer w-full min-h-[202px] rounded-[10px] bg-slate-800 overflow-hidden"
+      className={`cursor-pointer w-full min-h-[202px] rounded-[10px] bg-slate-800 overflow-hidden ${
+        isSelected ? 'ring-2 ring-indigo-500 ring-opacity-75' : ''
+      }`}
       style={{ fontFamily: 'Space Grotesk, sans-serif' }}
     >
-      <Card className="bg-slate-800 border-slate-700 min-h-full flex flex-col rounded-[10px]">
+      <Card className={`min-h-full flex flex-col rounded-[10px] ${
+        isSelected 
+          ? 'bg-indigo-900/20 border-indigo-500/70 shadow-indigo-500/25' 
+          : 'bg-slate-800 border-slate-700'
+      }`}>
         <CardHeader className="flex items-center justify-center pt-4 pb-2">
           <div className="flex items-center space-x-3 flex-1 min-w-0">
             {favicon && (
@@ -1560,6 +1741,29 @@ const MobileToolCard: React.FC<MobileToolCardProps> = ({
         </CardFooter>
       </Card>
     </motion.div>
+    
+    {/* Mobile Action Menu */}
+    <FloatingActionMenu
+      isVisible={showActionMenu}
+      onClose={handleCloseActionMenu}
+      onMoveToCategory={handleMoveToCategory}
+      position={menuPosition}
+    />
+    
+    {/* Category Selection Modal */}
+    <CategorySelectionModal
+      isOpen={showCategoryModal}
+      onClose={() => {
+        setShowCategoryModal(false);
+        setIsSelected(false);
+      }}
+      onSelectCategory={handleCategorySelect}
+      itemType="tool"
+      currentCategoryId={currentCategoryId}
+      currentSubcategoryId={currentSubcategoryId}
+      userId={userId || ''}
+    />
+    </div>
   );
 };
 
