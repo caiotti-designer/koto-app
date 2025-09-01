@@ -375,6 +375,13 @@ const KotoDashboard: React.FC = () => {
   const [isLoadingToolData, setIsLoadingToolData] = useState(false);
   const [toolFavicon, setToolFavicon] = useState('');
   const [returnToToolDialog, setReturnToToolDialog] = useState(false);
+  // Track if user manually edited the auto fields
+  const [toolNameEdited, setToolNameEdited] = useState(false);
+  const [toolDescEdited, setToolDescEdited] = useState(false);
+
+  // Right-click context menu (empty space shortcut)
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   // Settings state
   const [backgroundImage, setBackgroundImage] = useState(() => {
@@ -914,6 +921,40 @@ const KotoDashboard: React.FC = () => {
     }
     setDraggedItem(null);
   };
+
+  // Handle right-click on empty space in content area
+  const handleContentContextMenu = (e: React.MouseEvent) => {
+    // Only when right-click
+    if (e.type !== 'contextmenu') return;
+    // Ignore when interacting with inputs/buttons/interactive elements
+    const target = e.target as HTMLElement;
+    if (target.closest('input, textarea, select, button, a, [role="button"], [data-card]')) return;
+
+    e.preventDefault();
+    setContextMenuPosition({ x: e.clientX, y: e.clientY });
+    setContextMenuOpen(true);
+  };
+
+  // Close context menu on click elsewhere or escape/scroll
+  useEffect(() => {
+    if (!contextMenuOpen) return;
+    const close = () => setContextMenuOpen(false);
+    const onKey = (ev: KeyboardEvent) => {
+      if (ev.key === 'Escape') setContextMenuOpen(false);
+    };
+    window.addEventListener('click', close, { capture: true });
+    window.addEventListener('contextmenu', close, { capture: true });
+    window.addEventListener('scroll', close, { capture: true });
+    window.addEventListener('resize', close, { capture: true });
+    window.addEventListener('keydown', onKey, { capture: true });
+    return () => {
+      window.removeEventListener('click', close, { capture: true } as any);
+      window.removeEventListener('contextmenu', close, { capture: true } as any);
+      window.removeEventListener('scroll', close, { capture: true } as any);
+      window.removeEventListener('resize', close, { capture: true } as any);
+      window.removeEventListener('keydown', onKey, { capture: true } as any);
+    };
+  }, [contextMenuOpen]);
   const handleAddProject = async () => {
     if (!newProjectName.trim() || !user?.id) return;
     
@@ -982,10 +1023,10 @@ const KotoDashboard: React.FC = () => {
         if (returnToToolDialog) {
           setNewToolCategory(newCategory.id);
           setReturnToToolDialog(false);
-          setShowAddProjectDialog(false);
+          handleCloseAddProjectDialog();
           setShowNewToolDialog(true);
         } else {
-          setShowAddProjectDialog(false);
+          handleCloseAddProjectDialog();
         }
 
         toast.success('Project created successfully!');
@@ -994,12 +1035,6 @@ const KotoDashboard: React.FC = () => {
       console.error('Failed to create project:', error);
       toast.error('Failed to create project');
     }
-
-    // Reset form
-    setNewProjectName('');
-    setSelectedIcon(iconOptions[0]);
-    setNewProjectTags([]);
-    setNewProjectSubcategories([]);
   };
   const handleAddTag = () => {
     if (!newTagInput.trim() || newProjectTags.includes(newTagInput.trim())) return;
@@ -1026,9 +1061,31 @@ const KotoDashboard: React.FC = () => {
     setShowToolDetailsDialog(true);
   };
   const handleAddPrompt = () => {
+    handleOpenNewPromptDialog();
+  };
+
+  const handleOpenNewPromptDialog = () => {
+    // Reset dialog state before opening
+    setNewPromptTitle('');
+    setNewPromptContent('');
+    setNewPromptModel('GPT-4');
+    setCustomModelName('');
+    setNewPromptTags([]);
+    setNewPromptCoverImage('');
+    setNewPromptCoverFile(null);
+    setNewPromptSelectedProject('');
     setShowNewPromptDialog(true);
   };
   const handleAddTool = () => {
+    // Reset dialog state before opening
+    setNewToolName('');
+    setNewToolUrl('');
+    setNewToolDescription('');
+    setNewToolCategory('');
+    setToolFavicon('');
+    setIsLoadingToolData(false);
+    setToolNameEdited(false);
+    setToolDescEdited(false);
     setShowNewToolDialog(true);
   };
   const handleCreatePrompt = async () => {
@@ -1105,7 +1162,31 @@ toast.error('Please sign in to continue', {
       console.error('Failed to create prompt', e);
     }
 
-    // Reset form
+    // Reset form and close dialog
+    handleCloseNewPromptDialog();
+  };
+  
+  const handleCloseNewToolDialog = () => {
+    console.log('handleCloseNewToolDialog called');
+    console.log('Current showNewToolDialog state:', showNewToolDialog);
+    setShowNewToolDialog(false);
+    console.log('Setting showNewToolDialog to false');
+    // Reset form state
+    setNewToolName('');
+    setNewToolUrl('');
+    setNewToolDescription('');
+    setNewToolCategory('');
+    setToolFavicon('');
+    setIsLoadingToolData(false);
+    setToolNameEdited(false);
+    setToolDescEdited(false);
+    console.log('Form state reset complete');
+  };
+
+  const handleCloseNewPromptDialog = () => {
+    console.log('handleCloseNewPromptDialog called');
+    setShowNewPromptDialog(false);
+    // Reset form state
     setNewPromptTitle('');
     setNewPromptContent('');
     setNewPromptModel('GPT-4');
@@ -1114,8 +1195,35 @@ toast.error('Please sign in to continue', {
     setNewPromptCoverImage('');
     setNewPromptCoverFile(null);
     setNewPromptSelectedProject('');
-    setShowNewPromptDialog(false);
+    console.log('Prompt form state reset complete');
   };
+
+  const handleCloseAddProjectDialog = () => {
+    console.log('handleCloseAddProjectDialog called');
+    setShowAddProjectDialog(false);
+    // Reset form state
+    setNewProjectName('');
+    setSelectedIcon(iconOptions[0]);
+    setNewProjectTags([]);
+    setNewProjectSubcategories([]);
+    setNewTagInput('');
+    setNewSubcategoryInput('');
+    setIconSearchQuery('');
+    console.log('Project form state reset complete');
+  };
+
+  const handleOpenAddProjectDialog = () => {
+    // Reset dialog state before opening
+    setNewProjectName('');
+    setSelectedIcon(iconOptions[0]);
+    setNewProjectTags([]);
+    setNewProjectSubcategories([]);
+    setNewTagInput('');
+    setNewSubcategoryInput('');
+    setIconSearchQuery('');
+    setShowAddProjectDialog(true);
+  };
+  
   const handleCreateTool = async () => {
     if (!newToolName.trim() || !newToolUrl.trim()) return;
     
@@ -1154,14 +1262,8 @@ return;
       console.error('Failed to create tool', e);
     }
 
-    // Reset form
-    setNewToolName('');
-    setNewToolUrl('');
-    setNewToolDescription('');
-    setNewToolCategory('');
-    setToolFavicon('');
-    setIsLoadingToolData(false);
-    setShowNewToolDialog(false);
+    // Reset form and close dialog
+    handleCloseNewToolDialog();
   };
   const handleAddPromptTag = () => {
     if (!newPromptTagInput.trim() || newPromptTags.includes(newPromptTagInput.trim())) return;
@@ -1460,9 +1562,9 @@ return;
       // Set favicon
       setToolFavicon(faviconUrl);
 
-      // Auto-complete description based on common domains
+      // Auto-complete description based on common domains or fetched content
       if (!newToolDescription) {
-        const url = newToolUrl.toLowerCase();
+        const lowerUrl = newToolUrl.toLowerCase();
         let description = '';
         
         // AI Tools
@@ -1478,6 +1580,20 @@ return;
           description = 'Open-source AI model for generating images from text descriptions.';
         } else if (url.includes('huggingface.co')) {
           description = 'Platform for machine learning models, datasets, and AI applications.';
+        } else if (url.includes('perplexity.ai')) {
+          description = 'AI-powered search engine that provides comprehensive answers with sources.';
+        } else if (url.includes('poe.com')) {
+          description = 'Platform for chatting with various AI models and bots.';
+        } else if (url.includes('bard.google.com')) {
+          description = 'Google\'s AI chatbot for creative collaboration and helpful conversations.';
+        } else if (url.includes('bing.com/chat')) {
+          description = 'Microsoft\'s AI-powered search and chat assistant.';
+        } else if (url.includes('replicate.com')) {
+          description = 'Platform for running and deploying machine learning models.';
+        } else if (url.includes('leonardo.ai')) {
+          description = 'AI-powered creative platform for generating and editing images.';
+        } else if (url.includes('dalle.art') || url.includes('dall-e')) {
+          description = 'AI system for creating realistic images and art from text descriptions.';
         } 
         // Design Tools
         else if (url.includes('figma.com')) {
@@ -1488,6 +1604,18 @@ return;
           description = 'Digital design toolkit for creating user interfaces and experiences.';
         } else if (url.includes('adobe.com')) {
           description = 'Creative software suite for design, photography, and digital content creation.';
+        } else if (url.includes('framer.com')) {
+          description = 'Interactive design tool for creating prototypes and websites.';
+        } else if (url.includes('invisionapp.com')) {
+          description = 'Digital product design platform for prototyping and collaboration.';
+        } else if (url.includes('behance.net')) {
+          description = 'Creative portfolio platform for showcasing design work and projects.';
+        } else if (url.includes('dribbble.com')) {
+          description = 'Design community for discovering and connecting with creative professionals.';
+        } else if (url.includes('unsplash.com')) {
+          description = 'High-quality stock photography platform for creative projects.';
+        } else if (url.includes('pexels.com')) {
+          description = 'Free stock photos and videos for creative projects.';
         } 
         // Development Tools
         else if (url.includes('github.com')) {
@@ -1500,6 +1628,20 @@ return;
           description = 'Cloud platform for building, running, and scaling applications.';
         } else if (url.includes('aws.amazon.com')) {
           description = 'Amazon Web Services cloud computing platform and infrastructure.';
+        } else if (url.includes('stackoverflow.com')) {
+          description = 'Developer community platform for programming questions and answers.';
+        } else if (url.includes('codepen.io')) {
+          description = 'Online code editor for frontend development and experimentation.';
+        } else if (url.includes('jsfiddle.net')) {
+          description = 'Online code playground for testing and sharing JavaScript code.';
+        } else if (url.includes('codesandbox.io')) {
+          description = 'Online development environment for web applications.';
+        } else if (url.includes('replit.com')) {
+          description = 'Online IDE and hosting platform for coding projects.';
+        } else if (url.includes('gitlab.com')) {
+          description = 'DevOps platform for software development and deployment.';
+        } else if (url.includes('bitbucket.org')) {
+          description = 'Git code hosting and collaboration platform for teams.';
         } 
         // Productivity Tools
         else if (url.includes('notion.so')) {
@@ -1533,16 +1675,76 @@ return;
         } 
         // Fallback: Extract meaningful description from domain
         else {
+          // Enhanced heuristic: analyze domain structure and common patterns
           try {
-            const domain = urlObj.hostname.replace('www.', '').replace('app.', '');
-            const siteName = domain.split('.')[0];
-            const capitalizedName = siteName.charAt(0).toUpperCase() + siteName.slice(1);
-            description = `${capitalizedName} - A useful tool for productivity and workflow enhancement.`;
+            const cleanDomain = urlObj.hostname.replace(/^www\.|^app\.|^my\.|^beta\.|^dev\./, '');
+            const domainParts = cleanDomain.split('.');
+            const siteName = domainParts[0];
+            const tld = domainParts[domainParts.length - 1];
+            
+            // Analyze path for more context
+            const pathParts = (urlObj.pathname || '/').split('/').filter(Boolean);
+            const firstPath = pathParts[0];
+            const secondPath = pathParts[1];
+            
+            // Build intelligent description based on domain patterns
+            let description = '';
+            
+            // Check for common tool patterns in domain names
+            if (siteName.includes('ai') || siteName.includes('ml') || siteName.includes('gpt')) {
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — AI-powered tool for automation and intelligent tasks.`;
+            } else if (siteName.includes('app') || siteName.includes('tool') || siteName.includes('hub')) {
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — specialized application and utility platform.`;
+            } else if (siteName.includes('cloud') || siteName.includes('host') || siteName.includes('deploy')) {
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — cloud infrastructure and deployment services.`;
+            } else if (siteName.includes('api') || siteName.includes('dev') || siteName.includes('code')) {
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — development tools and API services.`;
+            } else if (siteName.includes('data') || siteName.includes('analytics') || siteName.includes('insight')) {
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — data analysis and business intelligence platform.`;
+            } else if (siteName.includes('design') || siteName.includes('creative') || siteName.includes('art')) {
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — creative design and visual content tools.`;
+            } else if (siteName.includes('productivity') || siteName.includes('work') || siteName.includes('team')) {
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — productivity and team collaboration platform.`;
+            } else if (siteName.includes('market') || siteName.includes('shop') || siteName.includes('store')) {
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — e-commerce and marketplace platform.`;
+            } else if (siteName.includes('learn') || siteName.includes('edu') || siteName.includes('course')) {
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — educational content and learning platform.`;
+            } else if (siteName.includes('social') || siteName.includes('chat') || siteName.includes('connect')) {
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — social networking and communication platform.`;
+            } else {
+              // Generic but more intelligent description
+              const name = siteName.charAt(0).toUpperCase() + siteName.slice(1);
+              if (firstPath && firstPath.length > 2 && firstPath.length < 30) {
+                const cleanPath = firstPath.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                description = `${name} — ${cleanPath} platform and services.`;
+              } else if (secondPath && secondPath.length > 2 && secondPath.length < 30) {
+                const cleanPath = secondPath.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                description = `${name} — ${cleanPath} tools and resources.`;
+              } else {
+                description = `${name} — comprehensive online platform and tools.`;
+              }
+            }
+            
+            // Add domain-specific context if available
+            if (tld === 'ai') {
+              description = description.replace(/\.$/, '') + ' powered by artificial intelligence.';
+            } else if (tld === 'app') {
+              description = description.replace(/\.$/, '') + ' - mobile and web application.';
+            } else if (tld === 'io') {
+              description = description.replace(/\.$/, '') + ' - innovative technology platform.';
+            } else if (tld === 'co') {
+              description = description.replace(/\.$/, '') + ' - company and business services.';
+            }
+            
+            setNewToolDescription(description);
           } catch {
-            description = 'A useful tool for productivity and workflow enhancement.';
+            // Last-resort fallback if everything fails
+            const cleanDomain = urlObj.hostname.replace(/^www\.|^app\./, '');
+            const siteName = cleanDomain.split('.')[0];
+            const name = siteName.charAt(0).toUpperCase() + siteName.slice(1);
+            setNewToolDescription(`${name} — helpful online tool and platform.`);
           }
         }
-        setNewToolDescription(description);
       }
     } catch (error) {
       console.error('Error fetching tool data:', error);
@@ -1553,12 +1755,39 @@ return;
 
   // Debounced URL change handler
   useEffect(() => {
+    // quick debounce for network fetch
     const timeoutId = setTimeout(() => {
       if (newToolUrl) {
         fetchToolData(newToolUrl);
       }
-    }, 500);
+    }, 250);
     return () => clearTimeout(timeoutId);
+  }, [newToolUrl]);
+
+  // Immediate reaction to URL typing: compute preliminary name/description fast
+  useEffect(() => {
+    if (!newToolUrl) {
+      setToolFavicon('');
+      if (!toolNameEdited) setNewToolName('');
+      if (!toolDescEdited) setNewToolDescription('');
+      return;
+    }
+    try {
+      const urlObj = new URL(newToolUrl);
+      const cleanDomain = urlObj.hostname.replace(/^www\.|^app\./, '');
+      const siteName = cleanDomain.split('.')[0];
+      const name = siteName ? siteName.charAt(0).toUpperCase() + siteName.slice(1) : '';
+      if (!toolNameEdited && name) setNewToolName(name);
+      if (!toolDescEdited) {
+        const pathHint = (urlObj.pathname || '/').split('/').filter(Boolean)[0];
+        const hint = pathHint && pathHint.length > 2 && pathHint.length < 24 ? pathHint.replace(/[-_]/g, ' ') : 'tool';
+        setNewToolDescription(name ? `${name} — ${hint}.` : 'Online tool.');
+      }
+    } catch {
+      // ignore invalid URL while typing
+      if (!toolNameEdited) setNewToolName('');
+      if (!toolDescEdited) setNewToolDescription('');
+    }
   }, [newToolUrl]);
 
   // Missing handler functions for PromptDetailsModal
@@ -2296,7 +2525,7 @@ return;
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    onClick={() => setShowAddProjectDialog(true)}
+                    onClick={handleOpenAddProjectDialog}
                     className="h-6 w-6 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                   >
                     <Plus className="w-4 h-4" />
@@ -2925,7 +3154,7 @@ return;
           </div>
 
           {/* Content Grid */}
-          <div className="py-6 px-0 relative">
+          <div className="py-6 px-0 relative" onContextMenu={handleContentContextMenu}>
             {/* Drag overlay */}
             {isDragging && (
               <div className="absolute inset-0 bg-blue-50/30 dark:bg-blue-900/10 backdrop-blur-[1px] z-10 pointer-events-none rounded-lg" />
@@ -2933,7 +3162,7 @@ return;
             <div className="w-[96%] mx-auto">
               {/* Show prompts/tools if they exist, otherwise show empty state */}
               {(activeTab === 'prompts' ? filteredPrompts.length > 0 : filteredTools.length > 0) ? <div className={`columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 w-full transition-all duration-300 ${isDragging ? 'scale-[0.98]' : 'scale-100'}`}>
-                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div key={prompt.id} className={`mb-4 w-full transition-all duration-200 ${draggedItem?.item?.id === prompt.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} style={{ breakInside: 'avoid' }}>
+                  {activeTab === 'prompts' ? filteredPrompts.map(prompt => <div data-card="true" key={prompt.id} className={`mb-4 w-full transition-all duration-200 ${draggedItem?.item?.id === prompt.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} style={{ breakInside: 'avoid' }}>
                           <PromptCard 
                             title={prompt.title} 
                             description={prompt.content} 
@@ -2945,7 +3174,7 @@ return;
                             onDragStart={(e: React.DragEvent<HTMLDivElement>) => handleDragStart(e, 'prompt', prompt)}
                             onDragEnd={handleDragEnd}
                           />
-                        </div>) : filteredTools.map(tool => <div key={tool.id} className={`mb-4 w-full transition-all duration-200 ${draggedItem?.item?.id === tool.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} style={{ breakInside: 'avoid' }}>
+                        </div>) : filteredTools.map(tool => <div data-card="true" key={tool.id} className={`mb-4 w-full transition-all duration-200 ${draggedItem?.item?.id === tool.id ? 'opacity-50 transform rotate-2 scale-95' : 'opacity-100 transform rotate-0 scale-100'}`} style={{ breakInside: 'avoid' }}>
                           <ToolCard 
                             name={tool.name}
                             description={tool.description}
@@ -2961,7 +3190,7 @@ return;
                           />
                         </div>)}
                 </div> : (/* Empty State for New User */
-            <div className="text-center py-12 w-full">
+            <div className="text-center py-12 w-full" data-empty-area="true">
                   <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     {activeTab === 'prompts' ? <MessageSquare className="w-8 h-8 text-slate-400" /> : <Wrench className="w-8 h-8 text-slate-400" />}
                   </div>
@@ -2985,6 +3214,48 @@ return;
         </main>
       </div>
 
+      {/* Right-click context shortcut */}
+      <AnimatePresence>
+        {contextMenuOpen && (
+          <motion.div
+            className="fixed z-[60]"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            style={{ top: contextMenuPosition.y, left: contextMenuPosition.x, transformOrigin: 'top left' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="min-w-[200px] rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
+              <button
+                onClick={() => {
+                  setContextMenuOpen(false);
+                  if (activeTab === 'prompts') {
+                    handleAddPrompt();
+                  } else {
+                    handleAddTool();
+                  }
+                }}
+                className="w-full text-left px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                <span>{activeTab === 'prompts' ? 'Add Prompt' : 'Add Tool'}</span>
+              </button>
+              <div className="h-px bg-slate-200 dark:bg-slate-700" />
+              <button
+                onClick={() => {
+                  setContextMenuOpen(false);
+                  handleOpenAddProjectDialog();
+                }}
+                className="w-full text-left px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"
+              >
+                <FolderPlus className="w-4 h-4" />
+                <span>{activeTab === 'toolbox' ? 'Add Stack' : 'Add Project'}</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Add Project Dialog */}
       <AnimatePresence>
         {showAddProjectDialog && <motion.div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{
@@ -2993,7 +3264,7 @@ return;
         opacity: 1
       }} exit={{
         opacity: 0
-      }} onClick={() => setShowAddProjectDialog(false)}>
+              }} onClick={handleCloseAddProjectDialog}>
             <motion.div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-xl max-h-[80vh] overflow-y-auto" initial={{
           scale: 0.9,
           opacity: 0
@@ -3115,7 +3386,7 @@ return;
                 <div className="flex justify-end space-x-3 pt-4">
                   <Button 
                     variant="ghost" 
-                    onClick={() => setShowAddProjectDialog(false)}
+                    onClick={handleCloseAddProjectDialog}
                   >
                     Cancel
                   </Button>
@@ -3139,7 +3410,7 @@ return;
         opacity: 1
       }} exit={{
         opacity: 0
-      }} onClick={() => setShowNewPromptDialog(false)}>
+              }} onClick={handleCloseNewPromptDialog}>
             <motion.div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-2xl shadow-xl max-h-[80vh] overflow-y-auto" initial={{
           scale: 0.9,
           opacity: 0
@@ -3294,7 +3565,7 @@ return;
                 <div className="flex justify-end space-x-3 pt-4">
                   <Button 
                     variant="ghost" 
-                    onClick={() => setShowNewPromptDialog(false)}
+                    onClick={handleCloseNewPromptDialog}
                   >
                     Cancel
                   </Button>
@@ -3338,7 +3609,18 @@ return;
                     URL
                   </label>
                   <div className="relative">
-                    <input type="url" value={newToolUrl} onChange={e => setNewToolUrl(e.target.value)} placeholder="https://example.com" className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+                    <input 
+                      type="url" 
+                      value={newToolUrl} 
+                      onChange={e => {
+                        setNewToolUrl(e.target.value);
+                        // URL drives auto fields; reset edit flags to allow refresh
+                        setToolNameEdited(false);
+                        setToolDescEdited(false);
+                      }} 
+                      placeholder="https://example.com" 
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" 
+                    />
                     {isLoadingToolData && <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                         <div className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
                       </div>}
@@ -3352,7 +3634,13 @@ return;
                     {newToolName && !isLoadingToolData && <span className="ml-2 text-xs text-green-600 dark:text-green-400">✓ Auto-completed</span>}
                   </label>
                   <div className="relative">
-                    <input type="text" value={newToolName} onChange={e => setNewToolName(e.target.value)} placeholder="Enter tool name" className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+                    <input 
+                      type="text" 
+                      value={newToolName} 
+                      onChange={e => { setNewToolName(e.target.value); setToolNameEdited(true); }} 
+                      placeholder="Enter tool name" 
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" 
+                    />
                     {toolFavicon && <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                         <img src={toolFavicon} alt="Site favicon" className="w-5 h-5 rounded-sm" onError={e => {
                     (e.target as HTMLImageElement).style.display = 'none';
@@ -3367,7 +3655,13 @@ return;
                     Description
                     {newToolDescription && !isLoadingToolData && <span className="ml-2 text-xs text-green-600 dark:text-green-400">✓ Auto-completed</span>}
                   </label>
-                  <textarea value={newToolDescription} onChange={e => setNewToolDescription(e.target.value)} placeholder="Enter tool description (will auto-complete based on URL)" rows={3} className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+                  <textarea 
+                    value={newToolDescription} 
+                    onChange={e => { setNewToolDescription(e.target.value); setToolDescEdited(true); }} 
+                    placeholder="Enter tool description (will auto-complete based on URL)" 
+                    rows={3} 
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white" 
+                  />
                 </div>
 
                 {/* Category */}
@@ -3389,7 +3683,7 @@ return;
                     <button onClick={() => {
                   setReturnToToolDialog(true);
                   setShowNewToolDialog(false);
-                  setShowAddProjectDialog(true);
+                  handleOpenAddProjectDialog();
                 }} className="w-full flex items-center justify-center space-x-2 px-3 py-2 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:border-slate-400 dark:hover:border-slate-500 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
                       <Plus className="w-4 h-4" />
                       <span className="text-sm font-medium">Add new stack</span>
@@ -3400,7 +3694,7 @@ return;
                 <div className="flex justify-end space-x-3 pt-4">
                   <Button 
                     variant="ghost" 
-                    onClick={() => setShowNewToolDialog(false)}
+                    onClick={() => handleCloseNewToolDialog()}
                   >
                     Cancel
                   </Button>
@@ -3792,7 +4086,7 @@ return;
         
         {/* Add Project FAB */}
         <motion.button
-          onClick={() => setShowAddProjectDialog(true)}
+                          onClick={handleOpenAddProjectDialog}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white w-12 h-12 min-w-[48px] min-h-[48px] rounded-full shadow-lg flex items-center justify-center transition-colors border border-white/20"
