@@ -541,6 +541,138 @@ export async function fetchSharedTool(shareToken: string): Promise<ToolRow | nul
   return data;
 }
 
+export async function shareCategory(categoryId: string): Promise<string | null> {
+  try {
+    const shareToken = await generateShareToken();
+    if (!shareToken) return null;
+
+    const { error } = await supabase
+      .from('categories')
+      .update({ share_token: shareToken })
+      .eq('id', categoryId);
+
+    if (error) {
+      console.error('Error sharing category:', error);
+      return null;
+    }
+
+    return shareToken;
+  } catch (error) {
+    console.error('Error in shareCategory:', error);
+    return null;
+  }
+}
+
+export async function shareSubcategory(subcategoryId: string): Promise<string | null> {
+  try {
+    const shareToken = await generateShareToken();
+    if (!shareToken) return null;
+
+    const { error } = await supabase
+      .from('subcategories')
+      .update({ share_token: shareToken })
+      .eq('id', subcategoryId);
+
+    if (error) {
+      console.error('Error sharing subcategory:', error);
+      return null;
+    }
+
+    return shareToken;
+  } catch (error) {
+    console.error('Error in shareSubcategory:', error);
+    return null;
+  }
+}
+
+export async function fetchSharedCategory(shareToken: string): Promise<{ category: CategoryRow; prompts: PromptRow[]; tools: ToolRow[] } | null> {
+  try {
+    // First get the shared category
+    const { data: category, error: categoryError } = await supabase
+      .from('categories')
+      .select('*')
+      .eq('share_token', shareToken)
+      .single();
+
+    if (categoryError || !category) {
+      console.error('Error fetching shared category:', categoryError);
+      return null;
+    }
+
+    // Get prompts in this category
+    const { data: prompts, error: promptsError } = await supabase
+      .from('prompts')
+      .select('*')
+      .eq('category', category.id)
+      .order('created_at', { ascending: false });
+
+    // Get tools in this category
+    const { data: tools, error: toolsError } = await supabase
+      .from('tools')
+      .select('*')
+      .eq('category', category.id)
+      .order('created_at', { ascending: false });
+
+    if (promptsError || toolsError) {
+      console.error('Error fetching category content:', promptsError || toolsError);
+      return null;
+    }
+
+    return {
+      category,
+      prompts: prompts || [],
+      tools: tools || []
+    };
+  } catch (error) {
+    console.error('Error in fetchSharedCategory:', error);
+    return null;
+  }
+}
+
+export async function fetchSharedSubcategory(shareToken: string): Promise<{ subcategory: SubcategoryRow; prompts: PromptRow[]; tools: ToolRow[] } | null> {
+  try {
+    // First get the shared subcategory
+    const { data: subcategory, error: subcategoryError } = await supabase
+      .from('subcategories')
+      .select('*')
+      .eq('share_token', shareToken)
+      .single();
+
+    if (subcategoryError || !subcategory) {
+      console.error('Error fetching shared subcategory:', subcategoryError);
+      return null;
+    }
+
+    // Get prompts in this subcategory
+    const { data: prompts, error: promptsError } = await supabase
+      .from('prompts')
+      .select('*')
+      .eq('subcategory', subcategory.id)
+      .order('created_at', { ascending: false });
+
+    // Get tools in this subcategory
+    const { data: tools, error: toolsError } = await supabase
+      .from('tools')
+      .select('*')
+      .eq('subcategory', subcategory.id)
+      .order('created_at', { ascending: false });
+
+    if (promptsError || toolsError) {
+      console.error('Error fetching subcategory content:', promptsError || toolsError);
+      return null;
+    }
+
+    return {
+      subcategory,
+      prompts: prompts || [],
+      tools: tools || []
+    };
+  } catch (error) {
+    console.error('Error in fetchSharedSubcategory:', error);
+    return null;
+  }
+}
+
 export async function fetchPublicProfile(username: string): Promise<{ profile: UserProfile; prompts: PromptRow[]; tools: ToolRow[] } | null> {
   // First get the user profile
   const { data: profile, error: profileError } = await supabase

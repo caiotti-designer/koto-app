@@ -53,6 +53,8 @@ import {
   subscribeToCategories,
   subscribeToSubcategories,
   unsubscribeFromChannel,
+  shareCategory,
+  shareSubcategory,
 } from '../../lib/data';
 import type { PromptRow, ToolRow } from '../../lib/data';
 import type { UserProfile } from '../../lib/data';
@@ -1499,6 +1501,69 @@ return;
       toast.error('Failed to delete category');
     }
   };
+
+  // Share a category
+  const handleShareCategory = async (categoryId: string) => {
+    if (!user?.id) {
+      toast.error('Please sign in to share');
+      return;
+    }
+
+    try {
+      const shareToken = await shareCategory(categoryId);
+      const shareUrl = `${window.location.origin}/shared/category?token=${shareToken}`;
+      
+      // Copy to clipboard
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success('Share link copied to clipboard!');
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        const textArea = document.createElement('textarea');
+        textArea.value = shareUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        toast.success('Share link copied to clipboard!');
+      }
+    } catch (error) {
+      console.error('Failed to share project:', error);
+      toast.error('Failed to create share link');
+    }
+  };
+
+  // Share a subcategory
+  const handleShareSubcategory = async (subcategoryId: string) => {
+    if (!user?.id) {
+      toast.error('Please sign in to share');
+      return;
+    }
+
+    try {
+      const shareToken = await shareSubcategory(subcategoryId);
+      const shareUrl = `${window.location.origin}/shared/subcategory?token=${shareToken}`;
+      
+      // Copy to clipboard
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success('Share link copied to clipboard!');
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        const textArea = document.createElement('textarea');
+        textArea.value = shareUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        toast.success('Share link copied to clipboard!');
+      }
+    } catch (error) {
+      console.error('Failed to share subcategory:', error);
+      toast.error('Failed to create share link');
+    }
+  };
+
   const getCurrentCategoryName = () => {
     if (activeCategory === 'all') {
       return activeTab === 'prompts' ? 'AI Prompts' : 'A.I Tools';
@@ -1944,8 +2009,8 @@ return;
           });
       }
     } catch (error) {
-        console.error('Failed to share tool:', error);
-        toast.error('Failed to share tool', {
+        console.error('Failed to share stack:', error);
+    toast.error('Failed to share stack', {
           description: 'Please try again later',
           duration: 3000,
         });
@@ -2169,7 +2234,7 @@ return;
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Share tool with others</p>
+                          <p>Share stack with others</p>
                         </TooltipContent>
                       </Tooltip>
                       
@@ -2608,7 +2673,7 @@ return;
                                         </DropdownMenuTrigger>
                                       </TooltipTrigger>
                                       <TooltipContent side="right">
-                                        <p>Category actions</p>
+                                        <p>Projects actions</p>
                                       </TooltipContent>
                                     </Tooltip>
                                     <DropdownMenuContent align="end" className="w-48">
@@ -2618,6 +2683,13 @@ return;
                                       }}>
                                         <Plus className="w-4 h-4 mr-2" />
                                         Add Subcategory
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleShareCategory(category.id);
+                                      }}>
+                                        <Share2 className="w-4 h-4 mr-2" />
+                                        Share project
                                       </DropdownMenuItem>
                                       <DropdownMenuSeparator />
                                       <DropdownMenuItem 
@@ -2688,6 +2760,14 @@ return;
                                 </TooltipContent>
                               </Tooltip>
                               <DropdownMenuContent align="end" className="w-48">
+                                <DropdownMenuItem onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleShareSubcategory(subcategory.id);
+                                }}>
+                                  <Share2 className="w-4 h-4 mr-2" />
+                                  Share Subcategory
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem 
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -3120,6 +3200,33 @@ return;
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>Edit {activeTab === 'toolbox' ? 'Stack' : 'Project'}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                      
+                      {/* Share shortcut - positioned below edit button */}
+                      {(activeTab === 'prompts' || activeTab === 'toolbox') && activeCategory && activeCategory !== 'all' && activeCategory !== 'all-tools' && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                // Check if it's a subcategory
+                                const subcategory = subcategories.find(sub => sub.id === activeCategory);
+                                if (subcategory) {
+                                  handleShareSubcategory(activeCategory);
+                                } else {
+                                  handleShareCategory(activeCategory);
+                                }
+                              }}
+                              className="opacity-0 group-hover:opacity-100 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all duration-200 cursor-pointer ml-1"
+                            >
+                              <Share2 className="w-4 h-4" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Share {activeTab === 'toolbox' ? 'stack' : 'project'}</p>
                           </TooltipContent>
                         </Tooltip>
                       )}

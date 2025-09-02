@@ -40,6 +40,14 @@ const router = createBrowserRouter([
     element: <SharedView type="tool" />,
   },
   {
+    path: '/shared/category',
+    element: <SharedView type="category" />,
+  },
+  {
+    path: '/shared',
+    element: <SharedView />,
+  },
+  {
     path: '/profile/:username',
     element: <SharedView type="profile" />,
   },

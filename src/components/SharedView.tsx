@@ -18,16 +18,20 @@ import {
   fetchSharedPrompt, 
   fetchSharedTool, 
   fetchPublicProfile,
+  fetchSharedCategory,
+  fetchSharedSubcategory,
   type PromptRow,
   type ToolRow,
-  type UserProfile
+  type UserProfile,
+  type CategoryRow,
+  type SubcategoryRow
 } from '../lib/data';
 
 interface SharedViewProps {
-  type: 'prompt' | 'tool' | 'profile';
+  type?: 'prompt' | 'tool' | 'profile' | 'category' | 'subcategory';
 }
 
-const SharedView: React.FC<SharedViewProps> = ({ type }) => {
+const SharedView: React.FC<SharedViewProps> = ({ type: propType }) => {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -43,6 +47,34 @@ const SharedView: React.FC<SharedViewProps> = ({ type }) => {
     prompts: PromptRow[];
     tools: ToolRow[];
   } | null>(null);
+  const [categoryData, setCategoryData] = useState<{
+    category: CategoryRow;
+    prompts: PromptRow[];
+    tools: ToolRow[];
+  } | null>(null);
+  const [subcategoryData, setSubcategoryData] = useState<{
+    subcategory: SubcategoryRow;
+    prompts: PromptRow[];
+    tools: ToolRow[];
+  } | null>(null);
+
+  // Determine type from props or URL parameters
+  const type = propType || (() => {
+    const token = searchParams.get('token');
+    const categoryToken = searchParams.get('category');
+    const subcategoryToken = searchParams.get('subcategory');
+    const promptToken = searchParams.get('prompt');
+    const toolToken = searchParams.get('tool');
+    
+    if (categoryToken || (token && searchParams.get('type') === 'category')) return 'category';
+    if (subcategoryToken || (token && searchParams.get('type') === 'subcategory')) return 'subcategory';
+    if (promptToken || (token && searchParams.get('type') === 'prompt')) return 'prompt';
+    if (toolToken || (token && searchParams.get('type') === 'tool')) return 'tool';
+    if (params.username) return 'profile';
+    
+    // Default fallback based on token parameter
+    return 'category';
+  })();
 
   useEffect(() => {
     const loadContent = async () => {
@@ -67,6 +99,18 @@ const SharedView: React.FC<SharedViewProps> = ({ type }) => {
           if (!username) throw new Error('Username is required');
           const data = await fetchPublicProfile(username);
           setProfileData(data);
+        } else if (type === 'category') {
+          const token = searchParams.get('token') || searchParams.get('category');
+          if (!token) throw new Error('Share token is required');
+          const data = await fetchSharedCategory(token);
+          if (!data) throw new Error('Category not found');
+          setCategoryData(data);
+        } else if (type === 'subcategory') {
+          const token = searchParams.get('token') || searchParams.get('subcategory');
+          if (!token) throw new Error('Share token is required');
+          const data = await fetchSharedSubcategory(token);
+          if (!data) throw new Error('Subcategory not found');
+          setSubcategoryData(data);
         }
       } catch (err) {
         console.error('Error loading content:', err);
@@ -157,6 +201,8 @@ const SharedView: React.FC<SharedViewProps> = ({ type }) => {
             {type === 'prompt' && 'Shared Prompt'}
             {type === 'tool' && 'Shared Tool'}
             {type === 'profile' && `${profileData?.profile.display_name || profileData?.profile.username}'s Profile`}
+            {type === 'category' && `Shared Category: ${categoryData?.category.name}`}
+            {type === 'subcategory' && `Shared Subcategory: ${subcategoryData?.subcategory.name}`}
           </h1>
           <div className="w-[44px] sm:w-20"></div> {/* Spacer for centering */}
         </div>
@@ -383,6 +429,140 @@ const SharedView: React.FC<SharedViewProps> = ({ type }) => {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {(type === 'category' || type === 'subcategory') && (categoryData || subcategoryData) && (
+            <div className="max-w-4xl mx-auto">
+              {/* Category/Subcategory Header */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 mb-8">
+                <div className="text-center">
+                  <h1 className="text-3xl font-bold text-white mb-4">
+                    {type === 'category' ? categoryData?.category.name : subcategoryData?.subcategory.name}
+                  </h1>
+                  <div className="flex items-center justify-center space-x-4 text-white/60">
+                    <span className="bg-white/10 px-3 py-1 rounded-full text-sm">
+                      {type === 'category' ? 'Category' : 'Subcategory'}
+                    </span>
+                    <span className="bg-white/10 px-3 py-1 rounded-full text-sm">
+                      {(categoryData?.prompts.length || subcategoryData?.prompts.length || 0) + 
+                       (categoryData?.tools.length || subcategoryData?.tools.length || 0)} items
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="space-y-8">
+                {/* Prompts */}
+                {((categoryData?.prompts.length || 0) > 0 || (subcategoryData?.prompts.length || 0) > 0) && (
+                  <div>
+                    <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+                      <MessageSquare className="w-6 h-6 mr-2" />
+                      Prompts ({categoryData?.prompts.length || subcategoryData?.prompts.length || 0})
+                    </h2>
+                    <div className="grid gap-6">
+                      {(categoryData?.prompts || subcategoryData?.prompts || []).map((prompt) => (
+                        <div key={prompt.id} className="bg-white/5 backdrop-blur-sm rounded-xl p-6">
+                          <div className="flex justify-between items-start mb-4">
+                            <h3 className="text-xl font-semibold text-white">{prompt.title}</h3>
+                            <motion.button
+                              onClick={() => handleCopy(prompt.content)}
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                            >
+                              {copySuccess ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                            </motion.button>
+                          </div>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            <span className="bg-white/10 px-3 py-1 rounded-full text-sm text-white/60">
+                              {prompt.model}
+                            </span>
+                            {prompt.tags && prompt.tags.map((tag, index) => (
+                              <span key={index} className="bg-white/10 px-3 py-1 rounded-full text-sm text-white/60">
+                                #{tag}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="bg-black/20 rounded-lg p-4 max-h-40 overflow-y-auto">
+                            <pre className="text-white/90 whitespace-pre-wrap font-mono text-sm leading-relaxed break-words">
+                              {prompt.content}
+                            </pre>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Tools */}
+                {((categoryData?.tools.length || 0) > 0 || (subcategoryData?.tools.length || 0) > 0) && (
+                  <div>
+                    <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+                      <Wrench className="w-6 h-6 mr-2" />
+                      Tools ({categoryData?.tools.length || subcategoryData?.tools.length || 0})
+                    </h2>
+                    <div className="grid gap-6">
+                      {(categoryData?.tools || subcategoryData?.tools || []).map((tool) => (
+                        <div key={tool.id} className="bg-white/5 backdrop-blur-sm rounded-xl p-6">
+                          <div className="flex items-start space-x-4">
+                            {tool.favicon ? (
+                              <img src={tool.favicon} alt={tool.name} className="w-10 h-10 rounded-lg" />
+                            ) : (
+                              <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                                <Wrench className="w-5 h-5 text-white/60" />
+                              </div>
+                            )}
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start mb-2">
+                                <h3 className="text-xl font-semibold text-white">{tool.name}</h3>
+                                <motion.a
+                                  href={tool.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  className="inline-flex items-center space-x-1 text-indigo-400 hover:text-indigo-300 transition-colors"
+                                >
+                                  <ExternalLink className="w-4 h-4" />
+                                  <span className="text-sm">Visit</span>
+                                </motion.a>
+                              </div>
+                              <p className="text-white/80 mb-3">{tool.description}</p>
+                              <div className="flex flex-wrap gap-2">
+                                <span className="bg-white/10 px-3 py-1 rounded-full text-sm text-white/60">
+                                  {safeHostname(tool.url)}
+                                </span>
+                                <motion.button
+                                  onClick={() => handleCopy(tool.url)}
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  className="inline-flex items-center space-x-1 px-3 py-1 bg-white/10 hover:bg-white/20 rounded-full text-sm text-white/60 transition-colors"
+                                >
+                                  {copySuccess ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                  <span>Copy URL</span>
+                                </motion.button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Empty State */}
+                {((categoryData?.prompts.length || 0) === 0 && (categoryData?.tools.length || 0) === 0) ||
+                 ((subcategoryData?.prompts.length || 0) === 0 && (subcategoryData?.tools.length || 0) === 0) && (
+                  <div className="text-center py-12">
+                    <div className="text-white/60 text-lg mb-2">No content found</div>
+                    <div className="text-white/40 text-sm">
+                      This {type} doesn't contain any prompts or tools yet.
                     </div>
                   </div>
                 )}

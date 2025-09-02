@@ -31,6 +31,8 @@ import {
   subscribeToCategories,
   subscribeToSubcategories,
   unsubscribeFromChannel,
+  shareCategory,
+  shareSubcategory,
 } from '../lib/data';
 import type { PromptRow, ToolRow, CategoryRow, SubcategoryRow } from '../lib/data';
 import { Badge } from './ui/badge';
@@ -189,6 +191,38 @@ const MobileDashboard: React.FC = () => {
     } catch (e) {
       console.error('Failed to delete subcategory', e);
       toast.error('Failed to delete');
+    }
+  };
+
+  const handleShareCategory = async (id: string) => {
+    if (!user?.id) {
+      toast.error('Please sign in to share categories');
+      return;
+    }
+    try {
+      const shareToken = await shareCategory(id);
+      const shareUrl = `${window.location.origin}/shared?token=${shareToken}&type=category`;
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success('Category link copied to clipboard!');
+    } catch (e) {
+      console.error('Failed to share project', e);
+    toast.error('Failed to share project');
+    }
+  };
+
+  const handleShareSubcategory = async (id: string) => {
+    if (!user?.id) {
+      toast.error('Please sign in to share subcategories');
+      return;
+    }
+    try {
+      const shareToken = await shareSubcategory(id);
+      const shareUrl = `${window.location.origin}/shared?token=${shareToken}&type=subcategory`;
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success('Subcategory link copied to clipboard!');
+    } catch (e) {
+      console.error('Failed to share subcategory', e);
+      toast.error('Failed to share subcategory');
     }
   };
 
@@ -882,8 +916,8 @@ const MobileDashboard: React.FC = () => {
                 }
               }
             } catch (error) {
-              console.error('Failed to share tool', error);
-              toast.error('Failed to share tool', {
+              console.error('Failed to share stack', error);
+              toast.error('Failed to share stack', {
                 description: 'Please try again later',
                 duration: 3000,
               });
@@ -1227,6 +1261,8 @@ const MobileDashboard: React.FC = () => {
           onDeleteCategory={handleDeleteCategory}
           onRenameSubcategory={handleRenameSubcategory}
           onDeleteSubcategory={handleDeleteSubcategory}
+          onShareCategory={handleShareCategory}
+          onShareSubcategory={handleShareSubcategory}
         />
 
 
@@ -2026,7 +2062,7 @@ const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClo
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Share tool with others</p>
+                        <p>Share stack with others</p>
                       </TooltipContent>
                     </Tooltip>
                     

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { X, Plus, ChevronDown, ChevronRight, MoreVertical, Folder, FolderPlus, Pencil, Trash2, Search } from 'lucide-react';
+import { X, Plus, ChevronDown, ChevronRight, MoreVertical, Folder, FolderPlus, Pencil, Trash2, Search, Share2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Input } from '../ui/input';
@@ -36,6 +36,8 @@ interface ProjectsDrawerProps {
   onDeleteCategory?: (id: string) => void;
   onRenameSubcategory?: (id: string, name: string) => void;
   onDeleteSubcategory?: (id: string) => void;
+  onShareCategory?: (id: string) => void;
+  onShareSubcategory?: (id: string) => void;
 }
 
 const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
@@ -54,6 +56,8 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
   onDeleteCategory,
   onRenameSubcategory,
   onDeleteSubcategory,
+  onShareCategory,
+  onShareSubcategory,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   // Derived lists via memoization to avoid effects causing render loops
@@ -214,6 +218,19 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
                     </div>
                   </Button>
                   
+                  {/* Share shortcut button */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 mr-1"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onShareCategory?.(category.id);
+                    }}
+                  >
+                    <Share2 className="h-4 w-4" />
+                  </Button>
+                  
                   {/* Category Actions */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -236,6 +253,10 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => onAddSubcategory?.(category.id)}>
                         Add Subcategory
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onShareCategory?.(category.id)}>
+                        <Share2 className="w-4 h-4 mr-2" />
+                        Share project
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => onDeleteCategory?.(category.id)}
@@ -264,6 +285,19 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
                             </Badge>
                           </div>
                         </Button>
+                        
+                        {/* Share shortcut button for subcategory */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 mr-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onShareSubcategory?.(sub.id);
+                          }}
+                        >
+                          <Share2 className="h-4 w-4" />
+                        </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -275,6 +309,10 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
                               const newName = prompt('Enter new name:', sub.name);
                               if (newName && newName.trim()) onRenameSubcategory?.(sub.id, newName.trim());
                             }}>Rename</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onShareSubcategory?.(sub.id)}>
+                              <Share2 className="w-4 h-4 mr-2" />
+                              Share Subcategory
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => onDeleteSubcategory?.(sub.id)} className="text-destructive">Delete</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
