@@ -27,6 +27,7 @@ export interface ToolCardProps {
   currentSubcategoryId?: string;
   toolId?: string;
   userId?: string;
+  readOnly?: boolean;
 }
 
 export default function ToolCard({
@@ -46,6 +47,7 @@ export default function ToolCard({
   currentSubcategoryId,
   toolId,
   userId
+  , readOnly = false
 }: ToolCardProps) {
   const [showActionMenu, setShowActionMenu] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -110,7 +112,7 @@ export default function ToolCard({
 
   return (
     <div
-      draggable
+      draggable={!readOnly}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       className={`${isDragging ? 'cursor-grabbing' : 'cursor-pointer'} transition-all duration-200 group`}
@@ -118,8 +120,7 @@ export default function ToolCard({
     >
     <motion.div 
       onClick={handleClick}
-// Remove onMouseDown since it's already handled by longPressHandlers.handlers
-      {...longPressHandlers.handlers}
+      {...(readOnly ? {} : longPressHandlers.handlers)}
       whileHover={!isDragging && !isSelected ? { scale: 1.02, y: -4 } : {}} 
       whileTap={!isDragging && !isSelected ? { scale: 0.98 } : {}} 
       transition={{ duration: 0.2, ease: "easeOut" }}

@@ -8,6 +8,7 @@ import { DndContext } from '@dnd-kit/core';
 import { ThemeProvider } from './contexts/ThemeContext.tsx';
 import AuthCallback from './auth/callback.tsx';
 import SharedView from './components/SharedView.tsx';
+import ProfilePage from './components/profile/ProfilePage.tsx';
 import ProfileSettings from './components/ProfileSettings.tsx';
 import MobileDashboard from './components/MobileDashboard.tsx';
 import { useIsMobile } from './hooks/use-mobile.ts';
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/profile/:username',
-    element: <SharedView type="profile" />,
+    element: <ProfilePage />,
   },
   {
     path: '/settings/profile',

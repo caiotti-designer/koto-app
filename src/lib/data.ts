@@ -52,6 +52,8 @@ export interface CategoryRow {
   user_id: string;
   created_at: string;
   updated_at: string;
+  // Optional ordering column; may not exist in all deployments yet
+  sort_order?: number | null;
 }
 
 export interface SubcategoryRow {
@@ -165,6 +167,111 @@ export async function removeAvatar(publicUrl: string) {
   await supabase.storage.from('avatars').remove([path]);
 }
 
+// Public profile helpers
+export async function fetchPublicUserByUsername(username: string): Promise<UserProfile | null> {
+  const { data: profile, error } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('username', username)
+    .eq('profile_public', true)
+    .single();
+
+  if (error) {
+    console.error('Error fetching public user by username:', error);
+    return null;
+  }
+  return profile as UserProfile;
+}
+
+export async function countPublicPrompts(userId: string): Promise<number> {
+  const { count, error } = await supabase
+    .from('prompts')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('is_public', true);
+  if (error) {
+    console.error('Error counting public prompts:', error);
+    return 0;
+  }
+  return count || 0;
+}
+
+export async function countPublicTools(userId: string): Promise<number> {
+  const { count, error } = await supabase
+    .from('tools')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('is_public', true);
+  if (error) {
+    console.error('Error counting public tools:', error);
+    return 0;
+  }
+  return count || 0;
+}
+
+export async function fetchPublicPrompts(
+  userId: string,
+  opts: { from: number; to: number; sort?: 'created_desc' | 'title_asc' }
+): Promise<PromptRow[]> {
+  let query = supabase
+    .from('prompts')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('is_public', true);
+  if (opts?.sort === 'title_asc') {
+    query = query.order('title', { ascending: true });
+  } else {
+    query = query.order('created_at', { ascending: false });
+  }
+  const { data, error } = await query.range(opts.from, opts.to);
+  if (error) {
+    console.error('Error fetching public prompts:', error);
+    return [];
+  }
+  return (data || []) as PromptRow[];
+}
+
+export async function fetchPublicTools(
+  userId: string,
+  opts: { from: number; to: number; sort?: 'created_desc' | 'title_asc' }
+): Promise<ToolRow[]> {
+  let query = supabase
+    .from('tools')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('is_public', true);
+  if (opts?.sort === 'title_asc') {
+    query = query.order('name', { ascending: true });
+  } else {
+    query = query.order('created_at', { ascending: false });
+  }
+  const { data, error } = await query.range(opts.from, opts.to);
+  if (error) {
+    console.error('Error fetching public tools:', error);
+    return [];
+  }
+  return (data || []) as ToolRow[];
+}
+
+// Public categories via view (preferred). Falls back to base table if view not present/policy allows.
+export async function fetchPublicCategories(userId: string, type: 'prompt' | 'tool'): Promise<CategoryRow[]> {
+  // Try view first
+  let { data, error } = await supabase
+    .from('public_categories' as any)
+    .select('*')
+    .eq('user_id', userId)
+    .eq('type', type);
+  if (error) {
+    console.warn('public_categories view not available, fallback to categories with RLS:', error?.message);
+    const res = await supabase
+      .from('categories')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('type', type);
+    data = res.data as any;
+  }
+  return (data || []) as any;
+}
 // Prompts CRUD
 export async function fetchPrompts(userId?: string): Promise<PromptRow[]> {
   if (!userId) {

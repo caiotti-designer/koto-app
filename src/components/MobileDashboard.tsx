@@ -293,6 +293,46 @@ const MobileDashboard: React.FC = () => {
     };
   }, []);
 
+  // Function to get current category name with localStorage fallback
+  const getCurrentCategoryName = () => {
+    const isAll = activeCategory === 'all';
+    const sub = subcategories.find(s => s.id === activeCategory);
+    
+    if (activeTab === 'prompts') {
+      if (isAll) return 'All Prompts';
+      if (sub) {
+        const parent = categories.find(c => c.id === sub.category_id);
+        return parent ? `${parent.name} / ${sub.name}` : sub.name;
+      }
+      const cat = categories.find(c => c.id === activeCategory);
+      if (cat) return cat.name;
+      
+      // Fallback to stored name if category not found yet
+      try {
+        const nameKey = 'koto_mobile_category_name_prompts';
+        const storedName = localStorage.getItem(nameKey);
+        if (storedName && storedName !== 'All Prompts') return storedName;
+      } catch {}
+      return 'All Prompts';
+    } else {
+      if (isAll) return 'All Tools';
+      if (sub) {
+        const parent = categories.find(c => c.id === sub.category_id);
+        return parent ? `${parent.name} / ${sub.name}` : sub.name;
+      }
+      const cat = categories.find(c => c.id === activeCategory);
+      if (cat) return cat.name;
+      
+      // Fallback to stored name if category not found yet
+      try {
+        const nameKey = 'koto_mobile_category_name_tools';
+        const storedName = localStorage.getItem(nameKey);
+        if (storedName && storedName !== 'All Tools') return storedName;
+      } catch {}
+      return 'All Tools';
+    }
+  };
+
   // Persist active tab/category
   useEffect(() => {
     try { localStorage.setItem('koto_mobile_active_tab', activeTab); } catch {}
@@ -301,9 +341,14 @@ const MobileDashboard: React.FC = () => {
   useEffect(() => {
     try {
       const key = activeTab === 'toolbox' ? 'koto_mobile_active_category_tools' : 'koto_mobile_active_category_prompts';
+      const nameKey = activeTab === 'toolbox' ? 'koto_mobile_category_name_tools' : 'koto_mobile_category_name_prompts';
       localStorage.setItem(key, activeCategory);
+      
+      // Store the category name for immediate display during refresh
+      const categoryName = getCurrentCategoryName();
+      localStorage.setItem(nameKey, categoryName);
     } catch {}
-  }, [activeCategory]);
+  }, [activeCategory, categories, subcategories]);
   useEffect(() => {
     // restore per-tab category on tab switch
     try {
@@ -548,27 +593,7 @@ const MobileDashboard: React.FC = () => {
                       <Wrench className="w-5 h-5 text-white" strokeWidth={2} />
                     )}
                     <h2 className="text-white font-bold text-lg leading-tight">
-                      {(() => {
-                        const isAll = activeCategory === 'all';
-                        const sub = subcategories.find(s => s.id === activeCategory);
-                        if (activeTab === 'prompts') {
-                          if (isAll) return 'All Prompts';
-                          if (sub) {
-                            const parent = categories.find(c => c.id === sub.category_id);
-                            return parent ? `${parent.name} / ${sub.name}` : sub.name;
-                          }
-                          const cat = categories.find(c => c.id === activeCategory);
-                          return cat ? cat.name : 'All Prompts';
-                        } else {
-                          if (isAll) return 'All Tools';
-                          if (sub) {
-                            const parent = categories.find(c => c.id === sub.category_id);
-                            return parent ? `${parent.name} / ${sub.name}` : sub.name;
-                          }
-                          const cat = categories.find(c => c.id === activeCategory);
-                          return cat ? cat.name : 'All Tools';
-                        }
-                      })()}
+                      {getCurrentCategoryName()}
                     </h2>
                   </div>
                   

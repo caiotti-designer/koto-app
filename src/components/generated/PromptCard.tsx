@@ -23,6 +23,7 @@ export interface PromptCardProps {
   currentSubcategoryId?: string;
   promptId?: string;
   userId?: string;
+  readOnly?: boolean;
 }
 export default function PromptCard({
   title = "Woman and Tiger",
@@ -39,6 +40,7 @@ export default function PromptCard({
   currentSubcategoryId,
   promptId,
   userId
+  , readOnly = false
 }: PromptCardProps) {
   const [showActionMenu, setShowActionMenu] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -102,7 +104,7 @@ export default function PromptCard({
 
   return (
     <div
-      draggable
+      draggable={!readOnly}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       className={`${isDragging ? 'cursor-grabbing' : 'cursor-pointer'} transition-all duration-200 group`}
@@ -110,8 +112,7 @@ export default function PromptCard({
     >
     <motion.div 
       onClick={handleClick}
-// Remove onMouseDown since it's already handled by longPressHandlers.handlers
-      {...longPressHandlers.handlers}
+      {...(readOnly ? {} : longPressHandlers.handlers)}
       whileHover={!isDragging && !isSelected ? { scale: 1.02, y: -4 } : {}} 
       whileTap={!isDragging && !isSelected ? { scale: 0.98 } : {}} 
       transition={{ duration: 0.2, ease: "easeOut" }}

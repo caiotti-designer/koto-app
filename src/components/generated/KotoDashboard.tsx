@@ -15,6 +15,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import { Badge } from '../ui/badge';
+import ProfileSettingsDialog from '../ProfileSettingsDialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -326,6 +327,7 @@ const KotoDashboard: React.FC = () => {
   const [showPromptDetailsDialog, setShowPromptDetailsDialog] = useState(false);
   const [showToolDetailsDialog, setShowToolDetailsDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  const [showProfileSettingsDialog, setShowProfileSettingsDialog] = useState(false);
   const [showProjectSettingsDialog, setShowProjectSettingsDialog] = useState(false);
   const [iconSearchQuery, setIconSearchQuery] = useState('');
   const [editingProjectName, setEditingProjectName] = useState('');
@@ -347,6 +349,12 @@ const KotoDashboard: React.FC = () => {
     type: 'prompt' | 'tool';
     item: Prompt | Tool;
   } | null>(null);
+  // Sidebar reorder state (Projects/Stacks order)
+  const [draggingCategoryId, setDraggingCategoryId] = useState<string | null>(null);
+  const [hoverCategoryId, setHoverCategoryId] = useState<string | null>(null);
+  const [hoverInsertPos, setHoverInsertPos] = useState<'above' | 'below' | null>(null);
+  const [reorderListType, setReorderListType] = useState<'prompts' | 'toolbox' | null>(null);
+  const [sidebarReorderArmed, setSidebarReorderArmed] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
@@ -529,9 +537,14 @@ const KotoDashboard: React.FC = () => {
   useEffect(() => {
     try {
       const key = activeTab === 'toolbox' ? 'koto_active_category_tools' : 'koto_active_category_prompts';
+      const nameKey = activeTab === 'toolbox' ? 'koto_active_category_name_tools' : 'koto_active_category_name_prompts';
       localStorage.setItem(key, activeCategory);
+      
+      // Also persist the category name for immediate display during refresh
+      const categoryName = getCurrentCategoryName();
+      localStorage.setItem(nameKey, categoryName);
     } catch {}
-  }, [activeCategory]);
+  }, [activeCategory, subcategories, updatedCategories, updatedToolCategories]);
 
   // On tab change, restore saved category for that tab or default
   useEffect(() => {
@@ -630,15 +643,6 @@ const KotoDashboard: React.FC = () => {
           fetchSubcategories(user.id)
         ]);
 
-        // Map categories from database
-        const mappedCategories = categoryRows.map(row => ({
-          id: row.id,
-          name: row.name,
-          count: 0, // Will be calculated dynamically
-          icon: iconOptions.find(opt => opt.name === row.icon)?.icon || Globe,
-          expanded: false
-        }));
-
         // Map subcategories from database
         const mappedSubcategories = subcategoryRows.map(row => ({
           id: row.id,
@@ -647,21 +651,69 @@ const KotoDashboard: React.FC = () => {
           count: 0 // Will be calculated dynamically
         }));
 
-        // Separate prompt and tool categories based on database type field
-        const promptCategories = categoryRows.filter(row => row.type === 'prompt').map(row => ({
+        // Separate prompt and tool categories based on database type field and sort by sort_order if present, otherwise created_at
+        const promptRows = categoryRows.filter(row => row.type === 'prompt');
+        const toolRows = categoryRows.filter(row => row.type === 'tool');
+
+        const sortByOrder = (rows: typeof categoryRows) => {
+          return [...rows].sort((a: any, b: any) => {
+            const ao = a.sort_order ?? null;
+            const bo = b.sort_order ?? null;
+            if (ao != null && bo != null) return ao - bo;
+            if (ao != null) return -1;
+            if (bo != null) return 1;
+            // fallback: by created_at
+            const at = new Date(a.created_at).getTime();
+            const bt = new Date(b.created_at).getTime();
+            return at - bt;
+          });
+        };
+
+        const promptCategories = sortByOrder(promptRows).map(row => ({
           id: row.id,
           name: row.name,
           count: 0,
           icon: iconOptions.find(opt => opt.name === row.icon)?.icon || Globe,
           expanded: false
         }));
-        const toolCategoriesFromDb = categoryRows.filter(row => row.type === 'tool').map(row => ({
+        const toolCategoriesFromDb = sortByOrder(toolRows).map(row => ({
           id: row.id,
           name: row.name,
           count: 0,
           icon: iconOptions.find(opt => opt.name === row.icon)?.icon || Globe,
           expanded: false
         }));
+
+        // Apply localStorage order if no sort_order in DB
+        const applyLocalOrder = (list: typeof promptCategories, key: string) => {
+          try {
+            const raw = typeof window !== 'undefined' ? localStorage.getItem(key) : null;
+            if (!raw) return list;
+            const order: string[] = JSON.parse(raw);
+            if (!Array.isArray(order) || order.length === 0) return list;
+            const dict = Object.fromEntries(list.map((c) => [c.id, c] as const)) as Record<string, typeof list[number]>;
+            const remaining = new Set(list.map(c => c.id));
+            const arranged: typeof list = [];
+            for (const id of order) {
+              const c = dict[id];
+              if (c) {
+                arranged.push(c);
+                remaining.delete(id);
+              }
+            }
+            // Append any remaining new categories at the end in original order
+            for (const c of list) {
+              if (remaining.has(c.id)) arranged.push(c);
+            }
+            return arranged;
+          } catch {
+            return list;
+          }
+        };
+        const anyPromptHasOrder = promptRows.some((r: any) => r.sort_order != null);
+        const anyToolHasOrder = toolRows.some((r: any) => r.sort_order != null);
+        const finalPromptCategories = anyPromptHasOrder ? promptCategories : applyLocalOrder(promptCategories, 'koto_order_prompt');
+        const finalToolCategories = anyToolHasOrder ? toolCategoriesFromDb : applyLocalOrder(toolCategoriesFromDb, 'koto_order_tool');
 
         setCategories([
           {
@@ -671,7 +723,7 @@ const KotoDashboard: React.FC = () => {
             icon: Globe,
             expanded: false
           },
-          ...promptCategories
+          ...finalPromptCategories
         ]);
 
         setToolCategories([
@@ -682,7 +734,7 @@ const KotoDashboard: React.FC = () => {
             icon: Globe,
             expanded: false
           },
-          ...toolCategoriesFromDb
+          ...finalToolCategories
         ]);
 
         setSubcategories(mappedSubcategories);
@@ -835,6 +887,106 @@ const KotoDashboard: React.FC = () => {
     const target = e.currentTarget as HTMLElement;
     target.style.opacity = '0.5';
     target.style.transform = 'rotate(5deg)';
+  };
+
+  // Sidebar reorder helpers
+  const moveItem = <T,>(arr: T[], fromId: string, toId: string, getId: (x: T) => string, position: 'above' | 'below' = 'above') => {
+    if (fromId === toId) return arr;
+    const items = [...arr];
+    const fromIndex = items.findIndex((x) => getId(x) === fromId);
+    const toIndex = items.findIndex((x) => getId(x) === toId);
+    if (fromIndex === -1 || toIndex === -1) return arr;
+    const [moved] = items.splice(fromIndex, 1);
+    const insertIndex = position === 'above' ? toIndex : toIndex + (fromIndex < toIndex ? 0 : 1);
+    items.splice(insertIndex, 0, moved);
+    return items;
+  };
+
+  const persistCategoryOrder = async (listType: 'prompts' | 'toolbox', list: Category[]) => {
+    // Exclude the fixed first item which is not part of 'list' mapping here
+    const orderIds = list.map((c) => c.id);
+    try {
+      if (user?.id) {
+        // Try to persist to DB (requires sort_order column)
+        await Promise.all(
+          orderIds.map((id, idx) => updateCategory(id, { sort_order: idx + 1 } as any).catch((e) => { throw e; }))
+        );
+      }
+      // Cache locally too for faster load
+      const key = listType === 'prompts' ? 'koto_order_prompt' : 'koto_order_tool';
+      localStorage.setItem(key, JSON.stringify(orderIds));
+    } catch (err) {
+      // Fallback to local storage-only persistence
+      const key = listType === 'prompts' ? 'koto_order_prompt' : 'koto_order_tool';
+      localStorage.setItem(key, JSON.stringify(orderIds));
+      console.warn('Category order persisted locally. Backend column may be missing.', err);
+      toast.info('Reordered locally. To sync across devices, run the DB migration for category ordering.');
+    }
+  };
+
+  const handleSidebarCategoryDragStart = (e: React.DragEvent, id: string, listType: 'prompts' | 'toolbox') => {
+    if (!sidebarReorderArmed) {
+      // Not in reorder mode, ignore drag
+      try { e.preventDefault(); } catch {}
+      return;
+    }
+    e.stopPropagation();
+    setDraggingCategoryId(id);
+    setReorderListType(listType);
+    try { e.dataTransfer.setData('text/plain', id); } catch {}
+    e.dataTransfer.effectAllowed = 'move';
+  };
+  const handleSidebarCategoryDragOver = (e: React.DragEvent, id: string) => {
+    if (!draggingCategoryId) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const target = e.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const pos = (e.clientY - rect.top) < rect.height / 2 ? 'above' : 'below';
+    if (hoverCategoryId !== id) setHoverCategoryId(id);
+    setHoverInsertPos(pos);
+  };
+  const handleSidebarCategoryDrop = async (e: React.DragEvent, id: string) => {
+    if (!draggingCategoryId || !reorderListType) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (draggingCategoryId === id) {
+      setDraggingCategoryId(null); setHoverCategoryId(null); setHoverInsertPos(null); setReorderListType(null); setSidebarReorderArmed(false); return;
+    }
+    if (reorderListType === 'prompts') {
+      const current = categories.filter((c) => c.id !== 'all');
+      const reordered = moveItem(current, draggingCategoryId, id, (c) => c.id, hoverInsertPos ?? 'above');
+      setCategories([categories[0], ...reordered]);
+      await persistCategoryOrder('prompts', reordered);
+    } else {
+      const current = toolCategories.filter((c) => c.id !== 'all-tools');
+      const reordered = moveItem(current, draggingCategoryId, id, (c) => c.id, hoverInsertPos ?? 'above');
+      setToolCategories([toolCategories[0], ...reordered]);
+      await persistCategoryOrder('toolbox', reordered);
+    }
+    setDraggingCategoryId(null);
+    setHoverCategoryId(null);
+    setHoverInsertPos(null);
+    setReorderListType(null);
+    setSidebarReorderArmed(false);
+  };
+  const handleSidebarCategoryDragEnd = () => {
+    setDraggingCategoryId(null);
+    setHoverCategoryId(null);
+    setHoverInsertPos(null);
+    setReorderListType(null);
+    setSidebarReorderArmed(false);
+  };
+
+  // Instant arm for sidebar reordering (no delay)
+  const armSidebarReorder = (id: string) => {
+    setSidebarReorderArmed(true);
+    setDraggingCategoryId(id);
+    setReorderListType(activeTab === 'prompts' ? 'prompts' : 'toolbox');
+  };
+  const cancelSidebarReorderArm = () => {
+    setSidebarReorderArmed(false);
+    setDraggingCategoryId(null);
   };
   
   const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
@@ -1583,7 +1735,22 @@ return;
     // Check in the appropriate category list
     const categoryList = activeTab === 'prompts' ? updatedCategories : updatedToolCategories;
     const category = categoryList.find(cat => cat.id === activeCategory);
-    return category ? category.name : activeTab === 'prompts' ? 'AI Prompts' : 'A.I Tools';
+    
+    if (category) {
+      return category.name;
+    }
+    
+    // If category not found (during loading), try to get the stored name
+    try {
+      const nameKey = activeTab === 'toolbox' ? 'koto_active_category_name_tools' : 'koto_active_category_name_prompts';
+      const storedName = localStorage.getItem(nameKey);
+      if (storedName) {
+        return storedName;
+      }
+    } catch {}
+    
+    // Final fallback
+    return activeTab === 'prompts' ? 'AI Prompts' : 'A.I Tools';
   };
   const getCurrentCategoryCount = () => {
     if (activeCategory === 'all') {
@@ -2626,13 +2793,59 @@ return;
                 </div>
 
                 {(activeTab === 'prompts' ? updatedCategories.filter(cat => cat.id !== 'all') : updatedToolCategories.filter(cat => cat.id !== 'all-tools')).map(category => {
-                const Icon = category.icon;
-                const isActive = activeCategory === category.id;
-                const categorySubcategories = subcategories.filter(sub => sub.parentId === category.id);
-                const hasSubcategories = categorySubcategories.length > 0;
-                return <div key={category.id}>
+                  const Icon = category.icon;
+                  const isActive = activeCategory === category.id;
+                  const categorySubcategories = subcategories.filter(sub => sub.parentId === category.id);
+                  const hasSubcategories = categorySubcategories.length > 0;
+                  return <motion.div layout key={category.id} className="relative">
+                      {/* Insertion indicator line for reorder */}
+                      {draggingCategoryId && hoverCategoryId === category.id && hoverInsertPos === 'above' && (
+                        <div className="absolute -top-1 left-2 right-2 h-0.5 bg-indigo-300 rounded-full" />
+                      )}
+                      {draggingCategoryId && hoverCategoryId === category.id && hoverInsertPos === 'below' && (
+                        <div className="absolute -bottom-1 left-2 right-2 h-0.5 bg-indigo-300 rounded-full" />
+                      )}
                       <div className="flex items-center group">
-                        <button onClick={() => setActiveCategory(category.id)} onDoubleClick={() => handleDoubleClick(category.id, category.name)} onDragOver={(e: React.DragEvent) => handleDragOver(e, category.id)} onDragLeave={handleDragLeave} onDrop={(e: React.DragEvent) => handleDrop(e, category.id)} className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative max-w-[247px] ${isActive ? 'bg-slate-800 dark:bg-slate-700 text-white' : dragOverTarget === category.id && isDragging ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 ring-2 ring-green-300 dark:ring-green-600 ring-opacity-50 shadow-lg transform scale-105' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'}`}>
+                        <button
+                          onClick={() => setActiveCategory(category.id)}
+                          onDoubleClick={() => handleDoubleClick(category.id, category.name)}
+                          onMouseDown={() => armSidebarReorder(category.id)}
+                          onMouseUp={() => cancelSidebarReorderArm()}
+                          onMouseLeave={() => cancelSidebarReorderArm()}
+                          onTouchStart={() => armSidebarReorder(category.id)}
+                          onTouchEnd={() => cancelSidebarReorderArm()}
+                          draggable={sidebarReorderArmed && draggingCategoryId === category.id}
+                          onDragStart={(e: React.DragEvent) => handleSidebarCategoryDragStart(e, category.id, activeTab === 'prompts' ? 'prompts' : 'toolbox')}
+                          onDragOver={(e: React.DragEvent) => {
+                            if (draggingCategoryId) {
+                              handleSidebarCategoryDragOver(e, category.id);
+                            } else {
+                              handleDragOver(e, category.id);
+                            }
+                          }}
+                          onDragLeave={(e: React.DragEvent) => {
+                            if (draggingCategoryId) {
+                              setHoverCategoryId(null); setHoverInsertPos(null);
+                            } else {
+                              handleDragLeave(e);
+                            }
+                          }}
+                          onDrop={(e: React.DragEvent) => {
+                            if (draggingCategoryId) {
+                              handleSidebarCategoryDrop(e, category.id);
+                            } else {
+                              handleDrop(e, category.id);
+                            }
+                          }}
+                          onDragEnd={handleSidebarCategoryDragEnd}
+                          className={`flex-1 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative max-w-[247px] ${
+                            isActive
+                              ? 'bg-slate-800 dark:bg-slate-700 text-white'
+                              : dragOverTarget === category.id && isDragging
+                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 ring-2 ring-green-300 dark:ring-green-600 ring-opacity-50 shadow-lg transform scale-105'
+                                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'
+                          }`}
+                        >
                           <Icon className="w-4.5 h-4.5 flex-shrink-0" />
                           <AnimatePresence mode="wait">
                             {!sidebarCollapsed && <motion.div initial={{
@@ -2789,7 +3002,7 @@ return;
                       })}
                           </motion.div>}
                       </AnimatePresence>
-                    </div>;
+                    </motion.div>;
               })}
               </div>
             </div>
@@ -3083,7 +3296,7 @@ return;
                         )}
                         {user && (
                           <>
-                            <DropdownMenuItem onClick={() => { window.location.href = '/settings/profile'; }}>
+                            <DropdownMenuItem onClick={() => { setShowProfileSettingsDialog(true); }}>
                               <User className="w-4 h-4 mr-2" />
                               Profile Settings
                             </DropdownMenuItem>
@@ -4000,6 +4213,15 @@ return;
         setSelectedTool(null);
       }} />
 
+      {/* Profile Settings Modal */}
+      <ProfileSettingsDialog
+        open={showProfileSettingsDialog}
+        onOpenChange={setShowProfileSettingsDialog}
+        userId={user?.id || null}
+        initialProfile={userProfile}
+        onSaved={(p) => setUserProfile(p)}
+      />
+
       {/* Simple Edit Modal */}
       <AnimatePresence>
         {showSimpleEditModal && (
@@ -4209,3 +4431,4 @@ return;
 };
 
 export default KotoDashboard;
+      
