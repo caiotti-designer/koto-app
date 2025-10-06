@@ -882,11 +882,6 @@ const KotoDashboard: React.FC = () => {
     });
     setIsDragging(true);
     e.dataTransfer.effectAllowed = 'move';
-    
-    // Add visual feedback to the dragged element
-    const target = e.currentTarget as HTMLElement;
-    target.style.opacity = '0.5';
-    target.style.transform = 'rotate(5deg)';
   };
 
   // Sidebar reorder helpers
@@ -994,11 +989,6 @@ const KotoDashboard: React.FC = () => {
     setDraggedItem(null);
     setDragOverTarget(null);
     setIsDragging(false);
-    
-    // Reset visual feedback
-    const target = e.currentTarget as HTMLElement;
-    target.style.opacity = '1';
-    target.style.transform = 'none';
   };
   
   const handleDragOver = (e: React.DragEvent, targetId: string) => {
@@ -1074,6 +1064,8 @@ const KotoDashboard: React.FC = () => {
       }
     }
     setDraggedItem(null);
+    setDragOverTarget(null);
+    setIsDragging(false);
   };
 
   // Handle right-click on empty space in content area
@@ -4431,4 +4423,4 @@ return;
 };
 
 export default KotoDashboard;
-      
+
