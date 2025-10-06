@@ -134,7 +134,7 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
       />
       
       {/* Drawer */}
-      <div className="fixed left-0 top-0 h-full w-80 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 z-50 md:hidden transform transition-transform duration-300 ease-in-out">
+      <div className="fixed left-0 top-0 h-full w-80 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 z-50 md:hidden transform transition-transform duration-300 ease-in-out flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
           <div className="flex items-center space-x-3">
@@ -154,7 +154,7 @@ const ProjectsDrawer: React.FC<ProjectsDrawerProps> = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto overscroll-y-contain pr-1">
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">

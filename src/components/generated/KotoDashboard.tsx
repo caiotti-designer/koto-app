@@ -56,6 +56,7 @@ import {
   unsubscribeFromChannel,
   shareCategory,
   shareSubcategory,
+  resequenceCategories,
 } from '../../lib/data';
 import type { PromptRow, ToolRow } from '../../lib/data';
 import type { UserProfile } from '../../lib/data';
@@ -95,6 +96,7 @@ interface Category {
     className?: string;
   }>;
   expanded?: boolean;
+  sortOrder?: number | null;
 }
 interface Project {
   id: string;
@@ -669,20 +671,17 @@ const KotoDashboard: React.FC = () => {
           });
         };
 
-        const promptCategories = sortByOrder(promptRows).map(row => ({
+        const mapRowToCategory = (row: any): Category => ({
           id: row.id,
           name: row.name,
           count: 0,
           icon: iconOptions.find(opt => opt.name === row.icon)?.icon || Globe,
-          expanded: false
-        }));
-        const toolCategoriesFromDb = sortByOrder(toolRows).map(row => ({
-          id: row.id,
-          name: row.name,
-          count: 0,
-          icon: iconOptions.find(opt => opt.name === row.icon)?.icon || Globe,
-          expanded: false
-        }));
+          expanded: false,
+          sortOrder: row.sort_order ?? null,
+        });
+
+        const promptCategories = sortByOrder(promptRows).map(mapRowToCategory);
+        const toolCategoriesFromDb = sortByOrder(toolRows).map(mapRowToCategory);
 
         // Apply localStorage order if no sort_order in DB
         const applyLocalOrder = (list: typeof promptCategories, key: string) => {
@@ -715,15 +714,19 @@ const KotoDashboard: React.FC = () => {
         const finalPromptCategories = anyPromptHasOrder ? promptCategories : applyLocalOrder(promptCategories, 'koto_order_prompt');
         const finalToolCategories = anyToolHasOrder ? toolCategoriesFromDb : applyLocalOrder(toolCategoriesFromDb, 'koto_order_tool');
 
+        const normalizedPromptCategories = normalizeCategoryOrder(finalPromptCategories);
+        const normalizedToolCategories = normalizeCategoryOrder(finalToolCategories);
+
         setCategories([
           {
             id: 'all',
             name: 'All',
             count: 0,
             icon: Globe,
-            expanded: false
+            expanded: false,
+            sortOrder: 0,
           },
-          ...finalPromptCategories
+          ...normalizedPromptCategories,
         ]);
 
         setToolCategories([
@@ -732,12 +735,16 @@ const KotoDashboard: React.FC = () => {
             name: 'All Tools',
             count: 0,
             icon: Globe,
-            expanded: false
+            expanded: false,
+            sortOrder: 0,
           },
-          ...finalToolCategories
+          ...normalizedToolCategories,
         ]);
 
-        setSubcategories(mappedSubcategories);
+  
+  
+
+      setSubcategories(mappedSubcategories);
       } catch (error) {
         console.error('Failed to load categories from database:', error);
       }
@@ -798,41 +805,99 @@ const KotoDashboard: React.FC = () => {
     // Subscribe to categories changes
     const categoriesChannel = subscribeToCategories(user.id, (payload) => {
       if (payload.eventType === 'INSERT') {
+
         const newCategory: Category = {
+
           id: payload.new.id,
+
           name: payload.new.name,
+
           count: 0,
+
           icon: iconOptions.find(opt => opt.name === payload.new.icon)?.icon || Globe,
+
           expanded: false,
+
+          sortOrder: payload.new.sort_order ?? null,
+
         };
-        
+
+
+
         if (payload.new.type === 'prompt') {
-          setCategories(prev => [...prev, newCategory]);
+
+          setCategories(prev => mergeCategoryState(prev, newCategory, 'insert', 'all'));
+
         } else {
-          setToolCategories(prev => [...prev, newCategory]);
+
+          setToolCategories(prev => mergeCategoryState(prev, newCategory, 'insert', 'all-tools'));
+
         }
+
       } else if (payload.eventType === 'UPDATE') {
+
         const updatedCategory: Category = {
+
           id: payload.new.id,
+
           name: payload.new.name,
+
           count: 0,
+
           icon: iconOptions.find(opt => opt.name === payload.new.icon)?.icon || Globe,
+
           expanded: false,
+
+          sortOrder: payload.new.sort_order ?? null,
+
         };
-        
+
+
+
         if (payload.new.type === 'prompt') {
-          setCategories(prev => prev.map(cat => 
-            cat.id === payload.new.id ? updatedCategory : cat
-          ));
+
+          setCategories(prev => mergeCategoryState(prev, updatedCategory, 'update', 'all'));
+
         } else {
-          setToolCategories(prev => prev.map(cat => 
-            cat.id === payload.new.id ? updatedCategory : cat
-          ));
+
+          setToolCategories(prev => mergeCategoryState(prev, updatedCategory, 'update', 'all-tools'));
+
         }
+
       } else if (payload.eventType === 'DELETE') {
-        setCategories(prev => prev.filter(cat => cat.id !== payload.old.id));
-        setToolCategories(prev => prev.filter(cat => cat.id !== payload.old.id));
+
+        const removed: Category = {
+
+          id: payload.old.id,
+
+          name: '',
+
+          count: 0,
+
+          icon: Globe,
+
+          expanded: false,
+
+          sortOrder: null,
+
+        };
+
+
+
+        if (payload.old.type === 'prompt') {
+
+          setCategories(prev => mergeCategoryState(prev, removed, 'delete', 'all'));
+
+        } else {
+
+          setToolCategories(prev => mergeCategoryState(prev, removed, 'delete', 'all-tools'));
+
+        }
+
       }
+
+
+
     });
 
     // Subscribe to subcategories changes
@@ -897,27 +962,71 @@ const KotoDashboard: React.FC = () => {
     return items;
   };
 
-  const persistCategoryOrder = async (listType: 'prompts' | 'toolbox', list: Category[]) => {
-    // Exclude the fixed first item which is not part of 'list' mapping here
-    const orderIds = list.map((c) => c.id);
-    try {
-      if (user?.id) {
-        // Try to persist to DB (requires sort_order column)
-        await Promise.all(
-          orderIds.map((id, idx) => updateCategory(id, { sort_order: idx + 1 } as any).catch((e) => { throw e; }))
-        );
-      }
-      // Cache locally too for faster load
-      const key = listType === 'prompts' ? 'koto_order_prompt' : 'koto_order_tool';
-      localStorage.setItem(key, JSON.stringify(orderIds));
-    } catch (err) {
-      // Fallback to local storage-only persistence
-      const key = listType === 'prompts' ? 'koto_order_prompt' : 'koto_order_tool';
-      localStorage.setItem(key, JSON.stringify(orderIds));
-      console.warn('Category order persisted locally. Backend column may be missing.', err);
-      toast.info('Reordered locally. To sync across devices, run the DB migration for category ordering.');
-    }
+  const applySequentialOrder = (items: Category[]): Category[] => items.map((item, idx) => ({
+    ...item,
+    sortOrder: idx + 1,
+  }));
+
+  const normalizeCategoryOrder = (items: Category[]): Category[] => {
+    return applySequentialOrder([
+      ...items
+    ].sort((a, b) => {
+      const ao = a.sortOrder ?? Number.MAX_SAFE_INTEGER;
+      const bo = b.sortOrder ?? Number.MAX_SAFE_INTEGER;
+      if (ao !== bo) return ao - bo;
+      return a.name.localeCompare(b.name);
+    }));
   };
+
+  const mergeCategoryState = (
+    current: Category[],
+    incoming: Category,
+    action: 'insert' | 'update' | 'delete',
+    headerId: string,
+  ): Category[] => {
+    const header = current.find((cat) => cat.id === headerId) ?? null;
+    const rest = header ? current.filter((cat) => cat.id !== headerId) : [...current];
+    let updated: Category[] = rest;
+
+    if (action === 'insert') {
+      updated = [...rest, incoming];
+    } else if (action === 'update') {
+      updated = rest.map((cat) => {
+        if (cat.id !== incoming.id) return cat;
+        return {
+          ...incoming,
+          expanded: cat.expanded,
+        };
+      });
+    } else if (action === 'delete') {
+      updated = rest.filter((cat) => cat.id !== incoming.id);
+    }
+
+    const normalized = normalizeCategoryOrder(updated);
+    if (header) {
+      return [{ ...header, sortOrder: 0 }, ...normalized];
+    }
+    return normalized;
+  };
+
+  const persistCategoryOrder = async (listType: 'prompts' | 'toolbox', list: Category[]) => {
+    const orderIds = list.map((c) => c.id);
+    const key = listType === 'prompts' ? 'koto_order_prompt' : 'koto_order_tool';
+
+    try {
+      localStorage.setItem(key, JSON.stringify(orderIds));
+    } catch (storageError) {
+      console.warn('Failed to persist category order locally', storageError);
+    }
+
+    if (!user?.id) {
+      return;
+    }
+
+    const type = listType === 'prompts' ? 'prompt' : 'tool';
+    await resequenceCategories(user.id, type, orderIds);
+  };
+
 
   const handleSidebarCategoryDragStart = (e: React.DragEvent, id: string, listType: 'prompts' | 'toolbox') => {
     if (!sidebarReorderArmed) {
@@ -950,15 +1059,52 @@ const KotoDashboard: React.FC = () => {
     }
     if (reorderListType === 'prompts') {
       const current = categories.filter((c) => c.id !== 'all');
-      const reordered = moveItem(current, draggingCategoryId, id, (c) => c.id, hoverInsertPos ?? 'above');
-      setCategories([categories[0], ...reordered]);
-      await persistCategoryOrder('prompts', reordered);
+      const previous = applySequentialOrder(current);
+      const reordered = applySequentialOrder(
+        moveItem(current, draggingCategoryId, id, (c) => c.id, hoverInsertPos ?? 'above'),
+      );
+      const header = categories[0] ? { ...categories[0], sortOrder: 0 } : undefined;
+      if (header) {
+        setCategories([header, ...reordered]);
+      } else {
+        setCategories(reordered);
+      }
+      try {
+        await persistCategoryOrder('prompts', reordered);
+      } catch (err) {
+        console.error('Failed to persist project order', err);
+        toast.error('Could not sync project order. Reverting.');
+        if (header) {
+          setCategories([header, ...previous]);
+        } else {
+          setCategories(previous);
+        }
+      }
     } else {
       const current = toolCategories.filter((c) => c.id !== 'all-tools');
-      const reordered = moveItem(current, draggingCategoryId, id, (c) => c.id, hoverInsertPos ?? 'above');
-      setToolCategories([toolCategories[0], ...reordered]);
-      await persistCategoryOrder('toolbox', reordered);
+      const previous = applySequentialOrder(current);
+      const reordered = applySequentialOrder(
+        moveItem(current, draggingCategoryId, id, (c) => c.id, hoverInsertPos ?? 'above'),
+      );
+      const header = toolCategories[0] ? { ...toolCategories[0], sortOrder: 0 } : undefined;
+      if (header) {
+        setToolCategories([header, ...reordered]);
+      } else {
+        setToolCategories(reordered);
+      }
+      try {
+        await persistCategoryOrder('toolbox', reordered);
+      } catch (err) {
+        console.error('Failed to persist stack order', err);
+        toast.error('Could not sync stack order. Reverting.');
+        if (header) {
+          setToolCategories([header, ...previous]);
+        } else {
+          setToolCategories(previous);
+        }
+      }
     }
+
     setDraggingCategoryId(null);
     setHoverCategoryId(null);
     setHoverInsertPos(null);
@@ -4423,4 +4569,3 @@ return;
 };
 
 export default KotoDashboard;
-

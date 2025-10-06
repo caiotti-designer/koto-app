@@ -60,7 +60,7 @@ export const CategorySelectionModal: React.FC<CategorySelectionModalProps> = ({
 
   const loadSubcategories = async (categoryId: string) => {
     try {
-      const data = await fetchSubcategories(categoryId);
+      const data = await fetchSubcategories(userId, categoryId);
       setSubcategories(data);
     } catch (error) {
       console.error('Error loading subcategories:', error);

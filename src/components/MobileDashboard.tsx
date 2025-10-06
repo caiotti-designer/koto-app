@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Menu, Globe, MessageSquare, Wrench, User as UserIcon, ExternalLink, Plus, FolderPlus, Folder, X, Edit2, Share2, Trash2, Check, ChevronDown, Settings, Sun, Moon, Monitor, Upload, Copy, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
@@ -132,13 +132,41 @@ const MobileDashboard: React.FC = () => {
   const [categories, setCategories] = useState<CategoryRow[]>([]);
   const [subcategories, setSubcategories] = useState<SubcategoryRow[]>([]);
 
+  const sortCategories = useCallback((items: CategoryRow[]) => {
+    const typeWeight = (type: CategoryRow['type']) => (type === 'prompt' ? 0 : 1);
+    return [...items].sort((a, b) => {
+      const byType = typeWeight(a.type) - typeWeight(b.type);
+      if (byType !== 0) return byType;
+      const ao = a.sort_order ?? Number.MAX_SAFE_INTEGER;
+      const bo = b.sort_order ?? Number.MAX_SAFE_INTEGER;
+      if (ao !== bo) return ao - bo;
+      const at = new Date(a.created_at).getTime();
+      const bt = new Date(b.created_at).getTime();
+      return at - bt;
+    });
+  }, []);
+
+  const sortSubcategories = useCallback((items: SubcategoryRow[]) => {
+    return [...items].sort((a, b) => {
+      if (a.category_id !== b.category_id) {
+        return a.category_id.localeCompare(b.category_id);
+      }
+      const ao = a.sort_order ?? Number.MAX_SAFE_INTEGER;
+      const bo = b.sort_order ?? Number.MAX_SAFE_INTEGER;
+      if (ao !== bo) return ao - bo;
+      const at = new Date(a.created_at).getTime();
+      const bt = new Date(b.created_at).getTime();
+      return at - bt;
+    });
+  }, []);
+
   // Category/subcategory helpers (sync with desktop behavior)
   const handleAddSubcategory = async (parentId: string) => {
     if (!user?.id) return;
     try {
       const created = await dbCreateSubcategory({ name: activeTab === 'prompts' ? 'New subproject' : 'New substack', category_id: parentId, user_id: user.id }, user.id);
       if (created) {
-        setSubcategories(prev => [...prev, created]);
+        setSubcategories(prev => sortSubcategories([...prev, created]));
       }
     } catch (e) {
       console.error('Failed to create subcategory', e);
@@ -149,7 +177,7 @@ const MobileDashboard: React.FC = () => {
   const handleRenameCategory = async (id: string, name: string) => {
     try {
       const updated = await updateCategory(id, { name });
-      setCategories(prev => prev.map(c => (c.id === id ? updated : c)));
+      setCategories(prev => sortCategories(prev.map(c => (c.id === id ? updated : c))));
     } catch (e) {
       console.error('Failed to rename category', e);
       toast.error('Failed to rename');
@@ -159,7 +187,7 @@ const MobileDashboard: React.FC = () => {
   const handleRenameSubcategory = async (id: string, name: string) => {
     try {
       const updated = await updateSubcategory(id, { name });
-      setSubcategories(prev => prev.map(s => (s.id === id ? updated : s)));
+      setSubcategories(prev => sortSubcategories(prev.map(s => (s.id === id ? updated : s))));
     } catch (e) {
       console.error('Failed to rename subcategory', e);
       toast.error('Failed to rename');
@@ -274,8 +302,8 @@ const MobileDashboard: React.FC = () => {
           
           setPrompts(promptsData);
           setTools(toolsData);
-          setCategories(categoriesData);
-          setSubcategories(subcategoriesData);
+          setCategories(sortCategories(categoriesData));
+          setSubcategories(sortSubcategories(subcategoriesData));
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -364,9 +392,11 @@ const MobileDashboard: React.FC = () => {
 
     const categoriesChannel = subscribeToCategories(user.id, (payload) => {
       if (payload.eventType === 'INSERT') {
-        setCategories(prev => [...prev, payload.new]);
+        setCategories(prev => sortCategories([...prev, payload.new as CategoryRow]));
       } else if (payload.eventType === 'UPDATE') {
-        setCategories(prev => prev.map(cat => cat.id === payload.new.id ? payload.new : cat));
+        setCategories(prev => sortCategories(prev.map(cat =>
+          cat.id === payload.new.id ? payload.new as CategoryRow : cat
+        )));
       } else if (payload.eventType === 'DELETE') {
         setCategories(prev => prev.filter(cat => cat.id !== payload.old.id));
       }
@@ -374,9 +404,11 @@ const MobileDashboard: React.FC = () => {
 
     const subcategoriesChannel = subscribeToSubcategories(user.id, (payload) => {
       if (payload.eventType === 'INSERT') {
-        setSubcategories(prev => [...prev, payload.new]);
+        setSubcategories(prev => sortSubcategories([...prev, payload.new as SubcategoryRow]));
       } else if (payload.eventType === 'UPDATE') {
-        setSubcategories(prev => prev.map(sub => sub.id === payload.new.id ? payload.new : sub));
+        setSubcategories(prev => sortSubcategories(prev.map(sub =>
+          sub.id === payload.new.id ? payload.new as SubcategoryRow : sub
+        )));
       } else if (payload.eventType === 'DELETE') {
         setSubcategories(prev => prev.filter(sub => sub.id !== payload.old.id));
       }
@@ -386,7 +418,7 @@ const MobileDashboard: React.FC = () => {
       unsubscribeFromChannel(categoriesChannel);
       unsubscribeFromChannel(subcategoriesChannel);
     };
-  }, [user]);
+  }, [user, sortCategories, sortSubcategories]);
 
   // Mapping helpers for modals
   const mapPromptRowToPrompt = (row: PromptRow): PromptModal => ({

@@ -63,6 +63,7 @@ export interface SubcategoryRow {
   user_id: string;
   created_at: string;
   updated_at: string;
+  sort_order?: number | null;
 }
 
 // Auth
@@ -391,19 +392,32 @@ export async function fetchCategories(userId: string, type?: 'prompt' | 'tool'):
     return [];
   }
 
-  let query = supabase
-    .from('categories')
-    .select('*')
-    .eq('user_id', userId)
+  const buildQuery = () => {
+    let base = supabase
+      .from('categories')
+      .select('*')
+      .eq('user_id', userId);
+    if (type) {
+      base = base.eq('type', type);
+    }
+    return base;
+  };
+
+  const { data, error } = await buildQuery()
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: true });
 
-  if (type) {
-    query = query.eq('type', type);
-  }
-
-  const { data, error } = await query;
-
   if (error) {
+    const message = (error.message || '').toLowerCase();
+    if (message.includes('sort_order')) {
+      const { data: fallbackData, error: fallbackError } = await buildQuery()
+        .order('created_at', { ascending: true });
+      if (fallbackError) {
+        console.error('Error fetching categories:', fallbackError);
+        return [];
+      }
+      return fallbackData || [];
+    }
     console.error('Error fetching categories:', error);
     return [];
   }
@@ -444,6 +458,30 @@ export async function updateCategory(id: string, patch: Partial<CategoryRow>): P
   return data as CategoryRow;
 }
 
+export async function resequenceCategories(userId: string, type: 'prompt' | 'tool', orderedIds: string[]): Promise<void> {
+  if (!userId || orderedIds.length === 0) {
+    return;
+  }
+
+  const { error } = await supabase.rpc('resequence_categories', {
+    p_user_id: userId,
+    p_type: type,
+    p_order: orderedIds,
+  });
+
+  if (error) {
+    const message = (error.message || '').toLowerCase();
+    if (message.includes('resequence_categories')) {
+      for (let i = 0; i < orderedIds.length; i += 1) {
+        const id = orderedIds[i];
+        await updateCategory(id, { sort_order: i + 1 } as Partial<CategoryRow>);
+      }
+      return;
+    }
+    throw error;
+  }
+}
+
 export async function deleteCategory(id: string): Promise<void> {
   const { error } = await supabase
     .from('categories')
@@ -462,19 +500,32 @@ export async function fetchSubcategories(userId: string, categoryId?: string): P
     return [];
   }
 
-  let query = supabase
-    .from('subcategories')
-    .select('*')
-    .eq('user_id', userId)
+  const buildQuery = () => {
+    let base = supabase
+      .from('subcategories')
+      .select('*')
+      .eq('user_id', userId);
+    if (categoryId) {
+      base = base.eq('category_id', categoryId);
+    }
+    return base;
+  };
+
+  const { data, error } = await buildQuery()
+    .order('sort_order', { ascending: true, nullsFirst: false })
     .order('created_at', { ascending: true });
 
-  if (categoryId) {
-    query = query.eq('category_id', categoryId);
-  }
-
-  const { data, error } = await query;
-
   if (error) {
+    const message = (error.message || '').toLowerCase();
+    if (message.includes('sort_order')) {
+      const { data: fallbackData, error: fallbackError } = await buildQuery()
+        .order('created_at', { ascending: true });
+      if (fallbackError) {
+        console.error('Error fetching subcategories:', fallbackError);
+        return [];
+      }
+      return fallbackData || [];
+    }
     console.error('Error fetching subcategories:', error);
     return [];
   }
