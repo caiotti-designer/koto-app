@@ -502,7 +502,7 @@ const MobileDashboard: React.FC = () => {
             <motion.button
               onClick={async () => {
                 try {
-                  const { signInWithGitHub } = await import('../lib/data');
+                  const { signInWithGitHub } = await import('../lib/data/auth');
                   await signInWithGitHub();
                 } catch (error) {
                   console.error('GitHub sign in error:', error);
@@ -521,7 +521,7 @@ const MobileDashboard: React.FC = () => {
             <motion.button
               onClick={async () => {
                 try {
-                  const { signInWithGoogle } = await import('../lib/data');
+                  const { signInWithGoogle } = await import('../lib/data/auth');
                   await signInWithGoogle();
                 } catch (error) {
                   console.error('Google sign in error:', error);

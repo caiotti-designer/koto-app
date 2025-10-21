@@ -2175,7 +2175,7 @@ return;
         cover_image: prompt.coverImage ?? undefined,
         is_public: prompt.isPublic ?? false,
       };
-      const { updatePrompt } = await import('../../lib/data');
+      const { updatePrompt } = await import('../../lib/data/mutations');
       const updated = await updatePrompt(prompt.id, patch);
       const mapped: Prompt = {
         id: updated.id,
@@ -2199,7 +2199,7 @@ return;
   };
   const handleDeletePrompt = async (promptId: string) => {
     try {
-      const { deletePrompt } = await import('../../lib/data');
+      const { deletePrompt } = await import('../../lib/data/mutations');
       await deletePrompt(promptId);
       setPrompts(prev => prev.filter(p => p.id !== promptId));
     } catch (e) {
@@ -2213,7 +2213,7 @@ return;
     if (!user?.id) return;
     
     try {
-      const { sharePrompt } = await import('../../lib/data');
+      const { sharePrompt } = await import('../../lib/data/mutations');
       const shareToken = await sharePrompt(prompt.id);
       if (shareToken) {
         const shareUrl = `${window.location.origin}/shared/prompt?token=${shareToken}`;
@@ -2260,7 +2260,7 @@ return;
     const handleSave = async () => {
       if (!editedTool) return;
       try {
-        const { updateTool } = await import('../../lib/data');
+        const { updateTool } = await import('../../lib/data/mutations');
         const updated = await updateTool(tool.id, {
           name: editedTool.name,
           url: editedTool.url,
@@ -2304,7 +2304,7 @@ return;
       if (!user?.id) return;
       
       try {
-        const { shareTool } = await import('../../lib/data');
+        const { shareTool } = await import('../../lib/data/mutations');
         const shareToken = await shareTool(tool.id);
         if (shareToken) {
           const shareUrl = `${window.location.origin}/shared/tool?token=${shareToken}`;
@@ -2326,7 +2326,7 @@ return;
     const handleToggleVisibility = async (nextPublic: boolean) => {
       if (!tool) return;
       try {
-        const { updateTool } = await import('../../lib/data');
+        const { updateTool } = await import('../../lib/data/mutations');
         const updated = await updateTool(tool.id, { is_public: nextPublic });
         setTools(prev => prev.map(t => t.id === tool.id ? {
           id: updated.id,
@@ -2346,7 +2346,7 @@ return;
     };
     const handleDelete = async () => {
       try {
-        const { deleteTool } = await import('../../lib/data');
+        const { deleteTool } = await import('../../lib/data/mutations');
         await deleteTool(tool.id);
         setTools(prev => prev.filter(t => t.id !== tool.id));
       } catch (e) {
