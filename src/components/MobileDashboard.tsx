@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { Menu, Globe, MessageSquare, Wrench, User as UserIcon, ExternalLink, Plus, FolderPlus, Folder, X, Edit2, Share2, Trash2, Check, ChevronDown, Settings, Sun, Moon, Monitor, Upload, Copy, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
@@ -38,11 +38,12 @@ import type { PromptRow, ToolRow, CategoryRow, SubcategoryRow } from '../lib/dat
 import { Badge } from './ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from './ui/card';
 import { useNavigate } from 'react-router-dom';
-import PromptDetailsModal, { Prompt as PromptModal } from './generated/PromptDetailsModal';
-import NewPromptDialog from './generated/NewPromptDialog';
-import NewToolDialog from './generated/NewToolDialog';
-import NewProjectDialog from './generated/NewProjectDialog';
-import ProjectsDrawer from './mobile/ProjectsDrawer';
+import type { Prompt as PromptModal } from './generated/PromptDetailsModal';
+const PromptDetailsModal = lazy(() => import('./generated/PromptDetailsModal'));
+const NewPromptDialog = lazy(() => import('./generated/NewPromptDialog'));
+const NewToolDialog = lazy(() => import('./generated/NewToolDialog'));
+const NewProjectDialog = lazy(() => import('./generated/NewProjectDialog'));
+const ProjectsDrawer = lazy(() => import('./mobile/ProjectsDrawer'));
 import { updateCategory, updateSubcategory, deleteCategory, deleteSubcategory, createSubcategory as dbCreateSubcategory } from '../lib/data';
 
 import { toast } from 'sonner';
@@ -51,7 +52,7 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { useLongPress } from '../hooks/useLongPress';
 import FloatingActionMenu from './mobile/FloatingActionMenu';
-import CategorySelectionModal from './mobile/CategorySelectionModal';
+const CategorySelectionModal = lazy(() => import('./mobile/CategorySelectionModal'));
 
 interface UserProfile {
   id: string;
