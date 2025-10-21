@@ -1,17 +1,19 @@
-import { StrictMode } from 'react';
+import { StrictMode, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
-import App from './App.tsx';
 import { MoveProvider } from './dnd-kit/MoveContext.tsx';
 import { DndContext } from '@dnd-kit/core';
 import { ThemeProvider } from './contexts/ThemeContext.tsx';
-import AuthCallback from './auth/callback.tsx';
-import SharedView from './components/SharedView.tsx';
-import ProfilePage from './components/profile/ProfilePage.tsx';
-import ProfileSettings from './components/ProfileSettings.tsx';
-import MobileDashboard from './components/MobileDashboard.tsx';
 import { useIsMobile } from './hooks/use-mobile.ts';
+
+// Lazy-loaded route components for code-splitting
+const App = lazy(() => import('./App.tsx'));
+const MobileDashboard = lazy(() => import('./components/MobileDashboard.tsx'));
+const AuthCallback = lazy(() => import('./auth/callback.tsx'));
+const SharedView = lazy(() => import('./components/SharedView.tsx'));
+const ProfilePage = lazy(() => import('./components/profile/ProfilePage.tsx'));
+const ProfileSettings = lazy(() => import('./components/ProfileSettings.tsx'));
 
 // Responsive root: choose mobile or desktop based on screen width
 function RootResponsive() {
@@ -67,7 +69,9 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider>
       <MoveProvider>
         <DndContext>
-          <RouterProvider router={router} />
+          <Suspense fallback={<div style={{padding: 16}}>Loading…</div>}>
+            <RouterProvider router={router} />
+          </Suspense>
         </DndContext>
       </MoveProvider>
     </ThemeProvider>
