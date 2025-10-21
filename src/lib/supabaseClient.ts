@@ -1,35 +1,36 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-// Get Supabase credentials from environment variables
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+let client: SupabaseClient | null = null;
 
-// Validate environment variables
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error('Environment variables:', {
-    VITE_SUPABASE_URL: SUPABASE_URL,
-    VITE_SUPABASE_ANON_KEY: SUPABASE_ANON_KEY ? '[REDACTED]' : 'undefined'
+export function getSupabase(): SupabaseClient {
+  if (client) return client;
+
+  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+  const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.error('Missing Supabase env. Ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.');
+    throw new Error('Supabase not configured');
+  }
+  try {
+    // Validate URL once
+    new URL(SUPABASE_URL);
+  } catch {
+    console.error('Invalid VITE_SUPABASE_URL:', SUPABASE_URL);
+    throw new Error('Invalid Supabase URL');
+  }
+
+  client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: false,
+    },
   });
-  throw new Error('Missing Supabase environment variables. Please check your .env file or Vercel environment variables.');
+  return client;
 }
 
-// Validate URL format
-try {
-  new URL(SUPABASE_URL);
-} catch (error) {
-  console.error('Invalid SUPABASE_URL format:', SUPABASE_URL);
-  throw new Error(`Invalid SUPABASE_URL format: ${SUPABASE_URL}. Please ensure it's a valid URL (e.g., https://your-project.supabase.co)`);
-}
+// Back-compat: named export alias
+export const supabase = undefined as unknown as SupabaseClient;
 
-// Create the Supabase client
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: false,
-  },
-});
-
-export const supabase = supabaseClient;
-
-export default supabase;
+export default undefined as unknown as SupabaseClient;

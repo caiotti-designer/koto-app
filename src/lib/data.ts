@@ -1,4 +1,4 @@
-import supabase from './supabaseClient';
+import { getSupabase } from './supabaseClient';
 import type { User } from '@supabase/supabase-js';
 
 // Types
@@ -70,7 +70,7 @@ export interface SubcategoryRow {
 export async function signInWithGitHub() {
   const redirectUrl = window.location.origin + '/auth/callback';
   
-  const { data, error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await getSupabase().auth.signInWithOAuth({
     provider: 'github',
     options: {
       redirectTo: redirectUrl,
@@ -88,7 +88,7 @@ export async function signInWithGitHub() {
 export async function signInWithGoogle() {
   const redirectUrl = window.location.origin + '/auth/callback';
   
-  const { data, error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await getSupabase().auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo: redirectUrl,
@@ -104,18 +104,18 @@ export async function signInWithGoogle() {
 }
 
 export async function signOut() {
-  const { error } = await supabase.auth.signOut();
+  const { error } = await getSupabase().auth.signOut();
   if (error) throw error;
 }
 
 export function onAuthChange(cb: (user: User | null) => void) {
   // Get current user immediately
-  supabase.auth.getUser().then(({ data, error }) => {
+  getSupabase().auth.getUser().then(({ data, error }) => {
     cb(data.user);
   });
   
   // Listen for auth state changes
-  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+  const { data: { subscription } } = getSupabase().auth.onAuthStateChange((event, session) => {
     cb(session?.user ?? null);
   });
   
@@ -126,12 +126,12 @@ export function onAuthChange(cb: (user: User | null) => void) {
 export async function uploadCover(file: File, userId?: string) {
   const userFolder = userId || 'anonymous';
   const filePath = `${userFolder}/${Date.now()}_${file.name}`;
-  const { error } = await supabase.storage.from('covers').upload(filePath, file, {
+  const { error } = await getSupabase().storage.from('covers').upload(filePath, file, {
     cacheControl: '3600',
     upsert: false,
   });
   if (error) throw error;
-  const { data } = supabase.storage.from('covers').getPublicUrl(filePath);
+  const { data } = getSupabase().storage.from('covers').getPublicUrl(filePath);
   return data.publicUrl;
 }
 
@@ -140,14 +140,14 @@ export async function removeCover(publicUrl: string) {
   const idx = publicUrl.indexOf('/object/public/covers/');
   if (idx === -1) return; // nothing to do
   const path = publicUrl.substring(idx + '/object/public/covers/'.length);
-  await supabase.storage.from('covers').remove([path]);
+  await getSupabase().storage.from('covers').remove([path]);
 }
 
 // Storage: avatar images
 export async function uploadAvatar(file: File, userId: string) {
   const filePath = `${userId}/avatar_${Date.now()}_${file.name}`;
   
-  const { error } = await supabase.storage.from('avatars').upload(filePath, file, {
+  const { error } = await getSupabase().storage.from('avatars').upload(filePath, file, {
     cacheControl: '3600',
     upsert: false,
   });
@@ -156,7 +156,7 @@ export async function uploadAvatar(file: File, userId: string) {
     throw error;
   }
   
-  const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+  const { data } = getSupabase().storage.from('avatars').getPublicUrl(filePath);
   return data.publicUrl;
 }
 
@@ -165,12 +165,12 @@ export async function removeAvatar(publicUrl: string) {
   const idx = publicUrl.indexOf('/object/public/avatars/');
   if (idx === -1) return; // nothing to do
   const path = publicUrl.substring(idx + '/object/public/avatars/'.length);
-  await supabase.storage.from('avatars').remove([path]);
+  await getSupabase().storage.from('avatars').remove([path]);
 }
 
 // Public profile helpers
 export async function fetchPublicUserByUsername(username: string): Promise<UserProfile | null> {
-  const { data: profile, error } = await supabase
+  const { data: profile, error } = await getSupabase()
     .from('user_profiles')
     .select('*')
     .eq('username', username)
@@ -185,7 +185,7 @@ export async function fetchPublicUserByUsername(username: string): Promise<UserP
 }
 
 export async function countPublicPrompts(userId: string): Promise<number> {
-  const { count, error } = await supabase
+  const { count, error } = await getSupabase()
     .from('prompts')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', userId)
@@ -198,7 +198,7 @@ export async function countPublicPrompts(userId: string): Promise<number> {
 }
 
 export async function countPublicTools(userId: string): Promise<number> {
-  const { count, error } = await supabase
+  const { count, error } = await getSupabase()
     .from('tools')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', userId)
@@ -214,7 +214,7 @@ export async function fetchPublicPrompts(
   userId: string,
   opts: { from: number; to: number; sort?: 'created_desc' | 'title_asc' }
 ): Promise<PromptRow[]> {
-  let query = supabase
+  let query = getSupabase()
     .from('prompts')
     .select('*')
     .eq('user_id', userId)
@@ -236,7 +236,7 @@ export async function fetchPublicTools(
   userId: string,
   opts: { from: number; to: number; sort?: 'created_desc' | 'title_asc' }
 ): Promise<ToolRow[]> {
-  let query = supabase
+  let query = getSupabase()
     .from('tools')
     .select('*')
     .eq('user_id', userId)
@@ -257,14 +257,14 @@ export async function fetchPublicTools(
 // Public categories via view (preferred). Falls back to base table if view not present/policy allows.
 export async function fetchPublicCategories(userId: string, type: 'prompt' | 'tool'): Promise<CategoryRow[]> {
   // Try view first
-  let { data, error } = await supabase
+  let { data, error } = await getSupabase()
     .from('public_categories' as any)
     .select('*')
     .eq('user_id', userId)
     .eq('type', type);
   if (error) {
     console.warn('public_categories view not available, fallback to categories with RLS:', error?.message);
-    const res = await supabase
+    const res = await getSupabase()
       .from('categories')
       .select('*')
       .eq('user_id', userId)
@@ -279,7 +279,7 @@ export async function fetchPrompts(userId?: string): Promise<PromptRow[]> {
     return [];
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('prompts')
     .select('*')
     .eq('user_id', userId)
@@ -294,7 +294,7 @@ export async function fetchPrompts(userId?: string): Promise<PromptRow[]> {
 }
 
 export async function createPrompt(prompt: Omit<PromptRow, 'id' | 'created_at' | 'user_id' | 'is_public' | 'share_token'>, userId: string): Promise<PromptRow | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('prompts')
     .insert([{
       ...prompt,
@@ -316,13 +316,13 @@ export async function updatePrompt(id: string, patch: Partial<PromptRow>) {
   // Remove updated_at from patch if it exists, as the database might not have this column
 const cleanPatch = { ...patch } as any;
 if ('updated_at' in cleanPatch) delete cleanPatch.updated_at;
-  const { data, error } = await supabase.from('prompts').update(cleanPatch).eq('id', id).select('*').single();
+  const { data, error } = await getSupabase().from('prompts').update(cleanPatch).eq('id', id).select('*').single();
   if (error) throw error;
   return data as PromptRow;
 }
 
 export async function deletePrompt(id: string) {
-  const { error } = await supabase.from('prompts').delete().eq('id', id);
+  const { error } = await getSupabase().from('prompts').delete().eq('id', id);
   if (error) throw error;
 }
 
@@ -332,7 +332,7 @@ export async function fetchTools(userId?: string): Promise<ToolRow[]> {
     return [];
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('tools')
     .select('*')
     .eq('user_id', userId)
@@ -347,7 +347,7 @@ export async function fetchTools(userId?: string): Promise<ToolRow[]> {
 }
 
 export async function createTool(tool: Omit<ToolRow, 'id' | 'created_at' | 'user_id' | 'is_public' | 'share_token'>, userId: string): Promise<ToolRow | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('tools')
     .insert([{
       ...tool,
@@ -369,13 +369,13 @@ export async function updateTool(id: string, patch: Partial<ToolRow>) {
   // Remove updated_at from patch if it exists, as the database might not have this column
 const cleanPatch = { ...patch } as any;
 if ('updated_at' in cleanPatch) delete cleanPatch.updated_at;
-  const { data, error } = await supabase.from('tools').update(cleanPatch).eq('id', id).select('*').single();
+  const { data, error } = await getSupabase().from('tools').update(cleanPatch).eq('id', id).select('*').single();
   if (error) throw error;
   return data as ToolRow;
 }
 
 export async function deleteTool(id: string): Promise<void> {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('tools')
     .delete()
     .eq('id', id);
@@ -393,7 +393,7 @@ export async function fetchCategories(userId: string, type?: 'prompt' | 'tool'):
   }
 
   const buildQuery = () => {
-    let base = supabase
+    let base = getSupabase()
       .from('categories')
       .select('*')
       .eq('user_id', userId);
@@ -426,7 +426,7 @@ export async function fetchCategories(userId: string, type?: 'prompt' | 'tool'):
 }
 
 export async function createCategory(category: Omit<CategoryRow, 'id' | 'created_at' | 'updated_at'>, userId: string): Promise<CategoryRow | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('categories')
     .insert([{
       ...category,
@@ -447,7 +447,7 @@ export async function updateCategory(id: string, patch: Partial<CategoryRow>): P
   const cleanPatch = { ...patch } as any;
   if ('updated_at' in cleanPatch) delete cleanPatch.updated_at;
   
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('categories')
     .update(cleanPatch)
     .eq('id', id)
@@ -463,7 +463,7 @@ export async function resequenceCategories(userId: string, type: 'prompt' | 'too
     return;
   }
 
-  const { error } = await supabase.rpc('resequence_categories', {
+  const { error } = await getSupabase().rpc('resequence_categories', {
     p_user_id: userId,
     p_type: type,
     p_order: orderedIds,
@@ -483,7 +483,7 @@ export async function resequenceCategories(userId: string, type: 'prompt' | 'too
 }
 
 export async function deleteCategory(id: string): Promise<void> {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('categories')
     .delete()
     .eq('id', id);
@@ -501,7 +501,7 @@ export async function fetchSubcategories(userId: string, categoryId?: string): P
   }
 
   const buildQuery = () => {
-    let base = supabase
+    let base = getSupabase()
       .from('subcategories')
       .select('*')
       .eq('user_id', userId);
@@ -534,7 +534,7 @@ export async function fetchSubcategories(userId: string, categoryId?: string): P
 }
 
 export async function createSubcategory(subcategory: Omit<SubcategoryRow, 'id' | 'created_at' | 'updated_at'>, userId: string): Promise<SubcategoryRow | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('subcategories')
     .insert([{
       ...subcategory,
@@ -555,7 +555,7 @@ export async function updateSubcategory(id: string, patch: Partial<SubcategoryRo
   const cleanPatch = { ...patch } as any;
   if ('updated_at' in cleanPatch) delete cleanPatch.updated_at;
   
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('subcategories')
     .update(cleanPatch)
     .eq('id', id)
@@ -567,7 +567,7 @@ export async function updateSubcategory(id: string, patch: Partial<SubcategoryRo
 }
 
 export async function deleteSubcategory(id: string): Promise<void> {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('subcategories')
     .delete()
     .eq('id', id);
@@ -580,7 +580,7 @@ export async function deleteSubcategory(id: string): Promise<void> {
 
 // User Profile CRUD
 export async function fetchUserProfile(userId: string): Promise<UserProfile | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('user_profiles')
     .select('*')
     .eq('id', userId)
@@ -601,7 +601,7 @@ export async function updateUserProfile(userId: string, updates: Partial<UserPro
     ...updates
   };
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('user_profiles')
     .upsert(profileData, { onConflict: 'id' })
     .select()
@@ -617,7 +617,7 @@ export async function updateUserProfile(userId: string, updates: Partial<UserPro
 
 // Sharing Functions
 export async function generateShareToken(): Promise<string> {
-  const { data, error } = await supabase.rpc('generate_share_token');
+  const { data, error } = await getSupabase().rpc('generate_share_token');
   
   if (error) {
     console.error('Error generating share token:', error);
@@ -631,7 +631,7 @@ export async function sharePrompt(promptId: string): Promise<string | null> {
   try {
     const shareToken = await generateShareToken();
     
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('prompts')
       .update({ share_token: shareToken })
       .eq('id', promptId);
@@ -652,7 +652,7 @@ export async function shareTool(toolId: string): Promise<string | null> {
   try {
     const shareToken = await generateShareToken();
     
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('tools')
       .update({ share_token: shareToken })
       .eq('id', toolId);
@@ -670,7 +670,7 @@ export async function shareTool(toolId: string): Promise<string | null> {
 }
 
 export async function fetchSharedPrompt(shareToken: string): Promise<PromptRow | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('prompts')
     .select('*')
     .eq('share_token', shareToken)
@@ -685,7 +685,7 @@ export async function fetchSharedPrompt(shareToken: string): Promise<PromptRow |
 }
 
 export async function fetchSharedTool(shareToken: string): Promise<ToolRow | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('tools')
     .select('*')
     .eq('share_token', shareToken)
@@ -704,7 +704,7 @@ export async function shareCategory(categoryId: string): Promise<string | null> 
     const shareToken = await generateShareToken();
     if (!shareToken) return null;
 
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('categories')
       .update({ share_token: shareToken })
       .eq('id', categoryId);
@@ -726,7 +726,7 @@ export async function shareSubcategory(subcategoryId: string): Promise<string | 
     const shareToken = await generateShareToken();
     if (!shareToken) return null;
 
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('subcategories')
       .update({ share_token: shareToken })
       .eq('id', subcategoryId);
@@ -746,7 +746,7 @@ export async function shareSubcategory(subcategoryId: string): Promise<string | 
 export async function fetchSharedCategory(shareToken: string): Promise<{ category: CategoryRow; prompts: PromptRow[]; tools: ToolRow[] } | null> {
   try {
     // First get the shared category
-    const { data: category, error: categoryError } = await supabase
+    const { data: category, error: categoryError } = await getSupabase()
       .from('categories')
       .select('*')
       .eq('share_token', shareToken)
@@ -758,14 +758,14 @@ export async function fetchSharedCategory(shareToken: string): Promise<{ categor
     }
 
     // Get prompts in this category
-    const { data: prompts, error: promptsError } = await supabase
+    const { data: prompts, error: promptsError } = await getSupabase()
       .from('prompts')
       .select('*')
       .eq('category', category.id)
       .order('created_at', { ascending: false });
 
     // Get tools in this category
-    const { data: tools, error: toolsError } = await supabase
+    const { data: tools, error: toolsError } = await getSupabase()
       .from('tools')
       .select('*')
       .eq('category', category.id)
@@ -790,7 +790,7 @@ export async function fetchSharedCategory(shareToken: string): Promise<{ categor
 export async function fetchSharedSubcategory(shareToken: string): Promise<{ subcategory: SubcategoryRow; prompts: PromptRow[]; tools: ToolRow[] } | null> {
   try {
     // First get the shared subcategory
-    const { data: subcategory, error: subcategoryError } = await supabase
+    const { data: subcategory, error: subcategoryError } = await getSupabase()
       .from('subcategories')
       .select('*')
       .eq('share_token', shareToken)
@@ -802,14 +802,14 @@ export async function fetchSharedSubcategory(shareToken: string): Promise<{ subc
     }
 
     // Get prompts in this subcategory
-    const { data: prompts, error: promptsError } = await supabase
+    const { data: prompts, error: promptsError } = await getSupabase()
       .from('prompts')
       .select('*')
       .eq('subcategory', subcategory.id)
       .order('created_at', { ascending: false });
 
     // Get tools in this subcategory
-    const { data: tools, error: toolsError } = await supabase
+    const { data: tools, error: toolsError } = await getSupabase()
       .from('tools')
       .select('*')
       .eq('subcategory', subcategory.id)
@@ -833,7 +833,7 @@ export async function fetchSharedSubcategory(shareToken: string): Promise<{ subc
 
 export async function fetchPublicProfile(username: string): Promise<{ profile: UserProfile; prompts: PromptRow[]; tools: ToolRow[] } | null> {
   // First get the user profile
-  const { data: profile, error: profileError } = await supabase
+  const { data: profile, error: profileError } = await getSupabase()
     .from('user_profiles')
     .select('*')
     .eq('username', username)
@@ -846,7 +846,7 @@ export async function fetchPublicProfile(username: string): Promise<{ profile: U
   }
 
   // Get public prompts
-  const { data: prompts, error: promptsError } = await supabase
+  const { data: prompts, error: promptsError } = await getSupabase()
     .from('prompts')
     .select('*')
     .eq('user_id', profile.id)
@@ -854,7 +854,7 @@ export async function fetchPublicProfile(username: string): Promise<{ profile: U
     .order('created_at', { ascending: false });
 
   // Get public tools
-  const { data: tools, error: toolsError } = await supabase
+  const { data: tools, error: toolsError } = await getSupabase()
     .from('tools')
     .select('*')
     .eq('user_id', profile.id)
@@ -875,7 +875,7 @@ export async function fetchPublicProfile(username: string): Promise<{ profile: U
 
 // Real-time subscriptions
 export function subscribeToCategories(userId: string, callback: (payload: any) => void) {
-  return supabase
+  return getSupabase()
     .channel('categories')
     .on(
       'postgres_changes',
@@ -891,7 +891,7 @@ export function subscribeToCategories(userId: string, callback: (payload: any) =
 }
 
 export function subscribeToSubcategories(userId: string, callback: (payload: any) => void) {
-  return supabase
+  return getSupabase()
     .channel('subcategories')
     .on(
       'postgres_changes',
@@ -907,7 +907,7 @@ export function subscribeToSubcategories(userId: string, callback: (payload: any
 }
 
 export function subscribeToPrompts(userId: string, callback: (payload: any) => void) {
-  return supabase
+  return getSupabase()
     .channel('prompts')
     .on(
       'postgres_changes',
@@ -923,7 +923,7 @@ export function subscribeToPrompts(userId: string, callback: (payload: any) => v
 }
 
 export function subscribeToTools(userId: string, callback: (payload: any) => void) {
-  return supabase
+  return getSupabase()
     .channel('tools')
     .on(
       'postgres_changes',
@@ -940,6 +940,7 @@ export function subscribeToTools(userId: string, callback: (payload: any) => voi
 
 export function unsubscribeFromChannel(channel: any) {
   if (channel) {
-    supabase.removeChannel(channel);
+    getSupabase().removeChannel(channel);
   }
 }
+

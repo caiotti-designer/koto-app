@@ -16,8 +16,8 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { toast } from 'sonner';
-import supabase from '../lib/supabaseClient';
 import { fetchUserProfile, type UserProfile, updateUserProfile, uploadAvatar, removeAvatar } from '../lib/data';
+import { getSupabase } from '../lib/supabaseClient';
 
 type Props = {
   open: boolean;
@@ -127,7 +127,7 @@ const ProfileSettingsDialog: React.FC<Props> = ({ open, onOpenChange, userId, in
       if (u !== u.toLowerCase()) return { ok: false, msg: 'Username must be lowercase' };
       if (!usernamePattern.test(u)) return { ok: false, msg: 'Only lowercase letters, numbers, _ and -' };
       // uniqueness
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('user_profiles')
         .select('id, username')
         .eq('username', u)
@@ -292,3 +292,5 @@ const ProfileSettingsDialog: React.FC<Props> = ({ open, onOpenChange, userId, in
 };
 
 export default ProfileSettingsDialog;
+
+

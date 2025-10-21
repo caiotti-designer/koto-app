@@ -7,7 +7,6 @@ import { useTheme } from '../contexts/ThemeContext';
 import { Button } from './ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import Logo from './Logo';
-import supabase from '../lib/supabaseClient';
 import type { User } from '@supabase/supabase-js';
 import {
   fetchPrompts,

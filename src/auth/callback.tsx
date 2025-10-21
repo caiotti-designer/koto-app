@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import supabase from '../lib/supabaseClient';
+import { getSupabase } from '../lib/supabaseClient';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ export default function AuthCallback() {
           console.log('[AuthCallback] Detected implicit tokens in URL hash');
 
           // Prefer getSessionFromUrl if available in the current supabase-js build
-          const getSessionFromUrlFn = (supabase as any)?.auth?.getSessionFromUrl;
+          const getSessionFromUrlFn = (getSupabase() as any)?.auth?.getSessionFromUrl;
           if (typeof getSessionFromUrlFn === 'function') {
             console.log('[AuthCallback] Using supabase.auth.getSessionFromUrl');
             const { data, error: parseError } = await getSessionFromUrlFn({ storeSession: true });
@@ -74,7 +74,7 @@ export default function AuthCallback() {
             return;
           }
           console.log('[AuthCallback] Setting session from URL hash via supabase.auth.setSession');
-          const { data: setData, error: setErr } = await supabase.auth.setSession({ access_token, refresh_token });
+          const { data: setData, error: setErr } = await getSupabase().auth.setSession({ access_token, refresh_token });
           if (setErr) {
             console.error('[AuthCallback] Failed to set session from tokens:', setErr);
             setStatus('error');
@@ -98,7 +98,7 @@ export default function AuthCallback() {
         }
 
         console.log('[AuthCallback] Exchanging code for session...', { statePresent: !!state });
-        const { error: exchangeError, data } = await supabase.auth.exchangeCodeForSession(code);
+        const { error: exchangeError, data } = await getSupabase().auth.exchangeCodeForSession(code);
         if (exchangeError) {
           console.error('Session exchange error:', exchangeError);
           setStatus('error');

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import supabase from '../lib/supabaseClient';
 import { 
   MessageSquare, 
   Wrench, 

@@ -30,7 +30,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
-import supabase from '../../lib/supabaseClient';
 import {
   fetchPrompts,
   fetchTools,
@@ -548,6 +547,13 @@ const KotoDashboard: React.FC = () => {
       localStorage.setItem(nameKey, categoryName);
     } catch {}
   }, [activeCategory, subcategories, updatedCategories, updatedToolCategories]);
+
+  // Clear search when switching tabs to avoid cross-tab filtering surprises
+  useEffect(() => {
+    try {
+      setSearchQuery('');
+    } catch {}
+  }, [activeTab]);
 
   // On tab change, restore saved category for that tab or default
   useEffect(() => {
@@ -1857,7 +1863,7 @@ return;
 
   const getCurrentCategoryName = () => {
     if (activeCategory === 'all') {
-      return activeTab === 'prompts' ? 'AI Prompts' : 'A.I Tools';
+      return activeTab === 'prompts' ? 'All Prompts' : 'All Tools';
     }
 
     // Check if it's a subcategory
@@ -1889,7 +1895,7 @@ return;
     } catch {}
     
     // Final fallback
-    return activeTab === 'prompts' ? 'AI Prompts' : 'A.I Tools';
+    return activeTab === 'prompts' ? 'All Prompts' : 'All Tools';
   };
   const getCurrentCategoryCount = () => {
     if (activeCategory === 'all') {
@@ -2854,7 +2860,7 @@ return;
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input 
                   type="text" 
-                  placeholder="Search prompts..." 
+                  placeholder={activeTab === 'prompts' ? 'Search prompts...' : 'Search tools...'} 
                   value={searchQuery} 
                   onChange={e => setSearchQuery(e.target.value)} 
                   className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-700 border-0 text-sm placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-slate-600"
