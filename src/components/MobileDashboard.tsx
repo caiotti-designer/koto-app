@@ -53,6 +53,7 @@ import { Textarea } from './ui/textarea';
 import { useLongPress } from '../hooks/useLongPress';
 import FloatingActionMenu from './mobile/FloatingActionMenu';
 const CategorySelectionModal = lazy(() => import('./mobile/CategorySelectionModal'));
+const MobileSettingsDialog = lazy(() => import('./mobile/MobileSettingsDialog'));
 
 interface UserProfile {
   id: string;
@@ -1326,194 +1327,18 @@ const MobileDashboard: React.FC = () => {
 
 
         {/* Settings Dialog */}
-        <AnimatePresence>
-          {showSettingsDialog && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-              onClick={() => setShowSettingsDialog(false)}
-            >
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full max-h-[80vh] overflow-y-auto"
-              >
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Settings</h2>
-                    <button
-                      onClick={() => setShowSettingsDialog(false)}
-                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                    >
-                      <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                    </button>
-                  </div>
-
-                  {/* Theme Selection */}
-                  <div className="mb-6">
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Default Theme</h3>
-                    <div className="grid grid-cols-3 gap-2">
-                      <button
-                        onClick={() => setTheme('light')}
-                        className={`p-3 rounded-lg border-2 transition-all ${
-                          theme === 'light'
-                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                            : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
-                        }`}
-                      >
-                        <Sun className="h-5 w-5 mx-auto mb-1 text-gray-700 dark:text-gray-300" />
-                        <span className="text-xs text-gray-700 dark:text-gray-300">Light</span>
-                      </button>
-                      <button
-                        onClick={() => setTheme('dark')}
-                        className={`p-3 rounded-lg border-2 transition-all ${
-                          theme === 'dark'
-                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                            : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
-                        }`}
-                      >
-                        <Moon className="h-5 w-5 mx-auto mb-1 text-gray-700 dark:text-gray-300" />
-                        <span className="text-xs text-gray-700 dark:text-gray-300">Dark</span>
-                      </button>
-                      <button
-                        onClick={() => setTheme('system')}
-                        className={`p-3 rounded-lg border-2 transition-all ${
-                          theme === 'system'
-                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                            : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
-                        }`}
-                      >
-                        <Monitor className="h-5 w-5 mx-auto mb-1 text-gray-700 dark:text-gray-300" />
-                        <span className="text-xs text-gray-700 dark:text-gray-300">System</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Background Options */}
-                  <div className="mb-6">
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Header Background</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">Choose background option:</p>
-                    
-                    <div className="space-y-3">
-                      {/* Default Background */}
-                      <label className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-                        <input
-                          type="radio"
-                          name="backgroundOption"
-                          value="default"
-                          checked={backgroundOption === 'default'}
-                          onChange={() => handleBackgroundOptionChange('default')}
-                          className="text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <div className="flex-1">
-                          <div className="font-medium text-gray-700 dark:text-gray-300">Default Background</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">Use the default Koto background image</div>
-                        </div>
-                        <div className="w-12 h-8 rounded border border-gray-200 dark:border-gray-600 overflow-hidden">
-                          <img src="/koto-background-image-default.webp" alt="Default" className="w-full h-full object-cover" />
-                        </div>
-                      </label>
-
-                      {/* Custom Background */}
-                      <label className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-                        <input
-                          type="radio"
-                          name="backgroundOption"
-                          value="custom"
-                          checked={backgroundOption === 'custom'}
-                          onChange={() => handleBackgroundOptionChange('custom')}
-                          className="text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <div className="flex-1">
-                          <div className="font-medium text-gray-700 dark:text-gray-300">Custom Background</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">Upload your own background image</div>
-                        </div>
-                        {backgroundOption === 'custom' && backgroundImage !== 'none' && backgroundImage !== '/koto-background-image-default.webp' && (
-                          <div className="w-12 h-8 rounded border border-gray-200 dark:border-gray-600 overflow-hidden">
-                            <img src={backgroundImage} alt="Custom" className="w-full h-full object-cover" />
-                          </div>
-                        )}
-                      </label>
-
-                      {/* Upload Section for Custom Background */}
-                      {backgroundOption === 'custom' && (
-                        <div className="mt-4 p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-center relative cursor-pointer hover:border-gray-400 dark:hover:border-gray-500 transition-colors">
-                           <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                           <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                             Click to upload custom photo
-                           </div>
-                           <div className="text-xs text-gray-500 dark:text-gray-500">
-                             Recommended: 1920x1080px, WebP or JPEG
-                           </div>
-                           <input
-                             type="file"
-                             accept="image/*"
-                             onChange={handleBackgroundUpload}
-                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                           />
-                          {backgroundImage && backgroundImage !== 'none' && backgroundImage !== '/koto-background-image-default.webp' && (
-                            <div className="mt-4 relative">
-                              <img
-                                src={backgroundImage}
-                                alt="Custom background preview"
-                                className="w-full h-32 object-cover rounded-lg"
-                              />
-                              <button
-                                onClick={() => {
-                                  setBackgroundImage('none');
-                                  setBackgroundOption('none');
-                                  localStorage.setItem('koto_background_image', 'none');
-                                  localStorage.setItem('koto_background_option', 'none');
-                                }}
-                                className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                              >
-                                <X className="h-4 w-4" />
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* No Background */}
-                      <label className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-                        <input
-                          type="radio"
-                          name="backgroundOption"
-                          value="none"
-                          checked={backgroundOption === 'none'}
-                          onChange={() => handleBackgroundOptionChange('none')}
-                          className="text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <div className="flex-1">
-                          <div className="font-medium text-gray-700 dark:text-gray-300">No Background</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">Transparent background with bottom border</div>
-                        </div>
-                      </label>
-                    </div>
-
-
-                  </div>
-
-
-
-                  {/* Close Button */}
-                  <div className="flex justify-end">
-                    <button
-                      onClick={() => setShowSettingsDialog(false)}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {showSettingsDialog && (
+          <Suspense fallback={null}>
+            <MobileSettingsDialog
+              open={showSettingsDialog}
+              onClose={() => setShowSettingsDialog(false)}
+              backgroundOption={backgroundOption}
+              backgroundImage={backgroundImage}
+              onChangeOption={handleBackgroundOptionChange}
+              onUpload={handleBackgroundUpload}
+            />
+          </Suspense>
+        )}
         
       </div>
     </div>

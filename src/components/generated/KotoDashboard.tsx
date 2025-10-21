@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, lazy } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Plus, Link, FolderPlus, MessageSquare, Wrench, ChevronLeft, Menu, Bell, User, Settings, HelpCircle, Sun, Moon, ExternalLink, Share2, Trash2, Copy, Palette, Code, Code2, Briefcase, PenTool, Target, Users, BarChart3, Zap, Globe, Figma, Cpu, Tag, X, Upload, Camera, Smile, Heart, Star, Coffee, Music, Book, BookOpen, Gamepad2, Laptop, Smartphone, Headphones, Car, Home, Plane, Gift, ShoppingBag, CreditCard, Mail, Phone, MapPin, Calendar, Clock, Eye, EyeOff, ChevronDown, ChevronRight, Edit2, LogOut, Check, Database, Shield, ShieldCheck, ShieldAlert, ShieldX, Server, Cloud, CloudSnow, CloudRain, Terminal, Package, Package2, PackageOpen, Layers, Workflow, GitBranch, Container, Boxes, Box, FileCode, FileCode2, Monitor, Tablet, Watch, Tv, Radio, Headset, Video, Image, FileText, Folder, Archive, Download, Share, Lock, Unlock, Key, UserCheck, UserPlus, UserMinus, Users2, Building, Building2, Factory, Store, Warehouse, Truck, Ship, Rocket, Satellite, Wifi, Bluetooth, Usb, HardDrive, MemoryStick, Disc, PlayCircle, PauseCircle, StopCircle, SkipForward, SkipBack, Volume2, VolumeX, Mic, MicOff, VideoOff, Scissors, Paintbrush, Paintbrush2, Brush, Pen, Pencil, Edit, Edit3, Type, AlignLeft, AlignCenter, AlignRight, Bold, Italic, Underline, Strikethrough, List, ListOrdered, CheckSquare, Square, Circle, Triangle, Hexagon, Octagon, Diamond, Shapes, Grid, Layout, Sidebar, PanelLeft, PanelRight, PanelTop, PanelBottom, Maximize, Minimize, RotateCcw, RotateCw, FlipHorizontal, FlipVertical, Move, MousePointer, Hand, Grab, ZoomIn, ZoomOut, Focus, Scan, QrCode, Barcode, Hash, AtSign, Percent, DollarSign, Euro, PoundSterling, Bitcoin, TrendingUp, TrendingDown, Activity, Flame, Snowflake, CloudLightning, Umbrella, Rainbow, Thermometer, Wind, Compass, Map, Navigation, Route, Flag, Bookmark, Award, Medal, Trophy, Crown, Gem, Sparkles, Wand2, Puzzle, Gamepad, Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, Spade, Club, Cherry, Apple, Grape, Banana, Carrot, Wheat, Leaf, Trees, Flower, Flower2, Bug, Fish, Bird, Cat, Dog, Rabbit, Turtle, Snail, Worm, Microscope, Telescope, Atom, Dna, Pill, Syringe, Stethoscope, Bandage, Cross, Minus, Equal, Divide, Calculator, Binary, Pi, Sigma, Variable, Parentheses, Brackets, Braces, Quote, Ampersand, Asterisk, Slash, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ArrowUpLeft, ArrowUpRight, ArrowDownLeft, ArrowDownRight, CornerUpLeft, CornerUpRight, CornerDownLeft, CornerDownRight, ChevronsUp, ChevronsDown, ChevronsLeft, ChevronsRight, MoreHorizontal, MoreVertical, GraduationCap } from 'lucide-react';
@@ -16,6 +16,7 @@ import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import { Badge } from '../ui/badge';
 const ProfileSettingsDialog = lazy(() => import('../ProfileSettingsDialog'));
+const AppSettingsDialog = lazy(() => import('../AppSettingsDialog'));
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -4169,188 +4170,18 @@ return;
       </AnimatePresence>
 
       {/* Settings Dialog */}
-      <AnimatePresence>
-        {showSettingsDialog && <motion.div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{
-        opacity: 0
-      }} animate={{
-        opacity: 1
-      }} exit={{
-        opacity: 0
-      }} onClick={() => setShowSettingsDialog(false)}>
-            <motion.div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-xl" initial={{
-          scale: 0.9,
-          opacity: 0
-        }} animate={{
-          scale: 1,
-          opacity: 1
-        }} exit={{
-          scale: 0.9,
-          opacity: 0
-        }} onClick={e => e.stopPropagation()}>
-              <div className="flex items-start justify-between mb-6">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Settings</h2>
-                <button onClick={() => setShowSettingsDialog(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
-                  <X className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                {/* Default Theme */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
-                    Default Theme
-                  </label>
-                  <div className="flex space-x-3">
-                    <button onClick={() => {
-                  setTheme('light');
-                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${theme === 'light' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
-                      <Sun className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" />
-                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Light</div>
-                    </button>
-                    <button onClick={() => {
-                  setTheme('dark');
-                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${theme === 'dark' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
-                      <Moon className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" />
-                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Dark</div>
-                    </button>
-                    <button onClick={() => {
-                  setTheme('system');
-                }} className={`flex-1 p-3 rounded-lg border-2 transition-colors ${theme === 'system' ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30' : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'}`}>
-                      <Monitor className="w-5 h-5 mx-auto mb-1 text-slate-600 dark:text-slate-400" />
-                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300">System</div>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Background Photo */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
-                    Header Background
-                  </label>
-                  <div className="space-y-4">
-                    {/* Background Options */}
-                    <div className="space-y-3">
-                      <div className="text-sm text-slate-600 dark:text-slate-400 mb-2">Choose background option:</div>
-                      
-                      {/* Default Background Option */}
-                      <label className="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">
-                        <input 
-                          type="radio" 
-                          name="backgroundOption" 
-                          value="default" 
-                          checked={backgroundOption === 'default'}
-                          onChange={() => handleBackgroundOptionChange('default')}
-                          className="text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <div className="flex-1">
-                          <div className="font-medium text-slate-700 dark:text-slate-300">Default Background</div>
-                          <div className="text-sm text-slate-500 dark:text-slate-400">Use the default Koto background image</div>
-                        </div>
-                        <div className="w-12 h-8 rounded border border-slate-200 dark:border-slate-600 overflow-hidden">
-                          <img src="/koto-background-image-default.webp" alt="Default" className="w-full h-full object-cover" />
-                        </div>
-                      </label>
-                      
-                      {/* Custom Background Option */}
-                      <label className="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">
-                        <input 
-                          type="radio" 
-                          name="backgroundOption" 
-                          value="custom" 
-                          checked={backgroundOption === 'custom'}
-                          onChange={() => handleBackgroundOptionChange('custom')}
-                          className="text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <div className="flex-1">
-                          <div className="font-medium text-slate-700 dark:text-slate-300">Custom Background</div>
-                          <div className="text-sm text-slate-500 dark:text-slate-400">Upload your own background image</div>
-                        </div>
-                        {backgroundOption === 'custom' && backgroundImage !== 'none' && backgroundImage !== '/koto-background-image-default.webp' && (
-                          <div className="w-12 h-8 rounded border border-slate-200 dark:border-slate-600 overflow-hidden">
-                            <img src={backgroundImage} alt="Custom" className="w-full h-full object-cover" />
-                          </div>
-                        )}
-                      </label>
-                      
-                      {/* No Background Option */}
-                      <label className="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">
-                        <input 
-                          type="radio" 
-                          name="backgroundOption" 
-                          value="none" 
-                          checked={backgroundOption === 'none'}
-                          onChange={() => handleBackgroundOptionChange('none')}
-                          className="text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <div className="flex-1">
-                           <div className="font-medium text-slate-700 dark:text-slate-300">No Background</div>
-                           <div className="text-sm text-slate-500 dark:text-slate-400">Transparent background with bottom border</div>
-                         </div>
-                        <div className="w-12 h-8 rounded border border-slate-200 dark:border-slate-600 bg-transparent border-b-2 border-b-slate-300 dark:border-b-slate-600"></div>
-                      </label>
-                    </div>
-                    
-                    {/* Custom Upload Section */}
-                    {backgroundOption === 'custom' && (
-                      <div className="space-y-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
-                        <input type="file" accept="image/*" onChange={handleBackgroundUpload} className="hidden" id="background-upload" />
-                        <label htmlFor="background-upload" className="flex items-center justify-center w-full p-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:border-slate-400 dark:hover:border-slate-500 cursor-pointer transition-colors">
-                          <div className="text-center">
-                            <Upload className="w-6 h-6 mx-auto mb-2 text-slate-400" />
-                            <div className="text-sm text-slate-600 dark:text-slate-400">
-                              Click to upload custom photo
-                            </div>
-                            <div className="text-xs text-slate-500 dark:text-slate-500 mt-1">
-                              Recommended: 1920x512px, WebP or JPEG
-                            </div>
-                          </div>
-                        </label>
-                        
-                        {backgroundImage !== 'none' && backgroundImage !== '/koto-background-image-default.webp' && (
-                          <div className="relative">
-                            <img src={backgroundImage} alt="Background preview" className="w-full h-20 object-cover rounded-lg" />
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button onClick={() => handleBackgroundOptionChange('default')} className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors">
-                                  <X className="w-3 h-3" />
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Remove custom background</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-slate-200 dark:border-slate-700">
-                <Button 
-                  variant="ghost" 
-                  onClick={() => setShowSettingsDialog(false)}
-                >
-                  Close
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>}
-      </AnimatePresence>
-
-      {/* Prompt Details Modal */}
-      <PromptDetailsModal prompt={selectedPrompt} isOpen={showPromptDetailsDialog} onClose={() => {
-        setShowPromptDetailsDialog(false);
-        setSelectedPrompt(null);
-      }} onEdit={handleEditPrompt} onDelete={handleDeletePrompt} onCopy={handleCopyPrompt} onShare={handleSharePrompt} />
-
-      {/* Tool Details Modal */}
-      <ToolDetailsModal tool={selectedTool} isOpen={showToolDetailsDialog} onClose={() => {
-        setShowToolDetailsDialog(false);
-        setSelectedTool(null);
-      }} />
-
+      {showSettingsDialog && (
+        <Suspense fallback={null}>
+          <AppSettingsDialog
+            open={showSettingsDialog}
+            onClose={() => setShowSettingsDialog(false)}
+            backgroundOption={backgroundOption}
+            backgroundImage={backgroundImage}
+            onChangeOption={handleBackgroundOptionChange}
+            onUpload={handleBackgroundUpload}
+          />
+        </Suspense>
+      )}
       {/* Profile Settings Modal */}
       <ProfileSettingsDialog
         open={showProfileSettingsDialog}
