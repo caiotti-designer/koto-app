@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
-import { Menu, Globe, MessageSquare, Wrench, User as UserIcon, ExternalLink, Plus, FolderPlus, Folder, X, Edit2, Share2, Trash2, Check, ChevronDown, Sun, Moon, Monitor, Upload, Copy, Lock } from 'lucide-react';
+import { Menu, Globe, MessageSquare, Wrench, User as UserIcon, ExternalLink, Plus, FolderPlus, Folder, X, Edit2, Share2, Trash2, Check, ChevronDown, Copy, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { Button } from './ui/button';
