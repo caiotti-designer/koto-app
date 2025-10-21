@@ -9,13 +9,14 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@supabase/node-fetch': path.resolve(__dirname, './src/shims/supabase-fetch.ts'),
     },
   },
   define: {
     global: 'globalThis',
   },
   optimizeDeps: {
-    include: ['@supabase/supabase-js']
+    exclude: ['@supabase/node-fetch']
   },
   server: {
     fs: {
