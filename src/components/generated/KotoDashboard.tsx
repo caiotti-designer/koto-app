@@ -2063,36 +2063,36 @@ return;
             
             // Check for common tool patterns in domain names
             if (siteName.includes('ai') || siteName.includes('ml') || siteName.includes('gpt')) {
-              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — AI-powered tool for automation and intelligent tasks.`;
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} â€” AI-powered tool for automation and intelligent tasks.`;
             } else if (siteName.includes('app') || siteName.includes('tool') || siteName.includes('hub')) {
-              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — specialized application and utility platform.`;
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} â€” specialized application and utility platform.`;
             } else if (siteName.includes('cloud') || siteName.includes('host') || siteName.includes('deploy')) {
-              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — cloud infrastructure and deployment services.`;
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} â€” cloud infrastructure and deployment services.`;
             } else if (siteName.includes('api') || siteName.includes('dev') || siteName.includes('code')) {
-              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — development tools and API services.`;
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} â€” development tools and API services.`;
             } else if (siteName.includes('data') || siteName.includes('analytics') || siteName.includes('insight')) {
-              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — data analysis and business intelligence platform.`;
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} â€” data analysis and business intelligence platform.`;
             } else if (siteName.includes('design') || siteName.includes('creative') || siteName.includes('art')) {
-              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — creative design and visual content tools.`;
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} â€” creative design and visual content tools.`;
             } else if (siteName.includes('productivity') || siteName.includes('work') || siteName.includes('team')) {
-              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — productivity and team collaboration platform.`;
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} â€” productivity and team collaboration platform.`;
             } else if (siteName.includes('market') || siteName.includes('shop') || siteName.includes('store')) {
-              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — e-commerce and marketplace platform.`;
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} â€” e-commerce and marketplace platform.`;
             } else if (siteName.includes('learn') || siteName.includes('edu') || siteName.includes('course')) {
-              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — educational content and learning platform.`;
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} â€” educational content and learning platform.`;
             } else if (siteName.includes('social') || siteName.includes('chat') || siteName.includes('connect')) {
-              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} — social networking and communication platform.`;
+              description = `${siteName.charAt(0).toUpperCase() + siteName.slice(1)} â€” social networking and communication platform.`;
             } else {
               // Generic but more intelligent description
               const name = siteName.charAt(0).toUpperCase() + siteName.slice(1);
               if (firstPath && firstPath.length > 2 && firstPath.length < 30) {
                 const cleanPath = firstPath.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                description = `${name} — ${cleanPath} platform and services.`;
+                description = `${name} â€” ${cleanPath} platform and services.`;
               } else if (secondPath && secondPath.length > 2 && secondPath.length < 30) {
                 const cleanPath = secondPath.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                description = `${name} — ${cleanPath} tools and resources.`;
+                description = `${name} â€” ${cleanPath} tools and resources.`;
               } else {
-                description = `${name} — comprehensive online platform and tools.`;
+                description = `${name} â€” comprehensive online platform and tools.`;
               }
             }
             
@@ -2113,7 +2113,7 @@ return;
             const cleanDomain = urlObj.hostname.replace(/^www\.|^app\./, '');
             const siteName = cleanDomain.split('.')[0];
             const name = siteName.charAt(0).toUpperCase() + siteName.slice(1);
-            setNewToolDescription(`${name} — helpful online tool and platform.`);
+            setNewToolDescription(`${name} â€” helpful online tool and platform.`);
           }
         }
       }
@@ -2152,7 +2152,7 @@ return;
       if (!toolDescEdited) {
         const pathHint = (urlObj.pathname || '/').split('/').filter(Boolean)[0];
         const hint = pathHint && pathHint.length > 2 && pathHint.length < 24 ? pathHint.replace(/[-_]/g, ' ') : 'tool';
-        setNewToolDescription(name ? `${name} — ${hint}.` : 'Online tool.');
+        setNewToolDescription(name ? `${name} â€” ${hint}.` : 'Online tool.');
       }
     } catch {
       // ignore invalid URL while typing
@@ -2398,13 +2398,9 @@ return;
 
                 {/* Header Actions - Only Close Button */}
                 <div className="absolute top-4 right-4">
-                  <motion.button onClick={onClose} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors">
+                  <button onClick={onClose}   className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors">
                     <X className="w-5 h-5" />
-                  </motion.button>
+                  </button>
                 </div>
               </div>
 
@@ -2448,11 +2444,11 @@ return;
                         Visibility
                       </label>
                       <div className="flex items-center space-x-4">
-                        <motion.button
+                        <button
                           type="button"
                           onClick={() => setEditedTool(prev => prev ? { ...prev, isPublic: false } : null)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
+                          
+                          
                           className={`flex items-center space-x-3 px-4 py-3 rounded-xl border-2 transition-all ${
                             !editedTool?.isPublic
                               ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
@@ -2472,13 +2468,13 @@ return;
                               Only visible to you
                             </div>
                           </div>
-                        </motion.button>
+                        </button>
                         
-                        <motion.button
+                        <button
                           type="button"
                           onClick={() => setEditedTool(prev => prev ? { ...prev, isPublic: true } : null)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
+                          
+                          
                           className={`flex items-center space-x-3 px-4 py-3 rounded-xl border-2 transition-all ${
                             editedTool?.isPublic
                               ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
@@ -2498,7 +2494,7 @@ return;
                               Visible on your profile
                             </div>
                           </div>
-                        </motion.button>
+                        </button>
                       </div>
                     </div>
                   )}
@@ -2544,39 +2540,23 @@ return;
                         </TooltipContent>
                       </Tooltip>
                       
-                      <motion.button onClick={handleEdit} whileHover={{
-                  scale: 1.05
-                }} whileTap={{
-                  scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                      <button onClick={handleEdit}   className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
                         <Edit2 className="w-4 h-4" />
                         <span className="text-sm font-medium">Edit</span>
-                      </motion.button>
+                      </button>
                       
-                      <motion.button onClick={() => setShowDeleteConfirm(true)} whileHover={{
-                  scale: 1.05
-                }} whileTap={{
-                  scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors">
+                      <button onClick={() => setShowDeleteConfirm(true)}   className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors">
                         <Trash2 className="w-4 h-4" />
                         <span className="text-sm font-medium">Delete</span>
-                      </motion.button>
+                      </button>
                      </> : <>
-                      <motion.button onClick={handleCancel} whileHover={{
-                  scale: 1.05
-                }} whileTap={{
-                  scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
+                      <button onClick={handleCancel}   className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
                         <span className="text-sm font-medium">Cancel</span>
-                      </motion.button>
+                      </button>
                       
-                      <motion.button onClick={handleSave} whileHover={{
-                  scale: 1.05
-                }} whileTap={{
-                  scale: 0.95
-                }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                      <button onClick={handleSave}   className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
                         <span className="text-sm font-medium">Save Changes</span>
-                      </motion.button>
+                      </button>
                     </>}
                 </div>
               </div>
@@ -2611,22 +2591,22 @@ return;
                           Are you sure you want to delete "{tool.name}"? This action cannot be undone.
                         </p>
                         <div className="flex space-x-3">
-                          <motion.button 
+                          <button 
                             onClick={() => setShowDeleteConfirm(false)} 
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            
+                            
                             className="flex-1 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg transition-colors"
                           >
                             Cancel
-                          </motion.button>
-                          <motion.button 
+                          </button>
+                          <button 
                             onClick={handleDelete} 
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            
+                            
                             className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                           >
                             Delete
-                          </motion.button>
+                          </button>
                         </div>
                       </div>
                     </motion.div>
@@ -2711,7 +2691,7 @@ return;
                 >
                   Cancel
                 </button>
-                <motion.button
+                <button
                    onClick={async () => {
                      try {
                        // Find the current category
@@ -2751,12 +2731,12 @@ return;
                        toast.error('Failed to update project. Please try again.');
                      }
                    }}
-                   whileHover={{ scale: 1.02 }}
-                   whileTap={{ scale: 0.98 }}
+                   
+                   
                    className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors"
                  >
                    Save Changes
-                 </motion.button>
+                 </button>
               </div>
             </motion.div>
           </motion.div>
@@ -2779,27 +2759,23 @@ return;
           </div>
           
           <div className="space-y-4">
-            <motion.button
+            <button
               onClick={() => {
                 signInWithGitHub().catch(err => console.error('GitHub sign-in error:', err));
               }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-medium transition-colors"
+              className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-medium transition-colors transition-transform hover:scale-105 active:scale-95"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clipRule="evenodd" />
               </svg>
               <span>Continue with GitHub</span>
-            </motion.button>
+            </button>
             
-            <motion.button
+            <button
               onClick={() => {
                 signInWithGoogle().catch(err => console.error('Google sign-in error:', err));
               }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-white hover:bg-gray-50 text-gray-900 rounded-xl font-medium transition-colors"
+              className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-white hover:bg-gray-50 text-gray-900 rounded-xl font-medium transition-colors transition-transform hover:scale-105 active:scale-95"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -2808,7 +2784,7 @@ return;
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
               <span>Continue with Google</span>
-            </motion.button>
+            </button>
           </div>
           
           <div className="mt-6 text-center">
@@ -3223,15 +3199,15 @@ return;
                       <h1 className="text-xl font-bold text-slate-900 dark:text-white">Koto</h1>
                     </div>
                     
-                    <motion.button
+                    <button
                       onClick={() => setMobileMenuOpen(false)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      
+                      
                       className="p-3 min-w-[44px] min-h-[44px] hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center justify-center"
                       aria-label="Close menu"
                     >
                       <X className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-                    </motion.button>
+                    </button>
                   </div>
                 </div>
 
@@ -3252,13 +3228,13 @@ return;
                 <div className="flex-1 overflow-y-auto p-4">
                   <div className="space-y-2">
                     {/* All Items */}
-                    <motion.button
+                    <button
                       onClick={() => {
                         setActiveCategory(activeTab === 'prompts' ? 'all' : 'all-tools');
                         setMobileMenuOpen(false);
                       }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                      
+                      
                       className={`w-full flex items-center space-x-3 px-3 py-3 min-h-[44px] rounded-lg text-left transition-colors ${
                         activeCategory === (activeTab === 'prompts' ? 'all' : 'all-tools')
                           ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
@@ -3269,18 +3245,18 @@ return;
                       <span className="font-medium text-sm">
                         {activeTab === 'prompts' ? 'All Prompts' : 'All Tools'}
                       </span>
-                    </motion.button>
+                    </button>
 
                     {/* Categories */}
                     {(activeTab === 'prompts' ? categories : toolCategories).map((category) => (
-                      <motion.button
+                      <button
                         key={category.id}
                         onClick={() => {
                           setActiveCategory(category.id);
                           setMobileMenuOpen(false);
                         }}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        
+                        
                         className={`w-full flex items-center space-x-3 px-3 py-3 min-h-[44px] rounded-lg text-left transition-colors ${
                           activeCategory === category.id
                             ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
@@ -3289,7 +3265,7 @@ return;
                       >
                         <category.icon className="w-4.5 h-4.5 flex-shrink-0" />
                         <span className="font-medium text-sm">{category.name}</span>
-                      </motion.button>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -3297,18 +3273,18 @@ return;
                 {/* Mobile Bottom Navigation */}
                 <div className="p-4 border-t border-slate-200 dark:border-slate-700">
                   <div className="space-y-1">
-                    <motion.button
+                    <button
                       onClick={() => {
                         setShowSettingsDialog(true);
                         setMobileMenuOpen(false);
                       }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                      
+                      
                       className="w-full flex items-center space-x-3 px-3 py-3 min-h-[44px] rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
                     >
                       <Settings className="w-4.5 h-4.5 flex-shrink-0" />
                       <span className="font-medium text-sm">Settings</span>
-                    </motion.button>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -3346,39 +3322,39 @@ return;
                 <div className="w-full flex items-stretch justify-between mb-6 h-14">
                   {/* Mobile Menu Button - Only visible on mobile */}
                   <div className="md:hidden flex items-center">
-                    <motion.button
+                    <button
                       onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      
+                      
                       className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white p-3 min-w-[44px] min-h-[44px] rounded-xl transition-colors mr-4 flex items-center justify-center"
                       aria-label="Toggle menu"
                     >
                       <Menu className="w-5 h-5" />
-                    </motion.button>
+                    </button>
                   </div>
                   
                   {/* Tabs */}
                   <div className="flex items-center flex-1 justify-center md:justify-start">
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-2 inline-flex" style={{ display: 'flex', alignItems: 'center' }}>
                     <div className="flex space-x-1 md:space-x-2" style={{ alignItems: 'center' }}>
-                      <motion.button 
+                      <button 
                         onClick={() => setActiveTab('prompts')} 
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        
+                        
                         className={`flex items-center space-x-1 md:space-x-2 px-3 md:px-6 py-3 md:py-4 min-h-[44px] rounded-xl text-sm font-medium transition-all ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                       >
                         <MessageSquare className="w-4 h-4" />
                         <span className="hidden sm:inline">Prompts</span>
-                      </motion.button>
-                      <motion.button 
+                      </button>
+                      <button 
                         onClick={() => setActiveTab('toolbox')} 
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        
+                        
                         className={`flex items-center space-x-1 md:space-x-2 px-3 md:px-6 py-3 md:py-4 min-h-[44px] rounded-xl text-sm font-medium transition-all ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
                       >
                         <Wrench className="w-4 h-4" />
                         <span className="hidden sm:inline">Tool Box</span>
-                      </motion.button>
+                      </button>
                     </div>
                   </div>
                   </div>
@@ -3387,9 +3363,9 @@ return;
                   <div className="h-full">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <motion.button 
-                          whileHover={{ scale: 1.05 }} 
-                          whileTap={{ scale: 0.95 }} 
+                        <button 
+                           
+                           
                           className="flex items-center space-x-0 md:space-x-3 pl-2 pr-2 md:pr-4 py-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl transition-colors h-full"
                         >
                           <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center overflow-hidden">
@@ -3417,7 +3393,7 @@ return;
                             </div>
                             <div className="text-xs text-white/80">{user ? 'Signed in' : 'Sign in to continue'}</div>
                           </div>
-                        </motion.button>
+                        </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="w-48" align="end">
                         {!user && (
@@ -3589,23 +3565,15 @@ return;
                   </div>
 
                   <div className="flex items-center space-x-2 md:space-x-4">
-                    <motion.button onClick={() => activeTab === 'prompts' ? handleAddPrompt() : handleAddTool()} whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 md:px-6 py-3 rounded-xl font-medium flex items-center space-x-2 shadow-lg transition-colors">
+                    <button onClick={() => activeTab === 'prompts' ? handleAddPrompt() : handleAddTool()}   className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 md:px-6 py-3 rounded-xl font-medium flex items-center space-x-2 shadow-lg transition-colors">
                       <Plus className="w-4 h-4" />
                       <span className="hidden md:inline">{activeTab === 'prompts' ? 'Add Prompt' : 'Add Tool'}</span>
-                    </motion.button>
+                    </button>
                     
-                    <motion.button onClick={() => setShowAddProjectDialog(true)} whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }} className="bg-white/20 hover:bg-white/30 text-white px-3 md:px-6 py-3 rounded-xl font-medium flex items-center space-x-2 backdrop-blur-sm transition-colors">
+                    <button onClick={() => setShowAddProjectDialog(true)}   className="bg-white/20 hover:bg-white/30 text-white px-3 md:px-6 py-3 rounded-xl font-medium flex items-center space-x-2 backdrop-blur-sm transition-colors">
                       <Plus className="w-4 h-4" />
                       <span className="hidden md:inline">{activeTab === 'toolbox' ? 'Add Stack' : 'Add Project'}</span>
-                    </motion.button>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -3659,14 +3627,10 @@ return;
                   <p className="text-slate-500 dark:text-slate-400 mb-6">
                     Get started by creating your first {activeTab === 'prompts' ? 'prompt' : 'tool'} or project
                   </p>
-                  <motion.button onClick={() => activeTab === 'prompts' ? handleAddPrompt() : handleAddTool()} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium flex items-center space-x-2 mx-auto transition-colors">
+                  <button onClick={() => activeTab === 'prompts' ? handleAddPrompt() : handleAddTool()}   className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium flex items-center space-x-2 mx-auto transition-colors">
                     <Plus className="w-4 h-4" />
                     <span>Add {activeTab === 'prompts' ? 'Prompt' : 'Tool'}</span>
-                  </motion.button>
+                  </button>
                 </div>)}
             </div>
           </div>
@@ -4090,7 +4054,7 @@ return;
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Tool Name
-                    {newToolName && !isLoadingToolData && <span className="ml-2 text-xs text-green-600 dark:text-green-400">✓ Auto-completed</span>}
+                    {newToolName && !isLoadingToolData && <span className="ml-2 text-xs text-green-600 dark:text-green-400">âœ“ Auto-completed</span>}
                   </label>
                   <div className="relative">
                     <input 
@@ -4112,7 +4076,7 @@ return;
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Description
-                    {newToolDescription && !isLoadingToolData && <span className="ml-2 text-xs text-green-600 dark:text-green-400">✓ Auto-completed</span>}
+                    {newToolDescription && !isLoadingToolData && <span className="ml-2 text-xs text-green-600 dark:text-green-400">âœ“ Auto-completed</span>}
                   </label>
                   <textarea 
                     value={newToolDescription} 
@@ -4372,26 +4336,26 @@ return;
       {/* Floating Action Buttons - Mobile/Tablet Only */}
       <div className="fixed bottom-6 right-6 flex flex-col space-y-3 md:hidden z-40">
         {/* Add Prompt/Tool FAB */}
-        <motion.button
+        <button
           onClick={() => activeTab === 'prompts' ? handleAddPrompt() : handleAddTool()}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          
+          
           className="bg-indigo-600 hover:bg-indigo-700 text-white w-12 h-12 min-w-[48px] min-h-[48px] rounded-full shadow-lg flex items-center justify-center transition-colors"
           aria-label={activeTab === 'prompts' ? 'Add new prompt' : 'Add new tool'}
         >
           <Plus className="w-6 h-6" />
-        </motion.button>
+        </button>
         
         {/* Add Project FAB */}
-        <motion.button
+        <button
                           onClick={handleOpenAddProjectDialog}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          
+          
           className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white w-12 h-12 min-w-[48px] min-h-[48px] rounded-full shadow-lg flex items-center justify-center transition-colors border border-white/20"
           aria-label="Add new project"
         >
           <FolderPlus className="w-5 h-5" />
-        </motion.button>
+        </button>
       </div>
       
       </div>
@@ -4400,3 +4364,4 @@ return;
 };
 
 export default KotoDashboard;
+

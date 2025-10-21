@@ -499,7 +499,7 @@ const MobileDashboard: React.FC = () => {
           </div>
           
           <div className="space-y-4">
-            <motion.button
+            <button
               onClick={async () => {
                 try {
                   const { signInWithGitHub } = await import('../lib/data/auth');
@@ -508,17 +508,15 @@ const MobileDashboard: React.FC = () => {
                   console.error('GitHub sign in error:', error);
                 }
               }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-medium transition-colors"
+              className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-medium transition-colors transition-transform hover:scale-105 active:scale-95"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clipRule="evenodd" />
               </svg>
               <span>Continue with GitHub</span>
-            </motion.button>
+            </button>
             
-            <motion.button
+            <button
               onClick={async () => {
                 try {
                   const { signInWithGoogle } = await import('../lib/data/auth');
@@ -527,9 +525,7 @@ const MobileDashboard: React.FC = () => {
                   console.error('Google sign in error:', error);
                 }
               }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-white hover:bg-gray-50 text-gray-900 rounded-xl font-medium transition-colors"
+              className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-white hover:bg-gray-50 text-gray-900 rounded-xl font-medium transition-colors transition-transform hover:scale-105 active:scale-95"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -538,7 +534,7 @@ const MobileDashboard: React.FC = () => {
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
               <span>Continue with Google</span>
-            </motion.button>
+            </button>
           </div>
           
           <div className="mt-6 text-center">
@@ -578,12 +574,10 @@ const MobileDashboard: React.FC = () => {
               <div className="flex items-center justify-between w-full h-12">
                 
                 {/* Profile Picture - 48x48 with blur effect */}
-                <motion.button 
+                <button 
                   onClick={() => navigate('/settings/profile')}
                   aria-label="Open profile settings"
-                  className="w-12 h-12 rounded-[10px] flex items-center justify-center p-2 bg-white/10 backdrop-blur-sm hover:bg-white/20"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="w-12 h-12 rounded-[10px] flex items-center justify-center p-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-transform hover:scale-105 active:scale-95"
                 >
                   <div className="w-8 h-8 rounded-full overflow-hidden">
                     {userProfile?.avatar_url ? (
@@ -598,18 +592,18 @@ const MobileDashboard: React.FC = () => {
                       </div>
                     )}
                   </div>
-                </motion.button>
+                </button>
 
                 {/* Menu Button - 48x48 with blur effect */}
-                <motion.button
+                <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   className="w-12 h-12 rounded-[10px] flex items-center justify-center p-2 bg-white/10 backdrop-blur-sm hover:bg-white/20"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  
+                  
                   aria-label="Toggle menu"
                 >
                   <Menu className="w-6 h-6 text-white" />
-                </motion.button>
+                </button>
               </div>
 
               {/* Content Section */}
@@ -659,7 +653,7 @@ const MobileDashboard: React.FC = () => {
                   className="rounded-[10px] p-2 flex items-center gap-2 bg-white/10 backdrop-blur-sm flex-shrink-0"
                 >
                   {/* Prompt Button - Active */}
-                  <motion.button
+                  <button
                       onClick={() => {
                         setActiveTab('prompts');
                         setActiveCategory('all');
@@ -673,15 +667,15 @@ const MobileDashboard: React.FC = () => {
                         ? 'bg-indigo-600 text-white shadow-lg' 
                         : 'bg-white/10 hover:bg-white/20'
                     }`}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    
+                    
                     aria-label="Show prompts"
                   >
                     <MessageSquare className="w-4 h-4 text-white" strokeWidth={2} />
-                  </motion.button>
+                  </button>
 
                   {/* Toolbox Button */}
-                  <motion.button
+                  <button
                       onClick={() => {
                         setActiveTab('toolbox');
                         setActiveCategory('all');
@@ -695,12 +689,12 @@ const MobileDashboard: React.FC = () => {
                         ? 'bg-indigo-600 text-white shadow-lg' 
                         : 'bg-white/10 hover:bg-white/20'
                     }`}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    
+                    
                     aria-label="Show tools"
                   >
                     <Wrench className="w-4 h-4 text-white" strokeWidth={2} />
-                  </motion.button>
+                  </button>
                 </div>
               </div>
             </div>
@@ -1009,79 +1003,79 @@ const MobileDashboard: React.FC = () => {
                 <div className="p-6 border-b border-slate-700">
                   <div className="flex items-center justify-between">
                     <h2 className="text-xl font-semibold text-white">Menu</h2>
-                    <motion.button
+                    <button
                       onClick={() => setMobileMenuOpen(false)}
                       className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
+                      
+                      
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
-                    </motion.button>
+                    </button>
                   </div>
                 </div>
 
                 {/* Menu Items */}
                 <div className="flex-1 p-6">
                   <nav className="space-y-2">
-                    <motion.button
+                    <button
                       onClick={() => {
                         setMobileMenuOpen(false);
                         setMobileMenuOpen(false);
                         navigate('/settings/profile');
                       }}
                       className="w-full flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700 transition-colors text-left"
-                      whileHover={{ x: 4 }}
+                      
                     >
                       <UserIcon className="w-5 h-5" />
                       <span>Profile Settings</span>
-                    </motion.button>
+                    </button>
                     
-                    <motion.button
+                    <button
                       onClick={() => {
                         setActiveTab('prompts');
                         setMobileMenuOpen(false);
                       }}
                       className="w-full flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700 transition-colors text-left"
-                      whileHover={{ x: 4 }}
+                      
                     >
                       <MessageSquare className="w-5 h-5" />
                       <span>All Prompts</span>
-                    </motion.button>
+                    </button>
                     
-                    <motion.button
+                    <button
                       onClick={() => {
                         setActiveTab('toolbox');
                         setMobileMenuOpen(false);
                       }}
                       className="w-full flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700 transition-colors text-left"
-                      whileHover={{ x: 4 }}
+                      
                     >
                       <Wrench className="w-5 h-5" />
                       <span>Toolbox</span>
-                    </motion.button>
+                    </button>
                     
-                    <motion.button
+                    <button
                       onClick={() => {
                         setShowSettingsDialog(true);
                         setMobileMenuOpen(false);
                       }}
                       className="w-full flex items-center gap-3 p-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700 transition-colors text-left"
-                      whileHover={{ x: 4 }}
+                      
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                       <span>Settings</span>
-                    </motion.button>
+                    </button>
                   </nav>
                 </div>
 
                 {/* Menu Footer */}
                 <div className="p-6 border-t border-slate-700">
-                  <motion.button
+                  <button
                     onClick={async () => {
                       setMobileMenuOpen(false);
                       try {
@@ -1092,13 +1086,13 @@ const MobileDashboard: React.FC = () => {
                       }
                     }}
                     className="w-full flex items-center gap-3 p-3 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-colors text-left"
-                    whileHover={{ x: 4 }}
+                    
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                     <span>Sign Out</span>
-                  </motion.button>
+                  </button>
                 </div>
               </motion.div>
             </>
@@ -1110,21 +1104,21 @@ const MobileDashboard: React.FC = () => {
         
         {/* Projects/Stacks FAB - Bottom Left */}
         <div className="fixed bottom-5 left-5 z-50">
-          <motion.button
+          <button
             onClick={() => setShowProjectsDrawer(true)}
             className="w-12 h-12 rounded-[10px] bg-white/10 backdrop-blur-sm text-white shadow-lg flex items-center justify-center hover:bg-white/20 transition-all"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            
+            
             aria-label={`View ${activeTab === 'prompts' ? 'Projects' : 'Stacks'}`}
           >
             <Folder className="w-5 h-5" />
-          </motion.button>
+          </button>
         </div>
 
         {/* Floating Action Buttons - context aware (adds Prompt or Tool based on active tab) */}
         <div className="fixed bottom-5 right-5 z-50 flex flex-col space-y-3">
           {/* Primary FAB - Add Prompt/Tool */}
-          <motion.button
+          <button
             onClick={() => {
               if (activeTab === 'prompts') {
                 setShowNewPromptDialog(true);
@@ -1133,25 +1127,25 @@ const MobileDashboard: React.FC = () => {
               }
             }}
             className="w-12 h-12 rounded-full bg-indigo-600 text-white shadow-lg flex items-center justify-center hover:bg-indigo-500"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            
+            
             aria-label={activeTab === 'prompts' ? 'Add prompt' : 'Add tool'}
           >
             <Plus className="w-5 h-5" />
-          </motion.button>
+          </button>
           
           {/* Secondary FAB - Add Project/Stack */}
-          <motion.button
+          <button
             onClick={() => {
               setShowNewProjectDialog(true);
             }}
             className="w-12 h-12 rounded-full bg-gray-600 dark:bg-slate-600 text-white shadow-lg flex items-center justify-center hover:bg-gray-500 dark:hover:bg-slate-500"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            
+            
             aria-label={activeTab === 'prompts' ? 'New Project' : 'New Stack'}
           >
             <FolderPlus className="w-5 h-5" />
-          </motion.button>
+          </button>
         </div>
 
         {/* Create Prompt Dialog */}
@@ -1421,7 +1415,7 @@ const MobilePromptCard: React.FC<MobilePromptCardProps> = ({
     <div className="relative">
     <motion.div
       {...longPressHandlers.handlers}
-      whileTap={{ scale: 0.98 }}
+      
       transition={{ duration: 0.2, ease: "easeOut" }}
       className={`cursor-pointer transition-all duration-200 group w-full ${
         isSelected ? 'ring-2 ring-indigo-500 ring-opacity-75' : ''
@@ -1597,7 +1591,7 @@ const MobileToolCard: React.FC<MobileToolCardProps> = ({
     <div className="relative">
     <motion.div
       {...longPressHandlers.handlers}
-      whileTap={{ scale: 0.98 }}
+      
       transition={{ duration: 0.2, ease: "easeOut" }}
       className={`cursor-pointer w-full min-h-[202px] rounded-[10px] bg-slate-800 overflow-hidden ${
         isSelected ? 'ring-2 ring-indigo-500 ring-opacity-75' : ''
@@ -1789,14 +1783,14 @@ const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClo
 
               {/* Header Actions - Only Close Button */}
               <div className="absolute top-4 right-4">
-                <motion.button
+                <button
                   onClick={onClose}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  
+                  
                   className="p-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl transition-colors"
                 >
                   <X className="w-5 h-5" />
-                </motion.button>
+                </button>
               </div>
             </div>
 
@@ -1839,11 +1833,11 @@ const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClo
                     Visibility
                   </Label>
                   <div className="flex flex-col space-y-2">
-                    <motion.button
+                    <button
                       type="button"
                       onClick={() => setEditedTool(prev => prev ? { ...prev, isPublic: false } : null)}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                      
+                      
                       className={`flex items-center space-x-3 px-4 py-3 rounded-xl border-2 transition-all ${
                         !editedTool?.isPublic
                           ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
@@ -1863,13 +1857,13 @@ const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClo
                           Only visible to you
                         </div>
                       </div>
-                    </motion.button>
+                    </button>
                     
-                    <motion.button
+                    <button
                       type="button"
                       onClick={() => setEditedTool(prev => prev ? { ...prev, isPublic: true } : null)}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                      
+                      
                       className={`flex items-center space-x-3 px-4 py-3 rounded-xl border-2 transition-all ${
                         editedTool?.isPublic
                           ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
@@ -1889,7 +1883,7 @@ const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClo
                           Visible on your profile
                         </div>
                       </div>
-                    </motion.button>
+                    </button>
                   </div>
                 </div>
               )}
@@ -1949,41 +1943,25 @@ const ToolDetailsModal: React.FC<ToolDetailsModalProps> = ({ tool, isOpen, onClo
                       </TooltipContent>
                     </Tooltip>
                     
-                    <motion.button onClick={handleEdit} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                    <button onClick={handleEdit}   className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
                       <Edit2 className="w-4 h-4" />
                       <span className="text-sm font-medium">Edit</span>
-                    </motion.button>
+                    </button>
                     
-                    <motion.button onClick={handleDelete} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors">
+                    <button onClick={handleDelete}   className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors">
                       <Trash2 className="w-4 h-4" />
                       <span className="text-sm font-medium">Delete</span>
-                    </motion.button>
+                    </button>
                   </>
                 ) : (
                   <>
-                    <motion.button onClick={handleCancel} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
+                    <button onClick={handleCancel}   className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors">
                       <span className="text-sm font-medium">Cancel</span>
-                    </motion.button>
+                    </button>
                     
-                    <motion.button onClick={handleSave} whileHover={{
-                scale: 1.05
-              }} whileTap={{
-                scale: 0.95
-              }} className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
+                    <button onClick={handleSave}   className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl transition-colors">
                       <span className="text-sm font-medium">Save Changes</span>
-                    </motion.button>
+                    </button>
                   </>
                 )}
               </div>
@@ -2008,3 +1986,6 @@ function dataURLtoFile(dataUrl: string, filename: string): File {
   while (n--) u8arr[n] = bstr.charCodeAt(n);
   return new File([u8arr], filename, { type: mime });
 }
+
+
+
