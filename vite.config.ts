@@ -23,6 +23,20 @@ export default defineConfig({
     },
   },
   build: {
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return;
+          if (id.includes('react-router')) return 'vendor-react-router';
+          if (id.includes('/react/')) return 'vendor-react';
+          if (id.includes('@radix-ui')) return 'vendor-radix';
+          if (id.includes('framer-motion')) return 'vendor-motion';
+          if (id.includes('@supabase')) return 'vendor-supabase';
+          if (id.includes('@dnd-kit')) return 'vendor-dnd';
+          if (id.includes('lucide-react')) return 'vendor-icons';
+        },
+      },
+    },
   }
 });
