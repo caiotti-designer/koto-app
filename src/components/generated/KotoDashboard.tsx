@@ -4339,6 +4339,25 @@ return;
         )}
       </AnimatePresence>
       
+      {/* Details Modals */}
+      <Suspense fallback={null}>
+        <PromptDetailsModal
+          prompt={selectedPrompt}
+          isOpen={showPromptDetailsDialog}
+          onClose={() => setShowPromptDetailsDialog(false)}
+          onEdit={handleEditPrompt}
+          onDelete={handleDeletePrompt}
+          onCopy={handleCopyPrompt}
+          onShare={handleSharePrompt}
+        />
+      </Suspense>
+
+      <ToolDetailsModal
+        tool={selectedTool}
+        isOpen={showToolDetailsDialog}
+        onClose={() => setShowToolDetailsDialog(false)}
+      />
+
       {/* Floating Action Buttons - Mobile/Tablet Only */}
       <div className="fixed bottom-6 right-6 flex flex-col space-y-3 md:hidden z-40">
         {/* Add Prompt/Tool FAB */}
