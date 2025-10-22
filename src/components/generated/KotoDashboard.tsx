@@ -312,11 +312,9 @@ const KotoDashboard: React.FC = () => {
     return 'prompts';
   });
   const [activeCategory, setActiveCategory] = useState<string>(() => {
+    // Always default to "All" for the current tab
     try {
       const savedTab = typeof window !== 'undefined' ? localStorage.getItem('koto_active_tab') : null;
-      const key = savedTab === 'toolbox' ? 'koto_active_category_tools' : 'koto_active_category_prompts';
-      const saved = typeof window !== 'undefined' ? localStorage.getItem(key) : null;
-      if (saved) return saved;
       return savedTab === 'toolbox' ? 'all-tools' : 'all';
     } catch {
       return 'all';
@@ -555,19 +553,17 @@ const KotoDashboard: React.FC = () => {
     } catch {}
   }, [activeTab]);
 
-  // On tab change, restore saved category for that tab or default
+  // On tab change, force default selection to "All" for that tab
   useEffect(() => {
     try {
+      const next = activeTab === 'toolbox' ? 'all-tools' : 'all';
+      setActiveCategory(next);
+      // keep localStorage in sync so stale values won't override in the future
       const key = activeTab === 'toolbox' ? 'koto_active_category_tools' : 'koto_active_category_prompts';
-      const saved = localStorage.getItem(key);
-      if (activeTab === 'prompts') {
-        setActiveCategory(saved || 'all');
-      } else {
-        setActiveCategory(saved || 'all-tools');
-      }
-    } catch {
-      setActiveCategory(activeTab === 'toolbox' ? 'all-tools' : 'all');
-    }
+      const nameKey = activeTab === 'toolbox' ? 'koto_active_category_name_tools' : 'koto_active_category_name_prompts';
+      localStorage.setItem(key, next);
+      localStorage.setItem(nameKey, activeTab === 'toolbox' ? 'All Tools' : 'All Prompts');
+    } catch {}
   }, [activeTab]);
 
   // Auth subscription and initial load
