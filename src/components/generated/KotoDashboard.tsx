@@ -3341,7 +3341,10 @@ return;
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-2 inline-flex" style={{ display: 'flex', alignItems: 'center' }}>
                     <div className="flex space-x-1 md:space-x-2" style={{ alignItems: 'center' }}>
                       <button 
-                        onClick={() => setActiveTab('prompts')} 
+                        onClick={() => {
+                          setActiveTab('prompts');
+                          setActiveCategory('all');
+                        }} 
                         
                         
                         className={`flex items-center space-x-1 md:space-x-2 px-3 md:px-6 py-3 md:py-4 min-h-[44px] rounded-xl text-sm font-medium transition-all ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
@@ -3350,7 +3353,10 @@ return;
                         <span className="hidden sm:inline">Prompts</span>
                       </button>
                       <button 
-                        onClick={() => setActiveTab('toolbox')} 
+                        onClick={() => {
+                          setActiveTab('toolbox');
+                          setActiveCategory('all-tools');
+                        }} 
                         
                         
                         className={`flex items-center space-x-1 md:space-x-2 px-3 md:px-6 py-3 md:py-4 min-h-[44px] rounded-xl text-sm font-medium transition-all ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
