@@ -507,7 +507,8 @@ const KotoDashboard: React.FC = () => {
   });
   const filteredTools = tools.filter(tool => {
     const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase());
-    if (activeCategory === 'all-tools') {
+    // Treat both 'all-tools' and legacy 'all' as show-all in Tools tab
+    if (activeCategory === 'all-tools' || activeCategory === 'all') {
       return matchesSearch;
     }
 
