@@ -1,8 +1,8 @@
-import supabase from '../supabaseClient';
+import { getSupabase } from '../supabaseClient';
 
 export async function signInWithGitHub() {
   const redirectUrl = window.location.origin + '/auth/callback';
-  const { data, error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await getSupabase().auth.signInWithOAuth({
     provider: 'github',
     options: { redirectTo: redirectUrl, skipBrowserRedirect: false },
   });
@@ -12,7 +12,7 @@ export async function signInWithGitHub() {
 
 export async function signInWithGoogle() {
   const redirectUrl = window.location.origin + '/auth/callback';
-  const { data, error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await getSupabase().auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: redirectUrl },
   });
@@ -21,7 +21,6 @@ export async function signInWithGoogle() {
 }
 
 export async function signOut() {
-  const { error } = await supabase.auth.signOut();
+  const { error } = await getSupabase().auth.signOut();
   if (error) throw error;
 }
-
