@@ -312,11 +312,9 @@ const KotoDashboard: React.FC = () => {
     return 'prompts';
   });
   const [activeCategory, setActiveCategory] = useState<string>(() => {
+    // Always default to "All" for the current tab
     try {
       const savedTab = typeof window !== 'undefined' ? localStorage.getItem('koto_active_tab') : null;
-      const key = savedTab === 'toolbox' ? 'koto_active_category_tools' : 'koto_active_category_prompts';
-      const saved = typeof window !== 'undefined' ? localStorage.getItem(key) : null;
-      if (saved) return saved;
       return savedTab === 'toolbox' ? 'all-tools' : 'all';
     } catch {
       return 'all';
@@ -509,7 +507,8 @@ const KotoDashboard: React.FC = () => {
   });
   const filteredTools = tools.filter(tool => {
     const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase());
-    if (activeCategory === 'all-tools') {
+    // Treat both 'all-tools' and legacy 'all' as show-all in Tools tab
+    if (activeCategory === 'all-tools' || activeCategory === 'all') {
       return matchesSearch;
     }
 
@@ -555,19 +554,17 @@ const KotoDashboard: React.FC = () => {
     } catch {}
   }, [activeTab]);
 
-  // On tab change, restore saved category for that tab or default
+  // On tab change, force default selection to "All" for that tab
   useEffect(() => {
     try {
+      const next = activeTab === 'toolbox' ? 'all-tools' : 'all';
+      setActiveCategory(next);
+      // keep localStorage in sync so stale values won't override in the future
       const key = activeTab === 'toolbox' ? 'koto_active_category_tools' : 'koto_active_category_prompts';
-      const saved = localStorage.getItem(key);
-      if (activeTab === 'prompts') {
-        setActiveCategory(saved || 'all');
-      } else {
-        setActiveCategory(saved || 'all-tools');
-      }
-    } catch {
-      setActiveCategory(activeTab === 'toolbox' ? 'all-tools' : 'all');
-    }
+      const nameKey = activeTab === 'toolbox' ? 'koto_active_category_name_tools' : 'koto_active_category_name_prompts';
+      localStorage.setItem(key, next);
+      localStorage.setItem(nameKey, activeTab === 'toolbox' ? 'All Tools' : 'All Prompts');
+    } catch {}
   }, [activeTab]);
 
   // Auth subscription and initial load
@@ -3344,7 +3341,10 @@ return;
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-2 inline-flex" style={{ display: 'flex', alignItems: 'center' }}>
                     <div className="flex space-x-1 md:space-x-2" style={{ alignItems: 'center' }}>
                       <button 
-                        onClick={() => setActiveTab('prompts')} 
+                        onClick={() => {
+                          setActiveTab('prompts');
+                          setActiveCategory('all');
+                        }} 
                         
                         
                         className={`flex items-center space-x-1 md:space-x-2 px-3 md:px-6 py-3 md:py-4 min-h-[44px] rounded-xl text-sm font-medium transition-all ${activeTab === 'prompts' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
@@ -3353,7 +3353,10 @@ return;
                         <span className="hidden sm:inline">Prompts</span>
                       </button>
                       <button 
-                        onClick={() => setActiveTab('toolbox')} 
+                        onClick={() => {
+                          setActiveTab('toolbox');
+                          setActiveCategory('all-tools');
+                        }} 
                         
                         
                         className={`flex items-center space-x-1 md:space-x-2 px-3 md:px-6 py-3 md:py-4 min-h-[44px] rounded-xl text-sm font-medium transition-all ${activeTab === 'toolbox' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/80 hover:text-white hover:bg-white/10'}`}
